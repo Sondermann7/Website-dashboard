@@ -1,0 +1,38 @@
+[
+  {
+    "id": "dec-local-only",
+    "date": "2026-07-15",
+    "decision": "Bartlett Ops Brain repo distribution is strictly local, ever — no public remote.",
+    "rationale": "Confirmed directly with Mikey when scaffolding the repo. Keeps the secrets/PII bar simple while .gitignore still enforces it as defense-in-depth.",
+    "confidence": "high",
+    "reversalConditions": "Mikey explicitly asks to push to a private remote for backup or multi-machine access.",
+    "source": "Mikey directly"
+  },
+  {
+    "id": "dec-auto-commit-off",
+    "date": "2026-07-15",
+    "decision": "Auto-commit stays OFF by default; every commit is a deliberate, asked-for action.",
+    "rationale": "Mikey wants to review a run of manual commits before trusting an agent to commit unattended.",
+    "confidence": "high",
+    "reversalConditions": "Mikey reviews several manual commits and explicitly asks for auto-commit-on-important-changes.",
+    "source": "Mikey directly"
+  },
+  {
+    "id": "dec-zero-dependency-server",
+    "date": "2026-07-15",
+    "decision": "server/server.js uses only Node's built-in modules (http, fs, path, url, crypto) — no Express, no npm install.",
+    "rationale": "Matches the existing searchops-helper/server.js pattern already in use for this account, and aligns with the safety rule against running third-party code blindly.",
+    "confidence": "high",
+    "reversalConditions": "A concrete feature genuinely requires a dependency Node's stdlib can't reasonably provide.",
+    "source": "Mikey directly"
+  },
+  {
+    "id": "dec-cowork-brief-contract",
+    "date": "2026-07-15",
+    "decision": "Cowork access is via the existing 'Copy Cowork brief' read flow plus a paste-back Memory tab, not live remote sync.",
+    "rationale": "Reconciles 'wire up Cowork access' with 'strictly local, ever' — true remote sync would require a private git remote, out of scope for this pass.",
+    "confidence": "medium",
+    "reversalConditions": "Mikey wants real-time Cowork read/write against this exact file tree; would require revisiting the local-only decision.",
+    "source": "Mikey directly"
+  }
+]

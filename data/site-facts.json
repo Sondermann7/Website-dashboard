@@ -1,0 +1,74 @@
+[
+  {
+    "id": "fact-domain",
+    "fact": "Primary domain is bartlettroofs.com.",
+    "category": "identity",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "bartlettroofing.com relationship (redirect vs unclaimed) is an open discovery task, not yet confirmed live." }
+  },
+  {
+    "id": "fact-cms",
+    "fact": "Site runs WordPress with the Avada/Fusion Builder page builder (not Elementor).",
+    "category": "platform",
+    "verify": { "status": "user-stated", "confidence": "high", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md safety rules", "checkedAt": null, "note": "" }
+  },
+  {
+    "id": "fact-seo-plugin",
+    "fact": "Yoast is the SEO plugin in use (not Rank Math).",
+    "category": "platform",
+    "verify": { "status": "user-stated", "confidence": "high", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md safety rules", "checkedAt": null, "note": "" }
+  },
+  {
+    "id": "fact-markets",
+    "fact": "Served markets include Boise/Treasure Valley (ID), Spokane (WA), Atlanta/Kennesaw (GA), and the Salt Lake City/Murray/Ogden territory (UT).",
+    "category": "geography",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "Live homepage title as of Jul 1 still listed CA, GA, ID, UT, WA — a fix task exists for this." }
+  },
+  {
+    "id": "fact-pleasant-grove-closed",
+    "fact": "The Pleasant Grove (UT) office is closed. Its 4 cities (Provo, Orem, Lehi, American Fork) are believed to have moved to Murray.",
+    "category": "geography",
+    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "Plan explicitly requires confirming the 4 cities belong to Murray (not Ogden) before any redirect work." }
+  },
+  {
+    "id": "fact-california-closed",
+    "fact": "California is closed / not served, unless corrected.",
+    "category": "geography",
+    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "Live Boise page reportedly still lists California as served plus an Oregon registration — direct contradiction logged in verification-queue.json." }
+  },
+  {
+    "id": "fact-service-areas-cpt",
+    "fact": "A custom post type named 'service-areas' powers the city/location pages (e.g. /service-areas/boise-id/).",
+    "category": "platform",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "" }
+  },
+  {
+    "id": "fact-stale-state-pages",
+    "fact": "There are stale/unserved-state location page archives (reportedly MT/NV/OR/WY) that need triage.",
+    "category": "geography",
+    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "Part of the 109-city-page tiering task." }
+  },
+  {
+    "id": "fact-lead-stack",
+    "fact": "Lead flow involves Gravity Forms, Roofle, CallRail, SalesTrak, Slack, and n8n/Zapier.",
+    "category": "tooling",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "Exact wiring between these tools is an open discovery task (lead-flow map)." }
+  },
+  {
+    "id": "fact-tracking-gaps",
+    "fact": "GA4/GSC/Google Ads/CallRail tracking has known gaps that need verification (e.g. a suspected GA4 double-fire via Site Kit + GTM).",
+    "category": "tracking",
+    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "See data/measurement-map.json (pending) for the full audit once run." }
+  },
+  {
+    "id": "fact-dashboard-claims-unreliable",
+    "fact": "Some claims carried over from the previous static dashboard may be stale or simply wrong (e.g. the 'Boise is dead' assumption was contradicted by a later GSC pull showing 183 clicks, +18%).",
+    "category": "meta",
+    "verify": { "status": "observed", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "This is the whole reason this system tags every imported claim with a verify block instead of trusting it by default." }
+  },
+  {
+    "id": "fact-callrail-nap-rule",
+    "fact": "CallRail dynamic tracking numbers must never be used as the public GBP/citation NAP phone number.",
+    "category": "rule",
+    "verify": { "status": "user-stated", "confidence": "high", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md safety rules", "checkedAt": null, "note": "" }
+  }
+]

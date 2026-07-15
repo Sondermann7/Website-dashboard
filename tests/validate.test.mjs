@@ -78,3 +78,15 @@ test('validateAll fails when a task is missing col', () => {
   assert.ok(result.errors.some(e => e.includes('col')));
   fs.rmSync(tmp, { recursive: true, force: true });
 });
+
+test('validateAll accepts the real committed site-facts.json and decisions.json', () => {
+  const dataDir = path.resolve(ROOT, 'data');
+  const facts = JSON.parse(fs.readFileSync(path.join(dataDir, 'site-facts.json'), 'utf8'));
+  const decisions = JSON.parse(fs.readFileSync(path.join(dataDir, 'decisions.json'), 'utf8'));
+  assert.ok(facts.length >= 10, 'expected the seeded Bartlett context facts');
+  assert.ok(facts.every(f => f.verify && typeof f.verify.status === 'string'));
+  assert.ok(decisions.length >= 4, 'expected the four confirmed build decisions');
+  const result = validateAll(dataDir);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.ok, true);
+});
