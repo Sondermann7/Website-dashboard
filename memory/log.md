@@ -23,3 +23,41 @@ No placeholder data was invented for these — each needs real-world work first:
 - `location-page-triage.json` — needs a site crawl of the 109 city pages.
 - `redirect-map.json` — needs actual approved redirect work to populate (not speculative).
 - `ai-visibility-baseline.json` — needs the 30-query baseline actually run across the 5 AI engines.
+
+### 2026-07-15 — Migration to Bartlett Ops Brain complete: summary
+
+**What was migrated:**
+- All 40 cycle tasks and 14 cadence items (6 weekly, 8 monthly) from `Bartlett-Ops-Dashboard.html`,
+  ported verbatim, now living in `data/tasks.json` / `data/cadence.json`.
+- The full dashboard UI (drag-and-drop board, cadence check-off, archive, carry-forward, search
+  filters, "Copy Cowork brief") preserved in `public/`, now reading/writing through a small local
+  API (`server/server.js`) instead of `localStorage`.
+- 12 Bartlett context facts seeded into `data/site-facts.json`.
+- The 4 decisions made while building this system, in `data/decisions.json` / `memory/decisions.md`.
+- 6 known tool/source classifications seeded across `data/tool-registry.json` (4) and
+  `data/source-registry.json` (2).
+- 5 highest-value unverified claims seeded into `data/verification-queue.json`.
+- Safety docs (`wordpress-safety.md`, `ads-safety.md`, `ai-search-rules.md`), the Cowork
+  read/write contract, and an operator README.
+- 13 automated tests (import, validate, server round-trip, schema checks) — all passing.
+- Manually verified in a real browser: drag-and-drop, cadence check-off, Memory tab append, and
+  full-reload persistence all round-trip correctly through `data/*.json`.
+
+**What remains `unverified`:** everything imported from the old dashboard, by design — see
+`data/verification-queue.json` for the 5 flagged first, and `data/site-facts.json` for the
+per-fact status.
+
+**What's `pending` (empty scaffolds, no invented data):** `measurement-map.json`,
+`url-inventory.json`, `location-page-triage.json`, `redirect-map.json`,
+`ai-visibility-baseline.json` — each needs real crawl/audit/baseline work before it can be
+populated (see the entry above for what specifically unblocks each one).
+
+**Needs Mikey's review, in priority order:**
+1. The "top 50 vs top 100 contractor" + California-served conflict on the live Boise page —
+   this is blocking several other content tasks from using either number.
+2. Whether the local-only / no-remote decision (`dec-local-only`) still holds, given the Cowork
+   contract is brief-and-paste-back rather than live sync.
+3. Whether to run `npm run import` at some point to pick up any future edits to
+   `scripts/seeds.mjs`, or whether the file-backed data is now the sole source of truth going
+   forward (recommended: the latter — treat `data/*.json` as authoritative from here on, and
+   only touch `seeds.mjs` if the *original* dashboard changes and needs re-importing).
