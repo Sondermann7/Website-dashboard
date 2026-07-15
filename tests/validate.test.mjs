@@ -103,3 +103,12 @@ test('tool-registry and source-registry are seeded and valid, with no overlap in
   const result = validateAll(dataDir);
   assert.equal(result.ok, true);
 });
+
+test('verification-queue is seeded with the highest-value unverified claims', () => {
+  const dataDir = path.resolve(ROOT, 'data');
+  const queue = JSON.parse(fs.readFileSync(path.join(dataDir, 'verification-queue.json'), 'utf8'));
+  assert.ok(queue.length >= 5);
+  assert.ok(queue.some(q => q.claim.includes('top 50')));
+  const result = validateAll(dataDir);
+  assert.equal(result.ok, true);
+});

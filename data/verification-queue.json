@@ -1,0 +1,52 @@
+[
+  {
+    "id": "vq-top50-vs-top100",
+    "claim": "Live Boise page says 'top 50 roofing contractors in the U.S.' while other materials say Top 100; the same page also lists California as served plus an Oregon registration, conflicting with the 'California closed' status used elsewhere.",
+    "sourceRef": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md — cycle task 'Reconcile top 50 vs top 100 contractor claim + California mention'",
+    "status": "open",
+    "assignedTo": "Mikey",
+    "addedAt": "2026-07-15",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-351-pages-not-indexed",
+    "claim": "GSC Indexing report (pulled Jul 1) reportedly showed 351 of 626 total pages excluded, only 275 indexed.",
+    "sourceRef": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md — cycle task 'Investigate why 351 pages are not indexed'",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-15",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-boise-183-clicks",
+    "claim": "GSC last-28-days reportedly showed /service-areas/boise-id/ got 183 clicks, up 18% — contradicting an earlier SEMrush-modeled estimate of ~90 visits/mo and the 'Boise is dead' framing.",
+    "sourceRef": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md — cycle task 'Correct the Boise-is-dead assumption using real GSC data'",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-15",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-pleasant-grove-cities-murray",
+    "claim": "The 4 former Pleasant Grove cities (Provo, Orem, Lehi, American Fork) are assumed to now belong to Murray, not Ogden.",
+    "sourceRef": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md — cycle task 'Remove the closed Pleasant Grove location completely'",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-15",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-mobile-core-web-vitals",
+    "claim": "PageSpeed Insights (pulled Jul 1) reportedly showed mobile Core Web Vitals FAILED with real-user LCP 3.2s, root-caused to ~9.4MB of available image-delivery savings.",
+    "sourceRef": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md — cycle task 'Fix mobile Core Web Vitals — image weight'",
+    "status": "open",
+    "assignedTo": "Bright Development",
+    "addedAt": "2026-07-15",
+    "resolvedAt": null,
+    "resolution": null
+  }
+]
