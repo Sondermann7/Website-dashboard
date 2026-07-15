@@ -76,7 +76,7 @@
     <button class="bulklink" id="bulkToggle">＋ Paste several at once (one per line)</button>
     <div class="bulkbox" id="bulkBox" hidden>
       <textarea id="bulkText" placeholder="Paste a list — e.g. a set of Cycle 2 tasks Cowork proposed. One per line. They drop into To Do under the selected stage/phase above."></textarea>
-      <button class="addrow" style="margin-top:8px;" onclick="bulkAdd()"><span style="font:700 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:#fff; background:var(--teal); border:none; border-radius:8px; padding:9px 16px; cursor:pointer; display:inline-block; font-family:var(--display); font-weight:600; letter-spacing:.06em;">Add all</span></button>
+      <button class="addrow" id="bulkAddBtn" style="margin-top:8px;"><span style="font:700 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:#fff; background:var(--teal); border:none; border-radius:8px; padding:9px 16px; cursor:pointer; display:inline-block; font-family:var(--display); font-weight:600; letter-spacing:.06em;">Add all</span></button>
     </div>
   </div>
   <div class="board" id="board">
@@ -119,6 +119,6 @@
 
 <div class="toast" id="toast">Copied</div>
 
-<script src="/app.js"></script>
+<script type="module" src="/app.js"></script>
 </body>
 </html>

@@ -2,7 +2,9 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
 import { validateAll } from '../scripts/validate.mjs';
+import { buildPrompt } from '../public/brief.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_DATA_DIR = path.resolve(__dirname, '..', 'data');
@@ -13,6 +15,7 @@ const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
 };
@@ -100,10 +103,51 @@ function appendMemoryLog(memoryDir, text){
   fs.appendFileSync(file, `\n### ${stamp}\n${text}\n`, 'utf8');
 }
 
+/**
+ * Tasks whose col just became "doing" in `nextTasks` but weren't "doing"
+ * in `prevTasks` (or are brand new). Pure/diff-only so it's cheaply testable
+ * without touching the filesystem or spawning anything.
+ */
+export function detectNewlyMovedToDoing(prevTasks, nextTasks){
+  const prevById = new Map(prevTasks.map(t => [t.id, t]));
+  return nextTasks.filter(t => t.col === 'doing' && prevById.get(t.id)?.col !== 'doing');
+}
+
+/**
+ * cmd.exe's `start` parses its arguments as a single command line — embedded
+ * newlines silently truncate/break the launch (confirmed empirically: a
+ * one-line argument with quotes/colons/dashes launches fine, the same text
+ * with newlines does not launch anything, with no error surfaced). Collapse
+ * paragraph breaks and line breaks to spaced separators so the brief still
+ * reads as structured text without carrying a real newline byte.
+ */
+function toSingleLine(text){
+  return text.replace(/\n\n+/g, '   //   ').replace(/\n/g, '  ');
+}
+
+/**
+ * Fully automatic, no-confirmation launch: spawns a new terminal window
+ * running the Claude Code CLI with the task's full Cowork brief as the
+ * initial prompt. Windows-only (uses cmd.exe's `start`). Fire-and-forget —
+ * callers don't await completion of the spawned session.
+ */
+export function launchCowork(task, { spawnFn = spawn } = {}){
+  const brief = toSingleLine(buildPrompt(task));
+  const title = `Cowork: ${task.t}`.slice(0, 200);
+  const child = spawnFn('cmd.exe', ['/c', 'start', title, 'claude', brief], {
+    detached: true,
+    stdio: 'ignore',
+    windowsHide: false,
+  });
+  if (child && typeof child.unref === 'function') child.unref();
+  return child;
+}
+
 export function createServer({
   dataDir = DEFAULT_DATA_DIR,
   memoryDir = DEFAULT_MEMORY_DIR,
   publicDir = DEFAULT_PUBLIC_DIR,
+  launchCoworkFn = launchCowork,
 } = {}){
   async function routeApi(req, res, parsed){
     try {
@@ -120,9 +164,12 @@ export function createServer({
 
       if (parsed.pathname === '/api/tasks' && req.method === 'POST') {
         const body = JSON.parse((await readBody(req)) || '[]');
+        const prevTasks = readJson(dataDir, 'tasks.json', []);
         const result = writeValidated(dataDir, 'tasks.json', body);
         if (!result.ok) return json(res, 400, { error: 'Invalid tasks payload', details: result.errors });
-        return json(res, 200, { ok: true });
+        const launched = detectNewlyMovedToDoing(prevTasks, body);
+        launched.forEach(task => launchCoworkFn(task));
+        return json(res, 200, { ok: true, launchedCowork: launched.map(t => t.id) });
       }
 
       if (parsed.pathname === '/api/cadence' && req.method === 'POST') {

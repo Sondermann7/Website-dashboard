@@ -26,7 +26,7 @@
   {
     "id": "t6b9852268ad84937",
     "order": 1,
-    "col": "todo",
+    "col": "done",
     "w": "W1",
     "ph": "CONTENT",
     "pri": "HIGH",
@@ -122,7 +122,7 @@
   {
     "id": "tfdbea2ddec9a4c85",
     "order": 5,
-    "col": "todo",
+    "col": "done",
     "w": "W1",
     "ph": "CONTENT",
     "pri": "HIGH",
@@ -147,8 +147,8 @@
   },
   {
     "id": "t7bc1058ff4294488",
-    "order": 6,
-    "col": "todo",
+    "order": 1784145786927,
+    "col": "doing",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "HIGH",
@@ -171,8 +171,8 @@
   },
   {
     "id": "t52ac1e6916ef4743",
-    "order": 7,
-    "col": "todo",
+    "order": 1784145815286,
+    "col": "doing",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "HIGH",
@@ -220,7 +220,7 @@
   {
     "id": "ta983d02c21c843f2",
     "order": 9,
-    "col": "todo",
+    "col": "done",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "MED",
@@ -244,7 +244,7 @@
   {
     "id": "t79b6e22d31ed498e",
     "order": 10,
-    "col": "todo",
+    "col": "done",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "MED",
@@ -268,7 +268,7 @@
   {
     "id": "t74893df606e34be5",
     "order": 11,
-    "col": "todo",
+    "col": "done",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "MED",

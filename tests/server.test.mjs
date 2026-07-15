@@ -93,3 +93,10 @@ test('GET / serves static files from publicDir', async () => {
   const body = await res.text();
   assert.ok(body.includes('<html>ok</html>'));
 });
+
+test('GET *.mjs is served with a JavaScript MIME type (required for <script type="module">)', async () => {
+  fs.writeFileSync(path.join(publicDir, 'brief.mjs'), 'export const x = 1;');
+  const res = await fetch(`${baseUrl}/brief.mjs`);
+  assert.equal(res.status, 200);
+  assert.match(res.headers.get('content-type'), /javascript/);
+});

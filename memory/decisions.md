@@ -40,3 +40,19 @@ Template for each entry:
 - Confidence: medium
 - Reversal conditions: Mikey wants real-time Cowork read/write against this exact file tree; would require revisiting the local-only decision.
 - Source: Mikey directly, 2026-07-15 (see docs/cowork-contract.md).
+
+### 2026-07-15 — Moving a card to Doing fully-automatically launches a live Claude Code session
+- Decision: Dragging a Cycle task into Doing spawns a new terminal running `claude "<brief>"`
+  immediately, with no confirmation step. Uses the Claude Code CLI (`claude-cli://` is registered
+  and scriptable on this machine) rather than Claude Desktop (no working `claude://` handler found)
+  or Cowork specifically (not confirmed installed).
+- Rationale: Mikey explicitly asked for this and chose "fully automatic" over a semi-automatic
+  copy-to-clipboard option after being told about the technical constraint (browsers can't launch
+  desktop apps; the CLI is what's actually scriptable here).
+- Confidence: high
+- Reversal conditions: If this proves too disruptive (e.g. multiple cards dragged quickly spawning
+  many concurrent sessions), or Mikey wants a review pause before a session starts.
+- Source: Mikey directly, 2026-07-15 (see docs/cowork-contract.md).
+- Note: found and fixed a real bug during implementation — `cmd.exe`'s `start` silently drops the
+  launch when the argument contains newlines (no error surfaced). The brief is now collapsed to a
+  single line before being passed to `start`. Confirmed via empirical live testing.
