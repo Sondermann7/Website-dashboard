@@ -1,0 +1,34 @@
+[
+  {
+    "id": "tool-claude-ads",
+    "name": "AgriciDaniel/claude-ads",
+    "type": "claude-skill",
+    "classification": "needs-review",
+    "note": "Promising Claude Code skill for paid media audits. Needs a full read-through before enabling.",
+    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "" }
+  },
+  {
+    "id": "tool-google-ads-conversion-audit-script",
+    "name": "GeertGR/google-ads-conversion-audit-script",
+    "type": "google-ads-script",
+    "classification": "needs-review",
+    "note": "Real Google Ads Script. Requires a full code review before pasting into any live Google Ads account — never run live ads scripts without that review.",
+    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "" }
+  },
+  {
+    "id": "tool-wp-mail-smtp",
+    "name": "awesomemotive/WP-Mail-SMTP",
+    "type": "wordpress-plugin",
+    "classification": "already-installed",
+    "note": "Already installed and active on the Bartlett WordPress site. Do not install a duplicate SMTP plugin.",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "" }
+  },
+  {
+    "id": "tool-smtp-mailer",
+    "name": "naa986/smtp-mailer",
+    "type": "wordpress-plugin",
+    "classification": "rejected",
+    "note": "Redundant with / conflicting against the already-installed WP Mail SMTP. Do not install alongside it.",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "" }
+  }
+]

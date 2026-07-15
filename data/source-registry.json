@@ -1,0 +1,16 @@
+[
+  {
+    "id": "source-awesome-seo-tools",
+    "name": "serpapi/awesome-seo-tools",
+    "classification": "reference-only",
+    "note": "Curated list of SEO tools. Read for ideas; nothing here gets installed directly from the list itself.",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "" }
+  },
+  {
+    "id": "source-awesome-seo",
+    "name": "teles/awesome-seo",
+    "classification": "reference-only",
+    "note": "Curated list of SEO resources/articles. Reference only.",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "" }
+  }
+]

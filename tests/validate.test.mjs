@@ -90,3 +90,16 @@ test('validateAll accepts the real committed site-facts.json and decisions.json'
   assert.deepEqual(result.errors, []);
   assert.equal(result.ok, true);
 });
+
+test('tool-registry and source-registry are seeded and valid, with no overlap in division of labor', () => {
+  const dataDir = path.resolve(ROOT, 'data');
+  const tools = JSON.parse(fs.readFileSync(path.join(dataDir, 'tool-registry.json'), 'utf8'));
+  const sources = JSON.parse(fs.readFileSync(path.join(dataDir, 'source-registry.json'), 'utf8'));
+  assert.ok(tools.length >= 4);
+  assert.ok(sources.length >= 2);
+  // tool-registry = installable capabilities; source-registry = reference-only material.
+  assert.ok(tools.every(t => t.classification !== 'reference-only'), 'installable tools should not be classified reference-only');
+  assert.ok(sources.every(s => s.classification === 'reference-only'), 'source-registry should only ever hold reference-only entries');
+  const result = validateAll(dataDir);
+  assert.equal(result.ok, true);
+});
