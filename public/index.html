@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bartlett Roofing — SEO + GEO Ops Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<!--
+  ===========================================================================
+  BARTLETT OPS BRAIN — file-backed successor to the original localStorage
+  dashboard (bartlett_ops_v5). Same look, same interactions. The dashboard
+  is the interface; data/*.json + memory/*.md are the brain; git is the
+  long-term memory. See docs/README.md.
+
+  TWO LAYERS
+  1) CYCLE layer  — project work in repeating rounds. Finish a cycle, archive
+     it (history kept), carry unfinished tasks forward, start the next round.
+  2) CADENCE layer — recurring weekly + monthly habits that AUTO-RESET each
+     period and never disappear.
+
+  Every task (cycle + cadence) carries a Cowork execution plan and a
+  "Copy Cowork brief" button. Drag cycle tasks across To Do / Doing / Done.
+
+  STORAGE: reads/writes go through /api/* to the file-backed server.
+  localStorage is kept only as an offline mirror if the server is unreachable.
+  ===========================================================================
+-->
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Bartlett Roofing &amp; Exteriors · SEO + GEO</div>
+  <h1>Ops Dashboard</h1>
+  <p class="sub">File-backed ops brain. Entity → reviews → links → content, gated by 30/60/90 revenue checkpoints. A continuous system, not a one-off checklist. The <b>Cycle</b> runs the project work in rounds and archives each round so the next builds on it. The <b>Cadence</b> runs the weekly + monthly habits that auto-reset and keep your gains compounding. Every task copies a full operator brief into Cowork.</p>
+</header>
+
+<div class="opsbar">
+  <div>
+    <div class="cyctag" id="cycTag">Current Cycle</div>
+    <div class="cycname" id="cycName">—</div>
+    <div class="cycmeta" id="cycMeta">—</div>
+  </div>
+  <div class="prog">
+    <div class="progbar"><div class="progfill" id="cycFill"></div></div>
+    <div class="progtxt" id="cycProg">0%</div>
+  </div>
+  <button class="nextbtn" id="nextBtn">Archive &amp; start next cycle →</button>
+</div>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="cycle">Current Cycle<span class="tcount" id="tcCycle"></span></button>
+  <button class="tab" data-tab="cadence">Cadence<span class="tcount" id="tcCad"></span></button>
+  <button class="tab" data-tab="archive">Archive<span class="tcount" id="tcArc"></span></button>
+  <button class="tab" data-tab="memory">Memory</button>
+</nav>
+
+<!-- CYCLE VIEW -->
+<section class="view active" id="view-cycle">
+  <div class="rail">
+    <div class="raillabel">Cycle stages — tap to filter</div>
+    <div class="weeks" id="weeks"></div>
+  </div>
+  <div class="legend" id="legend"><span class="lt">Phases</span></div>
+  <div class="addwrap">
+    <div class="addrow">
+      <input type="text" id="addInput" placeholder="New task title…" />
+      <select id="addStage"></select>
+      <select id="addPhase"></select>
+      <select id="addPri"><option value="HIGH">HIGH</option><option value="MED" selected>MED</option><option value="LOW">LOW</option></select>
+      <button id="addBtn">Add</button>
+    </div>
+    <input type="text" id="addNote" placeholder="Optional note / context…" style="width:100%; margin-top:8px; background:var(--raised); border:1px solid var(--line); color:var(--ink); border-radius:8px; padding:10px 12px; font:500 12.5px var(--sans);" />
+    <button class="bulklink" id="bulkToggle">＋ Paste several at once (one per line)</button>
+    <div class="bulkbox" id="bulkBox" hidden>
+      <textarea id="bulkText" placeholder="Paste a list — e.g. a set of Cycle 2 tasks Cowork proposed. One per line. They drop into To Do under the selected stage/phase above."></textarea>
+      <button class="addrow" style="margin-top:8px;" onclick="bulkAdd()"><span style="font:700 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:#fff; background:var(--teal); border:none; border-radius:8px; padding:9px 16px; cursor:pointer; display:inline-block; font-family:var(--display); font-weight:600; letter-spacing:.06em;">Add all</span></button>
+    </div>
+  </div>
+  <div class="board" id="board">
+    <div class="col" data-col="todo"><div class="colhead"><span class="cname">To Do</span><span class="ccount" data-count="todo">0</span></div><div class="dropzone" data-zone="todo"></div></div>
+    <div class="col" data-col="doing"><div class="colhead"><span class="cname">Doing</span><span class="ccount" data-count="doing">0</span></div><div class="dropzone" data-zone="doing"></div></div>
+    <div class="col" data-col="done"><div class="colhead"><span class="cname">Done</span><span class="ccount" data-count="done">0</span></div><div class="dropzone" data-zone="done"></div></div>
+  </div>
+</section>
+
+<!-- CADENCE VIEW -->
+<section class="view" id="view-cadence">
+  <div class="cadsec">
+    <div class="cadhead"><h3>Weekly</h3><span class="cadmeta" id="wkMeta">0/0 this week</span></div>
+    <div id="weeklyList"></div>
+  </div>
+  <div class="cadsec">
+    <div class="cadhead"><h3>Monthly</h3><span class="cadmeta" id="moMeta">0/0 this month</span></div>
+    <div id="monthlyList"></div>
+  </div>
+</section>
+
+<!-- ARCHIVE VIEW -->
+<section class="view" id="view-archive">
+  <div id="archiveList"></div>
+</section>
+
+<!-- MEMORY VIEW -->
+<section class="view" id="view-memory">
+  <div class="memwrap">
+    <textarea id="memInput" placeholder="Log a dated finding — what you learned, what a live check showed, what Cowork reported back…"></textarea>
+    <button id="memBtn">Append to memory/log.md</button>
+    <div class="memhint">Findings are appended to <code>memory/log.md</code> with a timestamp. Decisions with rationale/confidence belong in <code>data/decisions.json</code> — see docs/README.md.</div>
+  </div>
+</section>
+
+<div class="foot">
+  <span class="savestat" id="saveStat">—</span>
+  <button class="reset" id="resetBtn">Reset everything to seeded plan</button>
+</div>
+
+<div class="toast" id="toast">Copied</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
