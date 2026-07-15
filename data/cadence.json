@@ -1,0 +1,298 @@
+[
+  {
+    "id": "t23b3178cc4a74f32",
+    "lastDone": null,
+    "freq": "weekly",
+    "ph": "GEO",
+    "t": "Re-run 5 priority AI queries; log citation deltas",
+    "note": "The habit that proves GEO is working. Compare to last week; flag any drops.",
+    "where": "ChatGPT/Perplexity/Claude/Gemini + sheet",
+    "exec": [
+      "Run the 5 priority queries across the 4 engines.",
+      "Record cited vs competitor; note the change vs last week.",
+      "Flag any page that lost a citation.",
+      "Log it in the tracking sheet."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t2bb0e10c0148438e",
+    "lastDone": null,
+    "freq": "weekly",
+    "ph": "DISCOVERY",
+    "t": "Check Search Console for new errors + movers",
+    "note": "Catch coverage drops and ranking shifts early.",
+    "where": "Google Search Console",
+    "exec": [
+      "Pull last-7-day GSC: new errors, coverage drops.",
+      "Identify top gaining + losing pages/queries.",
+      "Summarize what changed + one action to take."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tbe2caf576eb84fe4",
+    "lastDone": null,
+    "freq": "weekly",
+    "ph": "ADS",
+    "t": "Review new leads + attribution",
+    "note": "Make sure every lead is tracked to its source.",
+    "where": "CRM + GA4 + Meta",
+    "exec": [
+      "Pull this week's leads; confirm each has source/campaign.",
+      "Flag any with broken/missing attribution.",
+      "Report best + worst performing ad page this week."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "td95f1e85b550467d",
+    "lastDone": null,
+    "freq": "weekly",
+    "ph": "LOCAL",
+    "t": "Reply to new reviews within 48h",
+    "note": "Response speed is a local ranking + trust signal.",
+    "where": "Birdeye / GBP",
+    "exec": [
+      "Check Google + Birdeye for new reviews.",
+      "Draft replies for my approval (I post).",
+      "Flag any negative review needing a call."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t079caa5b62e44661",
+    "lastDone": null,
+    "freq": "weekly",
+    "ph": "LINKS",
+    "t": "Link-building outreach block (90 min)",
+    "note": "5–10 new referring domains/mo doesn't happen by accident. One fixed weekly block.",
+    "where": "Outreach sheet + email",
+    "exec": [
+      "Send 5 new pitches (certs, suppliers, chamber, sponsorships, journalists).",
+      "Follow up on 5 open threads.",
+      "Log any won links with target page + anchor."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tac85e1e7b01d4529",
+    "lastDone": null,
+    "freq": "weekly",
+    "ph": "CONTENT",
+    "t": "Publish or refresh one content piece",
+    "note": "Refreshes help only when they add real value: updated facts, clearer answers, local proof, photos, reviews, or better internal links.",
+    "where": "WordPress",
+    "exec": [
+      "Publish or refresh one page/post with GEO formatting.",
+      "Direct-answer intro, fact density, updated date.",
+      "Build in Draft for approval."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t3552a72c96c84fdf",
+    "lastDone": null,
+    "freq": "monthly",
+    "ph": "DISCOVERY",
+    "t": "Full site crawl for 404s, orphans, broken redirects",
+    "note": "Catch link rot before it accumulates.",
+    "where": "Crawler (Screaming Frog / SearchAtlas)",
+    "exec": [
+      "Crawl the full site for 404s, orphan pages, broken redirects, missing titles/meta.",
+      "Deliver a prioritized fix list.",
+      "Fix the critical ones in Draft for approval."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "ta177350b542e44cf",
+    "lastDone": null,
+    "freq": "monthly",
+    "ph": "GEO",
+    "t": "Refresh top 5 pages when there is a real update",
+    "note": "Keep your best pages accurate and useful; update dateModified only when the content meaningfully changes.",
+    "where": "WordPress",
+    "exec": [
+      "Identify top 5 pages by traffic and conversion importance.",
+      "Refresh facts/copy/photos/internal links where there is a real improvement; update dateModified only when justified.",
+      "Report what changed and why it helps users."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t54cbd0ac9a044eaf",
+    "lastDone": null,
+    "freq": "monthly",
+    "ph": "RESEARCH",
+    "t": "Re-run the 30-query AI visibility baseline",
+    "note": "Measure citation share vs last month — the scoreboard.",
+    "where": "4 AI engines + sheet",
+    "exec": [
+      "Re-run the full 30-query baseline across 4 engines.",
+      "Compare citation share to last month.",
+      "Show the delta + where you gained/lost ground."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t9fec6cf3597b4eca",
+    "lastDone": null,
+    "freq": "monthly",
+    "ph": "RESEARCH",
+    "t": "Semrush: competitor + keyword-gap recheck",
+    "note": "Spot new openings and threats.",
+    "where": "Semrush",
+    "exec": [
+      "Re-pull competitor movement + new keyword gaps.",
+      "Flag new opportunities + threats.",
+      "Feed winners into next cycle's plan."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "ta815e740e87a4b5d",
+    "lastDone": null,
+    "freq": "monthly",
+    "ph": "REVIEWS",
+    "t": "Review-velocity scorecard per market",
+    "note": "Target 8–12 new Google reviews/mo per market. Below pace two months running = fix the ask process.",
+    "where": "Birdeye dashboard",
+    "exec": [
+      "Pull new-review count + avg rating per location.",
+      "Compare to target; flag markets below pace.",
+      "Adjust ask timing/channel where behind."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t3850b214561c4f89",
+    "lastDone": null,
+    "freq": "monthly",
+    "ph": "RESEARCH",
+    "t": "30/60/90 gate check — jobs won, not rankings",
+    "note": "Score against the Revenue Scorecard checkpoints. A Day-90 Boise miss = authority gap confirmed → shift budget from content to links.",
+    "where": "Revenue Scorecard + GSC + CallRail",
+    "exec": [
+      "Score every checkpoint pass/fail for the current gate.",
+      "Pull CallRail/GA4 organic-attributed Boise leads.",
+      "Count new referring domains vs 682 baseline.",
+      "Decide: stay course, or reallocate content budget to links."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t5b981d11bd1d416a",
+    "lastDone": null,
+    "freq": "monthly",
+    "ph": "ADS",
+    "t": "Review ad landing-page performance",
+    "note": "Keep, kill, or iterate each LP on the numbers.",
+    "where": "GA4 + Meta + PageSpeed",
+    "exec": [
+      "Review each LP: LCP, conversion rate, cost per lead.",
+      "Recommend keep / kill / iterate.",
+      "Draft the next test."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t335e444353d94eae",
+    "lastDone": null,
+    "freq": "monthly",
+    "ph": "DISCOVERY",
+    "t": "Confirm the backup ran successfully",
+    "note": "Never assume — verify monthly.",
+    "where": "Hosting / backup plugin",
+    "exec": [
+      "Confirm the backup ran this month.",
+      "Confirm a restore is possible.",
+      "Report status."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  }
+]

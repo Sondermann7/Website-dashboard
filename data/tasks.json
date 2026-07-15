@@ -1,0 +1,963 @@
+[
+  {
+    "id": "tfb5f88aacb3646b2",
+    "order": 0,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "Confirm a working backup exists before any change",
+    "note": "Nothing gets edited until a full, restorable backup is verified.",
+    "where": "Hosting panel / WP backup plugin",
+    "exec": [
+      "Read-only: identify the backup plugin or host service and when it last ran.",
+      "Confirm it covers files + database and that a restore option exists.",
+      "If none is recent, guide me through triggering one (I log in).",
+      "Report method, last good date, and how to restore. Change nothing else."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tb5dca3bb10b74e69",
+    "order": 1,
+    "col": "todo",
+    "w": "W1",
+    "ph": "CONTENT",
+    "pri": "HIGH",
+    "t": "Fix the homepage title + meta — drop CA, lead with real markets",
+    "note": "LIVE-VERIFIED July 1: title still reads 'Trusted Local Roofers Serving CA, GA, ID, UT, & WA'. California is closed and Boise isn't positioned as home market. Your most important page tells Google you're a 5-state generalist headquartered nowhere.",
+    "where": "WordPress → Yoast → homepage SEO title/meta",
+    "exec": [
+      "Read-only: capture current homepage title, meta description, and H1.",
+      "Propose: 'Boise Roofing Company | Bartlett Roofing & Exteriors — ID, UT, WA, GA' + a meta with markets and a CTA.",
+      "Show me before/after for approval.",
+      "Apply in Yoast, verify the rendered title in View Source, request reindex in GSC."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tc72e65e0fcde4047",
+    "order": 2,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "Noindex the junk taxonomy sitemaps (crawl-budget fix)",
+    "note": "LIVE-VERIFIED: sitemap_index.xml exposes testimonial-tag, element-category, slide-page, offer-type, and fusion_tb taxonomies. Crawl waste on a 416K-rank domain carrying 109 thin location pages. 15-minute reversible fix.",
+    "where": "Yoast → Settings → Content types / Taxonomies",
+    "exec": [
+      "Read-only: list every sitemap in sitemap_index.xml and flag utility taxonomies.",
+      "Propose which to disable + noindex (keep post, page, service-areas, offers if used).",
+      "On approval: disable in Yoast, verify sitemap_index.xml slims down.",
+      "Confirm no legitimate content type was removed."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t32cb9e0286124916",
+    "order": 3,
+    "col": "todo",
+    "w": "W1",
+    "ph": "LINKS",
+    "pri": "HIGH",
+    "t": "Launch the link-building program — 5–10 local referring domains/mo",
+    "note": "MISSING FROM v1 ENTIRELY. Authority Score 22 is the ceiling on everything else — top Boise competitors win on backlinks, not content. Without this, 'roofing boise' stalls at position 8–15 regardless of on-page quality.",
+    "where": "Outreach sheet + email",
+    "exec": [
+      "Build the Month-1 target list: GAF/CertainTeed/Owens Corning certification profiles, Boise Metro Chamber, BBB, 2 supplier partner pages, 1 local sponsorship (youth sports/HOA), 1 journalist pitch (storm season angle).",
+      "Create a tracking sheet: prospect, contact, status, link URL, target page, date.",
+      "Draft the first 5 outreach emails for my approval.",
+      "Log every acquired link; report new referring domains monthly vs the 682 baseline."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t5d65fdac70414b36",
+    "order": 4,
+    "col": "todo",
+    "w": "W1",
+    "ph": "REVIEWS",
+    "pri": "HIGH",
+    "t": "Stand up the Birdeye review engine — 8–12 new reviews/mo per market",
+    "note": "Reviews + GBP accuracy outweigh on-page for the map pack. v1 flagged 4 unanswered reviews but had no generation system. Map-pack presence in Boise alone ≈ 10–20 calls/mo.",
+    "where": "Birdeye (already owned)",
+    "exec": [
+      "Answer the 4 open Google reviews today (draft replies for my approval).",
+      "Configure Birdeye: automated review request on job completion, same day.",
+      "Set response SLA <48h with AI-drafted replies for approval.",
+      "Create a per-market monthly review scorecard; baseline current counts per GBP."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t2da0964972eb4e76",
+    "order": 5,
+    "col": "todo",
+    "w": "W1",
+    "ph": "CONTENT",
+    "pri": "HIGH",
+    "t": "Remove the closed Pleasant Grove location completely",
+    "note": "PG office is closed; its 4 cities (Provo, Orem, Lehi, American Fork) moved to Murray. Strip + redirect cleanly — no 404s.",
+    "where": "WordPress + Yoast",
+    "exec": [
+      "Read-only: crawl for every PG asset — office page, 4 city pages, menu/footer links, sitemap entries, NAP/schema mentions.",
+      "Confirm the 4 cities belong to Murray (not Ogden) before changing anything.",
+      "Propose a removal map: 301-redirect the 4 city pages to Murray equivalents; redirect/remove the PG office page.",
+      "Show me the map for approval — nothing removed without sign-off.",
+      "On approval: implement in Draft — set 301s, remove links, update sitemap, scrub PG from NAP/schema/GBP, one change at a time.",
+      "Re-crawl for orphan links and 404s; confirm every redirect resolves."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tf932744c84624c7f",
+    "order": 6,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "Map where the contact & quote forms actually submit",
+    "note": "Find where leads go today and how Roofle + CallRail are wired. You can't track new pages until you know the plumbing.",
+    "where": "WordPress admin + form/CRM settings",
+    "exec": [
+      "Read-only: locate every form (contact, quote, Roofle) and trace where each submission goes.",
+      "Document notification emails, any CRM/Zapier link, and how CallRail + Roofle are embedded.",
+      "Flag any form sending leads only to a personal inbox with no record.",
+      "Deliver a one-page lead-flow map. Recommend, don't change."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t14e730fa43ea4f30",
+    "order": 7,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "De-dupe the GA4 double-fire",
+    "note": "GA4 fires via both Site Kit and GTM — inflating your numbers. Keep one, disable the other.",
+    "where": "GA4 + Google Tag Manager",
+    "exec": [
+      "Confirm the double-fire in GA4 DebugView / Tag Assistant.",
+      "Recommend which single source to keep (usually GTM) and what to disable.",
+      "Pause for my login; guide me through disabling the duplicate.",
+      "Verify one GA4 event per page, then confirm fixed."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t75a67aba17b5471e",
+    "order": 8,
+    "col": "todo",
+    "w": "W1",
+    "ph": "GEO",
+    "pri": "HIGH",
+    "t": "Create Bing Webmaster Tools + submit sitemap",
+    "note": "Bing coverage can matter for AI-search and Microsoft/Copilot-style discovery. Treat Bing as one important index source, not a guaranteed ChatGPT citation lever.",
+    "where": "Bing Webmaster Tools",
+    "exec": [
+      "Guide me to create the account (import from Search Console if possible).",
+      "Find the Yoast XML sitemap URL.",
+      "Walk me through submitting it + verifying ownership.",
+      "Record submitted sitemap, verification method, and follow-up date to check coverage in ~2 weeks."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t6ea65382700e404c",
+    "order": 9,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "MED",
+    "t": "Confirm plugin list & Yoast config",
+    "note": "Document caching/forms/schema/redirects/backup plugins; confirm Yoast settings.",
+    "where": "WordPress admin",
+    "exec": [
+      "List active plugins grouped by job.",
+      "Confirm Yoast is the SEO plugin; capture key settings.",
+      "Flag redundant/conflicting plugins.",
+      "Deliver the inventory. Recommend, don't change."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t70de1d03c31c46bd",
+    "order": 10,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "MED",
+    "t": "Confirm domain + territory facts",
+    "note": "Is bartlettroofing.com a redirect or typo? Confirm Murray absorbed the 4 PG cities.",
+    "where": "DNS / WP admin",
+    "exec": [
+      "Check if bartlettroofing.com 301s to bartlettroofs.com or is unclaimed.",
+      "Confirm served markets and which office owns the 4 former-PG cities.",
+      "Note stale state archives (MT/NV/OR/WY) not served.",
+      "Report to feed the PG removal + 109-page fix."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t04bde1acf7f3461b",
+    "order": 11,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "MED",
+    "t": "Confirm GA4 + Search Console access",
+    "note": "Your measurement source of truth. Make sure you can log in and pull data.",
+    "where": "GA4 + Google Search Console",
+    "exec": [
+      "Confirm working access to GA4 + Search Console.",
+      "Pull a 90-day baseline: top pages, organic clicks, top queries.",
+      "Save the baseline to measure the plan against.",
+      "Flag tracking gaps (e.g., unverified GSC property versions)."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tcadf5c7cec5249e5",
+    "order": 12,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "Create URL inventory + redirect/location triage trackers",
+    "note": "No page gets deleted, noindexed, or redirected without a source-of-truth row and approval.",
+    "where": "Spreadsheet + WordPress + GSC",
+    "exec": [
+      "Export current sitemap/GSC URL list and group by office, state, city, service, blog, and landing page.",
+      "Create redirect-map and location-page-triage sheets with action, owner, reason, traffic, backlinks, and approval status.",
+      "Mark Pleasant Grove, CA, unserved-state archives, and the 109 city pages for review before changes.",
+      "Use the trackers as the approval gate for every noindex or 301 decision."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t574647e0e06b417c",
+    "order": 13,
+    "col": "todo",
+    "w": "W2",
+    "ph": "CONTENT",
+    "pri": "HIGH",
+    "t": "Boise page: authority first, copy last",
+    "note": "CORRECTED DIAGNOSIS (July 1): /service-areas/boise-id/ already exists with ~2,960 words and correct H2s. Later GSC data showed 183 clicks in the last 28 days, up 18%, so this is acceleration, not rescue. The remaining issue is authority/entity strength: GBP, internal links, schema, reviews, and links before copy. Target: roofing boise (260/mo $37 CPC), roof repair boise (170/mo $41), boise roofing contractor (90/mo $62).",
+    "where": "WordPress (Avada) + Yoast",
+    "exec": [
+      "Check GSC: is the page getting impressions with no clicks (CTR problem) or no impressions (authority problem)? Report which.",
+      "Add contextual internal links from the top 10 blog posts and the Boise roundup article to this page.",
+      "Add a footer link 'Roofing in Boise' sitewide.",
+      "Add LocalBusiness/Service JSON-LD with NAP matching the fixed GBP exactly; validate in Rich Results Test.",
+      "Only then: refresh title tag to lead with 'Boise Roofing Contractor', add 40-60 word direct-answer intro, add real Boise project references.",
+      "Build in Draft, show preview, publish on approval."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t624c7af23d7d4900",
+    "order": 14,
+    "col": "todo",
+    "w": "W1",
+    "ph": "CONTENT",
+    "pri": "MED",
+    "t": "Fix 'roofer near me' URL targeting",
+    "note": "SEMrush: ranking #31 for 'roofer near me' (49,500/mo) but landing on the Spokane page — wrong intent match. A service hub or Boise page should own this. Quick internal linking fix.",
+    "where": "WordPress + Yoast",
+    "exec": [
+      "Confirm current ranking page via GSC for 'roofer near me'.",
+      "Update internal links site-wide to point 'roofer near me' intent to the Boise page or a service hub.",
+      "No page deletion — just repoint links and update anchor text.",
+      "Verify in GSC within 2 weeks."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t24e7077f7a2c4683",
+    "order": 15,
+    "col": "todo",
+    "w": "W2",
+    "ph": "EXTERIORS",
+    "pri": "HIGH",
+    "t": "Plan the Exteriors section structure",
+    "note": "Windows, siding, gutters, fascia, soffits. Decide URLs, nav, and market mapping before building.",
+    "where": "WordPress (Avada) + sitemap planning",
+    "exec": [
+      "Propose an /exteriors/ hub with a child page per service.",
+      "Map which markets each service covers — no cloned pages.",
+      "Pull existing Avada brand tokens so new pages match exactly.",
+      "Deliver the structure as a tree for my approval."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t9c52f15d194e4aeb",
+    "order": 16,
+    "col": "todo",
+    "w": "W3",
+    "ph": "EXTERIORS",
+    "pri": "HIGH",
+    "t": "Build the Exteriors hub/overview page",
+    "note": "Anchor page for the new line, on-brand, linking to each service.",
+    "where": "WordPress (Avada)",
+    "exec": [
+      "Build /exteriors/ in Draft using the Avada brand template.",
+      "Write overview copy + clear links to each service page.",
+      "Add LocalBusiness/Service schema + a 40–60 word direct-answer intro.",
+      "Show in Preview; publish on approval."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t087065209fb14ce0",
+    "order": 17,
+    "col": "todo",
+    "w": "W3",
+    "ph": "EXTERIORS",
+    "pri": "HIGH",
+    "t": "Build the individual exterior service pages",
+    "note": "Each service its own page, genuinely differentiated, on-brand.",
+    "where": "WordPress (Avada)",
+    "exec": [
+      "Draft unique copy per service (materials, options, local relevance) — no cloned paragraphs.",
+      "Add real specifics for fact density.",
+      "Match the Avada template; leave image placeholders for my photos.",
+      "Build in Draft, Preview each, publish one at a time on approval."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "te75197f8b84a42b3",
+    "order": 18,
+    "col": "todo",
+    "w": "W2",
+    "ph": "GEO",
+    "pri": "HIGH",
+    "t": "Add answer-ready formatting + accurate schema to exterior pages",
+    "note": "Make new pages clear, crawlable, and easy to cite without relying on deprecated or unsupported rich-result assumptions.",
+    "where": "WordPress + View Source",
+    "exec": [
+      "Add accurate Service/LocalBusiness/Breadcrumb schema where relevant and verify it renders in View Source.",
+      "Lead each page with a concise direct-answer intro and useful real-customer questions.",
+      "Use specific, dated, verifiable statements only where accurate; cut hedging and fluff.",
+      "Validate schema and keep FAQ content for users, not as a Google FAQ-rich-result promise."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t5edddf80f945424c",
+    "order": 19,
+    "col": "todo",
+    "w": "W2",
+    "ph": "LOCAL",
+    "pri": "HIGH",
+    "t": "Google Business Profile cleanup in Birdeye",
+    "note": "Fastest local-trust win; never touches the site. Listings, reviews, and consistent NAP also strengthen AI-search entity confidence.",
+    "where": "Birdeye",
+    "exec": [
+      "Read-only: audit GBP listings; flag wrong NAP, categories, hours.",
+      "Draft clean NAP + category updates (keep CallRail number OFF public NAP).",
+      "Draft replies to the 4 open reviews for my approval.",
+      "I approve in Birdeye; then confirm listings are clean."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t30e378bda3b94418",
+    "order": 20,
+    "col": "todo",
+    "w": "W2",
+    "ph": "LOCAL",
+    "pri": "MED",
+    "t": "Add exteriors to GBP + listings",
+    "note": "Reflect the new services so local + AI search know you offer them.",
+    "where": "Birdeye / GBP",
+    "exec": [
+      "Draft updated GBP services + a post announcing exteriors, linking the hub.",
+      "Ensure listing categories include the new services.",
+      "I approve and publish in Birdeye.",
+      "Confirm the new services appear live."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "td1745b8431b34f15",
+    "order": 21,
+    "col": "todo",
+    "w": "W3",
+    "ph": "ADS",
+    "pri": "HIGH",
+    "t": "Build the first FB/IG ad landing page in /lp/",
+    "note": "On your own domain, stripped/fast template, noindexed. Lead capture lives here, not SurveyMonkey/Roofle.",
+    "where": "WordPress subdirectory",
+    "exec": [
+      "Create a lightweight /lp/ template — minimal bloat, one offer, one form.",
+      "Write conversion copy for the first campaign (pick service + market with me).",
+      "Set the page to noindex.",
+      "Build in Draft, Preview, publish on approval."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tf9580a2059ed4449",
+    "order": 22,
+    "col": "todo",
+    "w": "W3",
+    "ph": "ADS",
+    "pri": "HIGH",
+    "t": "Wire the landing-page tracking + verify Meta domain",
+    "note": "GA4 + Pixel + CallRail; form posts to CRM with UTMs; domain verified in Meta.",
+    "where": "WP + Meta Business Manager + GA4",
+    "exec": [
+      "Add GA4, Meta Pixel, CallRail; define a UTM convention for FB + IG.",
+      "Make the form write source/channel/campaign into the CRM.",
+      "Guide me through Meta domain verification (I log in).",
+      "Fire a test lead; confirm it lands in GA4, Meta, and the CRM."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t9c386234ab714ec3",
+    "order": 23,
+    "col": "todo",
+    "w": "W3",
+    "ph": "ADS",
+    "pri": "MED",
+    "t": "Measure the landing-page LCP (decision gate)",
+    "note": "Avada is heavy; slow load raises ad cost + kills conversion. If bloat hurts, that's the page type worth a future code build.",
+    "where": "PageSpeed Insights",
+    "exec": [
+      "Run the LP through PageSpeed (mobile + desktop); record LCP/CLS/score.",
+      "If LCP is poor, list the specific Avada/asset causes.",
+      "Recommend quick wins before any code rebuild.",
+      "Report numbers so we can decide on a lightweight LP later."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t2f6303620c3c4ac1",
+    "order": 24,
+    "col": "todo",
+    "w": "W3",
+    "ph": "RESEARCH",
+    "pri": "HIGH",
+    "t": "SEMrush monthly refresh + competitor gap recheck",
+    "note": "Initial SEMrush pull complete (June 2026) — data in Bartlett-SEO-Intelligence.html on Desktop. Monthly: re-pull domain_rank, domain_organic (top 50), domain_organic_organic, and keyword batch. Compare to baseline.",
+    "where": "Semrush",
+    "exec": [
+      "Identify top 3–5 competitors per market.",
+      "Pull keyword gaps by market + service.",
+      "Prioritize by volume × intent × difficulty; flag quick wins + money keywords.",
+      "Deliver a ranked list mapped to existing or needed pages."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "taff6169c135f4706",
+    "order": 25,
+    "col": "todo",
+    "w": "W3",
+    "ph": "RESEARCH",
+    "pri": "MED",
+    "t": "Build the AI-search visibility baseline",
+    "note": "Track whether Bartlett is mentioned or cited across answer engines. This is a measurement system, not a promise that any engine will rank us first.",
+    "where": "ChatGPT / Perplexity / Claude / Gemini / Copilot + sheet",
+    "exec": [
+      "Draft the 30 highest-value buyer queries by market and service.",
+      "Run each through ChatGPT, Perplexity, Claude, Gemini, and Copilot with date/location noted.",
+      "Record whether Bartlett is mentioned, cited with a link, or absent; log competitor sources.",
+      "Save the baseline and convert gaps into content, citation, review, or technical tasks."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tae65d97476c34772",
+    "order": 26,
+    "col": "todo",
+    "w": "W1",
+    "ph": "CONTENT",
+    "pri": "HIGH",
+    "t": "Tier the 109 city pages",
+    "note": "Keep and differentiate served markets; noindex or 301 only after tracker review. Duplicate location pages weaken human trust and AI-search confidence.",
+    "where": "WordPress + Yoast + GSC",
+    "exec": [
+      "Read-only: list all 109 pages with target city, office, GSC traffic, backlinks, and index status.",
+      "Tier: KEEP+differentiate, NOINDEX, or 301-redirect with a written reason and target URL.",
+      "Show the per-page decision tracker for approval before any change.",
+      "Execute in small batches; verify no traffic-earning page is lost."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tff6ec4e1bd144de2",
+    "order": 27,
+    "col": "todo",
+    "w": "W4",
+    "ph": "CONTENT",
+    "pri": "HIGH",
+    "t": "Rewrite served-market pages with real local detail",
+    "note": "Unique local data, real photos, specific services. Differentiation = rank + citability.",
+    "where": "WordPress (Avada)",
+    "exec": [
+      "Rewrite each served-market page with genuinely local content.",
+      "Remove duplicated boilerplate across cities.",
+      "Add direct-answer intro + schema; placeholders for real job photos.",
+      "Build in Draft, Preview, publish one market at a time."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t3b4f11e0593a4c86",
+    "order": 28,
+    "col": "todo",
+    "w": "W1",
+    "ph": "CONTENT",
+    "pri": "MED",
+    "t": "Fix stale geography",
+    "note": "Resolve CA, Pleasant Grove, and unserved-state signals only after confirming the canonical market map.",
+    "where": "WordPress + Yoast + redirect tracker",
+    "exec": [
+      "List every page, title, meta description, schema mention, menu/footer link, and archive with stale geography.",
+      "Propose fix, noindex, or redirect for each in the tracker.",
+      "Update homepage title/meta and CA/closed-office references only after approval.",
+      "Verify in Preview, publish approved changes, and re-crawl to confirm."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t3dd9a7f2c0784626",
+    "order": 29,
+    "col": "todo",
+    "w": "W4",
+    "ph": "GEO",
+    "pri": "HIGH",
+    "t": "Add 40–60 word direct answers atop priority pages",
+    "note": "The single highest-leverage GEO formatting change.",
+    "where": "WordPress editor",
+    "exec": [
+      "Identify the 15–20 highest-value pages from GSC + keyword map.",
+      "Write a 40–60 word direct answer for each.",
+      "Insert in Draft; leave the rest intact.",
+      "Show me 3 samples before rolling out."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t4abe232c55084529",
+    "order": 30,
+    "col": "todo",
+    "w": "W4",
+    "ph": "GEO",
+    "pri": "HIGH",
+    "t": "Raise evidence density, cut hedging",
+    "note": "Add specific proof only where accurate: local projects, service details, reviews, certifications, photos, dates, and verified market facts.",
+    "where": "WordPress editor",
+    "exec": [
+      "Audit priority pages for vague claims + hedging.",
+      "Replace generic copy with specific, verifiable local proof where accurate.",
+      "Never invent statistics, weather facts, permit claims, or service-area details.",
+      "Apply in Draft, show me, publish only after approval."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tfd128366f070423a",
+    "order": 31,
+    "col": "todo",
+    "w": "W4",
+    "ph": "GEO",
+    "pri": "HIGH",
+    "t": "Verify schema renders in raw HTML",
+    "note": "AI crawlers skip JS. Schema must be in raw HTML, not injected client-side.",
+    "where": "WordPress + View Source",
+    "exec": [
+      "Check View Source (not the DOM) for JSON-LD on each page type.",
+      "Confirm Organization/LocalBusiness/Service/Breadcrumb/Article/Person output where accurate.",
+      "Fix any schema appearing only after JS runs.",
+      "Validate all types; report pass/fail per page type and note any deprecated rich-result assumptions."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t3f76cfa9f459443f",
+    "order": 32,
+    "col": "todo",
+    "w": "W4",
+    "ph": "GEO",
+    "pri": "MED",
+    "t": "Audit robots.txt for AI-search and crawler access",
+    "note": "For ChatGPT search, verify OAI-SearchBot specifically. Treat llms.txt as optional for non-Google systems, not a Google ranking factor.",
+    "where": "Site root / robots.txt + official crawler docs",
+    "exec": [
+      "Read robots.txt and confirm Googlebot, Bingbot, OAI-SearchBot, PerplexityBot, ClaudeBot, and other relevant crawlers are not accidentally blocked.",
+      "Separate search/index crawlers from training crawlers; do not assume GPTBot controls ChatGPT search visibility.",
+      "Draft conservative robots.txt recommendations with links to official docs.",
+      "Optionally draft llms.txt for non-Google systems, clearly labeled experimental/optional, and show both for approval before live changes."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tb81e303954e34e3b",
+    "order": 33,
+    "col": "todo",
+    "w": "W4",
+    "ph": "GEO",
+    "pri": "MED",
+    "t": "Add author bylines + visible dates",
+    "note": "Named author + bio + visible publish/updated dates. E-E-A-T signal.",
+    "where": "WordPress",
+    "exec": [
+      "Set up an author profile (name, bio, credentials).",
+      "Make published + updated dates visible and accurate.",
+      "Add Person/Author schema tied to the byline.",
+      "Apply to blog template + top pages; show one example first."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tbf6499edca4640e8",
+    "order": 34,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "Investigate why 351 pages are not indexed",
+    "note": "GSC Indexing report (pulled Jul 1): 351 of 626 total pages excluded, only 275 indexed. This is bigger and more urgent than the taxonomy-sitemap crawl-waste issue — do this before writing any new content.",
+    "where": "Google Search Console",
+    "exec": [
+      "Pull the 'Why pages aren't indexed' breakdown in GSC and categorize by reason.",
+      "Cross-check against the 109-page triage and the junk-taxonomy-sitemap fix — some overlap is expected but likely doesn't explain all 351.",
+      "Report findings before any new content work begins.",
+      "Do not noindex or redirect anything without logging it in the triage tracker first."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t554e46b124c04060",
+    "order": 35,
+    "col": "todo",
+    "w": "W1",
+    "ph": "CONTENT",
+    "pri": "HIGH",
+    "t": "Correct the Boise-is-dead assumption using real GSC data",
+    "note": "GSC last 28 days shows /service-areas/boise-id/ got 183 clicks, UP 18% — faster growth than Salt Lake City right now. Earlier SEMrush-modeled estimate (90 visits/mo) was wrong. Reframe all Boise work from 'rescue' to 'accelerate.'",
+    "where": "Google Search Console",
+    "exec": [
+      "Confirm the 28-day trend holds on a fresh pull before final sign-off.",
+      "Update any existing planning language that describes Boise as dead or invisible.",
+      "Keep the authority-first fix order (GBP, links, schema before copy) — that conclusion is unaffected."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t39a4d573a3a74022",
+    "order": 36,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "Fix mobile Core Web Vitals — image weight (Bright Development ticket)",
+    "note": "PageSpeed Insights (pulled Jul 1): mobile Core Web Vitals FAILED, real-user LCP 3.2s vs the 2.5s pass threshold. Desktop passes cleanly (LCP 1.9s). Root cause isolated: image delivery — 9.4MB of savings available on mobile, total mobile page weight 25.6MB for one load.",
+    "where": "Bright Development",
+    "exec": [
+      "Hand off as a defined ticket: compress and serve responsive/lazy-loaded images sitewide.",
+      "Add explicit width/height attributes to image tags to reduce layout shift.",
+      "Address render-blocking requests (2,080ms of savings available).",
+      "Re-test at pagespeed.web.dev after the fix; confirm mobile moves from Failed to Passed."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t1a6bf4884a024b4c",
+    "order": 37,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "MED",
+    "t": "Build and submit the GSC disavow file for confirmed spam backlinks",
+    "note": "~319 backlinks confirmed from Telegram link-selling schemes across up to 140 spam domains. SEMrush's Backlink Audit toxicity tool is UI-only, not API-accessible — export the domain list manually.",
+    "where": "Semrush + Google Search Console",
+    "exec": [
+      "In Semrush Backlink Analytics, filter the Backlinks report by anchor text containing 'telegram', 'seo_cartel', or 'bhs_links'.",
+      "Export the actual referring domain list (not just anchor counts).",
+      "Format as a plain text file: one 'domain:example.com' line per entry.",
+      "Submit at search.google.com/search-console/disavow-links — human review required before submitting, always."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "t4815366981244a42",
+    "order": 38,
+    "col": "todo",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "MED",
+    "t": "Reconcile 'top 50' vs 'top 100' contractor claim + California mention",
+    "note": "Live Boise page currently says 'top 50 roofing contractors in the U.S.' while other materials say Top 100. Same page lists California as served plus an Oregon registration, conflicting with 'California closed' status elsewhere.",
+    "where": "Confirm with Mikey directly",
+    "exec": [
+      "Get the correct number (50 or 100) and the correct served-state list from Mikey.",
+      "Update the live page and every other document to match.",
+      "Do not use either claim in new content until this is resolved."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "te98e8070e3c34b38",
+    "order": 39,
+    "col": "todo",
+    "w": "W3",
+    "ph": "RESEARCH",
+    "pri": "MED",
+    "t": "Expand tracked competitor list + confirm AI-visibility false claim",
+    "note": "Live search surfaced 14 additional Boise-area competitors not currently tracked, all appearing on Yelp/Expertise.com/Angi/Forbes Home lists that AI engines cite from. Same search directly confirmed Idaho Roofing Contractors' site still falsely claims to be 'the only' OC Platinum contractor in the Treasure Valley.",
+    "where": "Semrush + ChatGPT/Perplexity/Google AI Overview/Claude/Gemini",
+    "exec": [
+      "Add True Roofs, Superior Roofing, Owyhee Roofing, Evergreen Exteriors, Recon Roofing & Solar, Rebel Roofing, F&G Roofing, Boise Exteriors, Siding Pros of Idaho, LaFever Roofing, Team Construction, Little Buckaroo Construction, Weathertight Roofing, and Hawaiian Built Roofing to the competitor tracking sheet.",
+      "Run the remaining priority AI-visibility prompts across all 5 engines for the OC Platinum query and log results.",
+      "Prioritize building the OC Platinum authority page given the confirmed false claim."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  }
+]
