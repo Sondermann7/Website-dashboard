@@ -1,0 +1,5 @@
+{
+  "status": "pending",
+  "note": "Requires a site crawl of the 109 city pages (target city, office, GSC traffic, backlinks, index status) before any KEEP/NOINDEX/301 decision can be logged here.",
+  "items": []
+}

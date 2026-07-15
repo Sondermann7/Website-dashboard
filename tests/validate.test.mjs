@@ -112,3 +112,16 @@ test('verification-queue is seeded with the highest-value unverified claims', ()
   const result = validateAll(dataDir);
   assert.equal(result.ok, true);
 });
+
+test('the five pending scaffolds are empty and clearly labeled, not populated with invented data', () => {
+  const dataDir = path.resolve(ROOT, 'data');
+  const PENDING = ['measurement-map.json','url-inventory.json','location-page-triage.json','redirect-map.json','ai-visibility-baseline.json'];
+  for (const filename of PENDING) {
+    const scaffold = JSON.parse(fs.readFileSync(path.join(dataDir, filename), 'utf8'));
+    assert.equal(scaffold.status, 'pending', `${filename} should be status:pending`);
+    assert.deepEqual(scaffold.items, [], `${filename} should have no invented items yet`);
+    assert.ok(scaffold.note && scaffold.note.length > 10, `${filename} should explain what unblocks it`);
+  }
+  const result = validateAll(dataDir);
+  assert.equal(result.ok, true);
+});

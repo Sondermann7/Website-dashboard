@@ -15,3 +15,11 @@ starting with the "top 50 vs top 100 contractor" conflict noted in the original 
 ### 2026-07-15 — Memory tab verified end-to-end
 Appended a test finding through the dashboard's Memory tab (browser → POST /api/memory/append
 → this file) to confirm the write path works before relying on it for real findings.
+
+### 2026-07-15 — Five data files scaffolded empty, `status: "pending"`
+No placeholder data was invented for these — each needs real-world work first:
+- `measurement-map.json` — needs a live GA4/GTM/CallRail/Meta tracking audit.
+- `url-inventory.json` — needs a full site crawl.
+- `location-page-triage.json` — needs a site crawl of the 109 city pages.
+- `redirect-map.json` — needs actual approved redirect work to populate (not speculative).
+- `ai-visibility-baseline.json` — needs the 30-query baseline actually run across the 5 AI engines.

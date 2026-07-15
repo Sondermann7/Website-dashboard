@@ -1,0 +1,5 @@
+{
+  "status": "pending",
+  "note": "Requires actually running the 30-query AI-visibility baseline across ChatGPT, Perplexity, Claude, Gemini, and Copilot, logging cited vs absent per query, before this can be populated.",
+  "items": []
+}

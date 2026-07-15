@@ -1,0 +1,5 @@
+{
+  "status": "pending",
+  "note": "Requires a live tracking audit (GA4, GTM, CallRail, Meta Pixel) to map what fires where, resolve the suspected GA4 double-fire, and confirm lead-source attribution end to end.",
+  "items": []
+}
