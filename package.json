@@ -1,0 +1,13 @@
+{
+  "name": "bartlett-ops-brain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "File-backed ops brain for Bartlett Roofing & Exteriors SEO/marketing command center.",
+  "scripts": {
+    "start": "node server/server.js",
+    "import": "node scripts/import.mjs",
+    "validate": "node scripts/validate.mjs",
+    "test": "node --test"
+  }
+}

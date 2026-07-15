@@ -1,0 +1,24 @@
+# Secrets
+.env
+.env.*
+*credentials*
+*secret*
+*.pem
+*.key
+*.p12
+
+# Never pull raw chat-log / lead-export folders into this repo
+**/Chat Logs/
+*.csv
+
+# Dependencies
+node_modules/
+
+# Backups created by import/server write-guards
+data/**/*.bak-*
+*.helper-backup-*
+*.bak-*
+
+# OS cruft
+.DS_Store
+Thumbs.db
