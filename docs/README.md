@@ -1,0 +1,74 @@
+# Bartlett Ops Brain
+
+File-backed SEO/website/ads command center for Bartlett Roofing & Exteriors. Successor to the
+single-file `Bartlett-Ops-Dashboard.html` (localStorage-only) that lived on the Desktop.
+
+**The dashboard is the interface. The files are the brain. Git history is the long-term memory.**
+
+## How this works
+
+- **`data/*.json`** is the structured source of truth: cycle tasks, cadence, archive, site facts,
+  decisions, tool/source registries, verification queue, and a handful of pending scaffolds
+  (measurement map, URL inventory, location-page triage, redirect map, AI-visibility baseline) —
+  these last five are intentionally empty (`status: "pending"`) until real crawl/audit/baseline
+  work produces actual data. Nothing in them is invented.
+- **`memory/*.md`** is freeform: `log.md` for dated findings, `decisions.md` for
+  decision/rationale/confidence/reversal-conditions entries, plus `session-notes/` and `audits/`
+  for anything an agent wants to leave behind between sessions.
+- **`public/`** is the dashboard UI — same look and interactions as the original HTML file, but
+  it now reads/writes through the local API instead of `localStorage`.
+- **`server/server.js`** is a zero-dependency Node server (built-in `http` only) that serves
+  `public/` and exposes `/api/state`, `/api/tasks`, `/api/cadence`, `/api/archive`, and
+  `/api/memory/append`. Every write backs up the previous file, then re-validates the whole
+  `data/` directory before committing the change to disk — a bad write 400s instead of
+  corrupting the brain.
+- **`scripts/`** — `seeds.mjs` (verbatim ported dashboard seed data), `import.mjs` (seeds
+  `data/tasks.json` / `cadence.json` / `archive.json` with `verify` blocks attached),
+  `validate.mjs` (shape/enum checks, usable standalone or from the server).
+
+## Running it
+
+```bash
+npm run import     # (re)seed data/tasks.json, cadence.json, archive.json from scripts/seeds.mjs
+                    # — backs up any existing files first. Only needed once, or to reset.
+npm start           # serves the dashboard at http://localhost:4178
+npm run validate    # checks every present data/*.json file against its schema
+npm test            # runs the full test suite (node --test)
+```
+
+## How each operator uses this
+
+- **Mikey** — uses the dashboard day to day (drag cards, check off cadence, log findings in the
+  Memory tab). Approves every commit; auto-commit is OFF by default (see `operating-rules.md`).
+- **Claude Code** — reads `data/*.json` and `memory/*.md` directly when working in this repo;
+  writes go through the same validated API paths the dashboard uses, or by editing JSON directly
+  and running `npm run validate` before committing.
+- **Codex** — same contract as Claude Code: read the files, validate before writing back.
+- **Cowork** — does not have live network access to this repo. See `cowork-contract.md` for the
+  brief-out / paste-back loop that connects Cowork sessions to this file-backed brain.
+
+## tool-registry vs. source-registry
+
+These overlap conceptually if left undefined, so the division of labor is explicit:
+
+- **`tool-registry.json`** = things that could actually be installed or enabled — plugins,
+  Claude Code/Cowork skills, MCPs, scripts. Classified as `installable | already-installed |
+  needs-review | rejected | unsafe-for-live`.
+- **`source-registry.json`** = reference-only material you'd read, not install — curated lists,
+  articles, documentation. Always classified `reference-only`.
+
+Don't let these drift into duplicating each other: if something could be installed, it belongs in
+`tool-registry.json`, even if it's currently `needs-review` or `rejected`.
+
+## Safety rules
+
+See `wordpress-safety.md`, `ads-safety.md`, and `ai-search-rules.md` for the non-negotiable rules
+this system operates under. The dashboard's "Copy Cowork brief" button bakes the relevant subset
+of these into every task handoff automatically.
+
+## What's still unverified
+
+Nothing imported from the old dashboard is treated as confirmed just because it's in a file.
+Every task, cadence item, and site fact carries a `verify.status` (`unverified | user-stated |
+observed | source-backed | contradicted | retired`). Check `data/verification-queue.json` for the
+highest-priority open claims — starting with the "top 50 vs top 100 contractor" conflict.
