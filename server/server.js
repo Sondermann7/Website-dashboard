@@ -1,6 +1,8 @@
 import http from 'node:http';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { validateAll } from '../scripts/validate.mjs';
@@ -10,6 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_DATA_DIR = path.resolve(__dirname, '..', 'data');
 const DEFAULT_MEMORY_DIR = path.resolve(__dirname, '..', 'memory');
 const DEFAULT_PUBLIC_DIR = path.resolve(__dirname, '..', 'public');
+const COWORK_LAUNCH_SCRIPT = path.join(__dirname, 'cowork-launch.ps1');
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -114,33 +117,66 @@ export function detectNewlyMovedToDoing(prevTasks, nextTasks){
 }
 
 /**
- * cmd.exe's `start` parses its arguments as a single command line — embedded
- * newlines silently truncate/break the launch (confirmed empirically: a
- * one-line argument with quotes/colons/dashes launches fine, the same text
- * with newlines does not launch anything, with no error surfaced). Collapse
- * paragraph breaks and line breaks to spaced separators so the brief still
- * reads as structured text without carrying a real newline byte.
- */
-function toSingleLine(text){
-  return text.replace(/\n\n+/g, '   //   ').replace(/\n/g, '  ');
-}
-
-/**
  * Fully automatic, no-confirmation launch: spawns a new terminal window
  * running the Claude Code CLI with the task's full Cowork brief as the
- * initial prompt. Windows-only (uses cmd.exe's `start`). Fire-and-forget —
+ * initial prompt, in read-only `plan` permission mode (a launched session
+ * can research and propose but not execute tool actions without a human
+ * approving the plan afterward — defense in depth even though the brief's
+ * own text already tells it to stay read-only first).
+ *
+ * SECURITY: task fields (title, notes, exec steps) are user/API-writable via
+ * POST /api/tasks. They must never be interpolated into a command line that
+ * cmd.exe or PowerShell parses as syntax (quotes/&/|/^ etc. are exploitable
+ * even when Node's spawn passes arguments as an array — cmd.exe's own `start`
+ * re-tokenizes its full command line using rules Node's argv-escaping doesn't
+ * account for). So the brief is written to a server-generated temp file
+ * (name derived from crypto.randomUUID(), never from task data) and handed
+ * to a fixed, checked-in wrapper script (cowork-launch.ps1) that reads the
+ * file and passes its content to Start-Process as a real parameter VALUE,
+ * not as re-parsed shell text. The only things ever placed on the actual
+ * cmd.exe command line are: a hard-coded title, the wrapper script's own
+ * fixed path, and the temp file's server-generated path — never task data.
+ *
+ * Windows-only (uses cmd.exe's `start` + PowerShell). Fire-and-forget —
  * callers don't await completion of the spawned session.
  */
-export function launchCowork(task, { spawnFn = spawn } = {}){
-  const brief = toSingleLine(buildPrompt(task));
-  const title = `Cowork: ${task.t}`.slice(0, 200);
-  const child = spawnFn('cmd.exe', ['/c', 'start', title, 'claude', brief], {
+export function launchCowork(task, { spawnFn = spawn, tmpDir = os.tmpdir() } = {}){
+  const brief = buildPrompt(task);
+  const launchId = crypto.randomUUID();
+  const briefFile = path.join(tmpDir, `bartlett-cowork-${launchId}.txt`);
+  fs.writeFileSync(briefFile, brief, 'utf8');
+
+  const child = spawnFn('cmd.exe', [
+    '/c', 'start', 'Cowork Task',
+    'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass',
+    '-File', COWORK_LAUNCH_SCRIPT,
+    '-BriefFile', briefFile,
+  ], {
     detached: true,
     stdio: 'ignore',
     windowsHide: false,
   });
   if (child && typeof child.unref === 'function') child.unref();
   return child;
+}
+
+/**
+ * Origin-based CSRF guard for mutating routes. Browsers always attach an
+ * Origin header on cross-origin requests — including "simple" form POSTs
+ * (e.g. a malicious page posting text/plain JSON to this local port), which
+ * would otherwise reach /api/tasks with attacker-chosen task content and
+ * silently trigger launchCowork(). No Origin header at all (curl, same-page
+ * requests in some older engines) is allowed through; a *present* Origin
+ * that doesn't match this server's own host is rejected.
+ */
+export function isSameOriginRequest(req){
+  const origin = req.headers.origin;
+  if (!origin) return true;
+  try {
+    return new URL(origin).host === req.headers.host;
+  } catch {
+    return false;
+  }
 }
 
 export function createServer({
@@ -151,6 +187,10 @@ export function createServer({
 } = {}){
   async function routeApi(req, res, parsed){
     try {
+      if (req.method === 'POST' && !isSameOriginRequest(req)) {
+        return json(res, 403, { error: 'Cross-origin request rejected' });
+      }
+
       if (parsed.pathname === '/api/state') {
         const tasks = readJson(dataDir, 'tasks.json', []);
         const cadence = readJson(dataDir, 'cadence.json', []);

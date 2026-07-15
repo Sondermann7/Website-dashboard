@@ -5,7 +5,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { runImport } from '../scripts/import.mjs';
-import { createServer, detectNewlyMovedToDoing, launchCowork } from '../server/server.js';
+import { createServer, detectNewlyMovedToDoing, launchCowork, isSameOriginRequest } from '../server/server.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -30,36 +30,55 @@ test('detectNewlyMovedToDoing: empty prev/next arrays produce no false positives
   assert.deepEqual(detectNewlyMovedToDoing([], [{ id: 'x', col: 'todo' }]), []);
 });
 
-test('launchCowork spawns cmd.exe start with the task brief, does not block on a real process', () => {
+test('isSameOriginRequest: allows no Origin header, allows matching Origin, rejects mismatched Origin', () => {
+  assert.equal(isSameOriginRequest({ headers: { host: 'localhost:4178' } }), true);
+  assert.equal(isSameOriginRequest({ headers: { host: 'localhost:4178', origin: 'http://localhost:4178' } }), true);
+  assert.equal(isSameOriginRequest({ headers: { host: 'localhost:4178', origin: 'http://evil.example' } }), false);
+  assert.equal(isSameOriginRequest({ headers: { host: 'localhost:4178', origin: 'not-a-valid-url' } }), false);
+});
+
+test('launchCowork never places task-controlled content on the cmd.exe command line — it goes through a temp file instead', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'bob-launch-tmp-'));
   const calls = [];
   const fakeChild = { unref: () => { calls.push('unrefed'); } };
   const spawnFn = (cmd, args, opts) => { calls.push({ cmd, args, opts }); return fakeChild; };
 
-  const task = { id: 't1', t: 'Confirm a working backup exists before any change', ph: 'DISCOVERY', pri: 'HIGH', w: 'W1', where: 'Hosting panel', exec: ['Step 1'] };
-  launchCowork(task, { spawnFn });
+  // Task fields are attacker/API-writable — include shell metacharacters and newlines
+  // to prove none of it ever reaches the parsed command line.
+  const task = {
+    id: 't1',
+    t: 'Injection test " & calc.exe & "\nmulti\nline\ntitle',
+    note: 'note with `backticks` and $(command) and | pipes',
+    ph: 'DISCOVERY', pri: 'HIGH', w: 'W1', where: 'Hosting panel',
+    exec: ['Step with "quotes" & ampersands'],
+  };
+  launchCowork(task, { spawnFn, tmpDir });
 
   const spawnCall = calls.find(c => c && c.cmd);
   assert.equal(spawnCall.cmd, 'cmd.exe');
-  assert.equal(spawnCall.args[0], '/c');
-  assert.equal(spawnCall.args[1], 'start');
-  assert.ok(spawnCall.args.includes('claude'));
-  const briefArg = spawnCall.args[spawnCall.args.length - 1];
-  assert.ok(briefArg.includes('Confirm a working backup exists before any change'));
-  assert.ok(briefArg.includes('Cowork operator brief'));
-  assert.ok(calls.includes('unrefed'), 'expected the spawned child to be unref()ed so it does not keep the server process alive');
-});
+  assert.deepEqual(spawnCall.args.slice(0, 3), ['/c', 'start', 'Cowork Task'], 'title must be the fixed constant, never task.t');
+  assert.equal(spawnCall.args[3], 'powershell.exe');
+  assert.ok(spawnCall.args.includes('-File'));
+  assert.ok(spawnCall.args.some(a => a.endsWith('cowork-launch.ps1')));
+  assert.ok(spawnCall.args.includes('-BriefFile'));
 
-test('launchCowork collapses newlines out of the brief — cmd.exe start silently drops multi-line args', () => {
-  // Confirmed empirically: `cmd /c start title claude "<single line>"` launches claude;
-  // the identical call with embedded \n in the argument launches nothing, no error surfaced.
-  const calls = [];
-  const spawnFn = (cmd, args) => { calls.push(args); return { unref(){} }; };
-  const task = { id: 't1', t: 'Multi\nline\n\ntest', ph: 'DISCOVERY', pri: 'HIGH', w: 'W1', exec: ['Step 1', 'Step 2'] };
-  launchCowork(task, { spawnFn });
-  const briefArg = calls[0][calls[0].length - 1];
-  assert.ok(!briefArg.includes('\n'), 'brief argument must not contain a raw newline');
-  assert.ok(briefArg.includes('MISSION'));
-  assert.ok(briefArg.includes('SAFETY RULES'));
+  const briefFileArg = spawnCall.args[spawnCall.args.length - 1];
+  assert.ok(briefFileArg.startsWith(tmpDir), 'brief file must live in the provided temp dir');
+  assert.match(path.basename(briefFileArg), /^bartlett-cowork-[0-9a-f-]+\.txt$/, 'filename must be a generated UUID, never derived from task data');
+
+  // None of the untrusted task content appears anywhere in the actual argv passed to spawn.
+  const fullCommandLine = spawnCall.args.join(' ');
+  assert.ok(!fullCommandLine.includes('calc.exe'));
+  assert.ok(!fullCommandLine.includes('backticks'));
+  assert.ok(!fullCommandLine.includes(task.t));
+
+  // The untrusted content instead lives in the file, which the trusted wrapper script reads.
+  const fileContent = fs.readFileSync(briefFileArg, 'utf8');
+  assert.ok(fileContent.includes('calc.exe'));
+  assert.ok(fileContent.includes('MISSION'));
+  assert.ok(calls.includes('unrefed'), 'expected the spawned child to be unref()ed so it does not keep the server process alive');
+
+  fs.rmSync(tmpDir, { recursive: true, force: true });
 });
 
 test('POST /api/tasks triggers launchCoworkFn exactly for tasks newly moved to doing', async () => {
@@ -102,6 +121,42 @@ test('POST /api/tasks triggers launchCoworkFn exactly for tasks newly moved to d
     const body2 = await res2.json();
     assert.deepEqual(body2.launchedCowork, []);
     assert.deepEqual(launched, [tasks[0].id], 'should not launch a second time for a task already in doing');
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+    fs.rmSync(dataDir, { recursive: true, force: true });
+    fs.rmSync(memoryDir, { recursive: true, force: true });
+    fs.rmSync(publicDir, { recursive: true, force: true });
+  }
+});
+
+test('POST /api/tasks from a cross-origin request is rejected before it can write or launch anything', async () => {
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'bob-launch-data-'));
+  const memoryDir = fs.mkdtempSync(path.join(os.tmpdir(), 'bob-launch-memory-'));
+  const publicDir = fs.mkdtempSync(path.join(os.tmpdir(), 'bob-launch-public-'));
+  fs.writeFileSync(path.join(publicDir, 'index.html'), '<html>ok</html>');
+  runImport(dataDir);
+
+  const launched = [];
+  const server = createServer({ dataDir, memoryDir, publicDir, launchCoworkFn: (task) => launched.push(task.id) });
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const { port } = server.address();
+  const baseUrl = `http://127.0.0.1:${port}`;
+
+  try {
+    const before = fs.readFileSync(path.join(dataDir, 'tasks.json'), 'utf8');
+    const tasks = JSON.parse(before);
+    tasks[0].col = 'doing';
+
+    const res = await fetch(`${baseUrl}/api/tasks`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Origin': 'http://evil.example' },
+      body: JSON.stringify(tasks),
+    });
+    assert.equal(res.status, 403);
+
+    const after = fs.readFileSync(path.join(dataDir, 'tasks.json'), 'utf8');
+    assert.equal(after, before, 'cross-origin write must not touch the file');
+    assert.deepEqual(launched, [], 'cross-origin request must never trigger a Cowork launch');
   } finally {
     await new Promise(resolve => server.close(resolve));
     fs.rmSync(dataDir, { recursive: true, force: true });

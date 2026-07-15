@@ -94,3 +94,19 @@ Confirmed empirically (single-line args with quotes/colons/dashes launch fine; t
 `\n` does not launch anything). Fixed by collapsing the brief to one line before passing it to
 `start`. Verified fixed with a real end-to-end test (synthetic harmless task, real `claude.exe`
 process confirmed spawned, then cleaned up).
+
+### 2026-07-15 — Auto-launch hardened after automated security review (2 findings, both fixed)
+A background security review flagged the auto-launch feature above: (1) CRITICAL command
+injection — task title/note/exec steps are writable via an unauthenticated local POST and were
+being interpolated into a `cmd.exe`-parsed command line; (2) HIGH — the launch fired as an
+unconditional side effect of any POST to `/api/tasks`, with no origin check, so a malicious
+webpage could CSRF a crafted task list and trigger a launch with attacker-chosen content. See
+`dec-secure-launch` in `decisions.md` for the full technical writeup.
+
+Both are fixed: the brief now flows through a server-generated temp file into a fixed wrapper
+script (`server/cowork-launch.ps1`) rather than ever touching a parsed command line, the launched
+session runs in `--permission-mode plan` (read-only) by default, and all mutating routes reject
+cross-origin POSTs. Verified live with a task titled to include `"`, `&`, backticks, and
+newlines — no injected process ran, and the temp file was cleaned up automatically. This also
+let me drop the earlier newline-collapsing workaround, so Claude now receives the brief with its
+original formatting intact.
