@@ -1,0 +1,109 @@
+[
+  {
+    "id": "proc-redirect-301",
+    "department": "CONTENT",
+    "title": "Create a 301 redirect without losing a page's traffic or causing a 404",
+    "objective": "Redirect or remove a URL cleanly — every source URL accounted for, every destination verified, no orphan links or new 404s.",
+    "steps": [
+      "Identify every place the source URL is referenced: sitemap entries, internal links, menu/footer links, and any known backlinks.",
+      "Add a row to the redirect-map tracker (data/redirect-map.json) — source, target, reason, owner, approval status — before touching anything live. No redirect goes live without a tracker row.",
+      "Confirm the target URL is correct, live, and actually the best-matching replacement for the source's intent.",
+      "Get explicit approval on the source-to-target row before publishing anything.",
+      "Implement one redirect at a time — never batch multiple redirects in a single pass.",
+      "Verify the resulting status code is 301 (not 302), and that there is no redirect chain (source should resolve in a single hop to the final live destination).",
+      "Update the XML sitemap and re-crawl the affected area to confirm no new 404s or orphan links were introduced.",
+      "Mark the tracker row resolved with the verification date and evidence (crawl export or screenshot)."
+    ],
+    "sourceNote": "Derived from docs/wordpress-safety.md (one change at a time; verify status codes and no 404s) and the redirect-shaped tasks already in data/tasks.json (Pleasant Grove removal, 109-page tiering)."
+  },
+  {
+    "id": "proc-schema-verification",
+    "department": "GEO",
+    "title": "Verify structured data (JSON-LD) the way AI and search crawlers actually see it",
+    "objective": "Confirm schema is present, accurate, and machine-readable in raw HTML — not just in the rendered page.",
+    "steps": [
+      "Open View Source for the page (Ctrl+U or equivalent) — never rely on the browser inspector/rendered DOM alone.",
+      "Locate the JSON-LD <script> block(s) directly in the raw HTML response, confirming they are not injected only after JavaScript executes.",
+      "Confirm the schema type(s) present match what the page needs (Organization, LocalBusiness, Service, Breadcrumb, Article, or Person as applicable).",
+      "Confirm every NAP field in the schema exactly matches the live Google Business Profile listing — no discrepancies in name, address, or phone.",
+      "Validate the markup with the current official rich-results/schema validator tool (not a cached or third-party mirror).",
+      "Report pass/fail per page type, and flag any assumption based on a deprecated or unsupported rich-result feature."
+    ],
+    "sourceNote": "Derived directly from docs/ai-search-rules.md (schema must render in raw HTML; verify against current official docs)."
+  },
+  {
+    "id": "proc-nap-gbp-update",
+    "department": "LOCAL",
+    "title": "Change a NAP or Google Business Profile field without creating conflicting citations",
+    "objective": "Update a listing field (name, address, phone, hours, category) so every source of truth stays consistent — GBP, site schema, and citations.",
+    "steps": [
+      "Read-only: capture the current live NAP, category, and hours across GBP, the website, and any known top citations before proposing a change.",
+      "Draft the proposed change with a clear reason (closure, phone change, hours update, new service category, etc.).",
+      "Never use a CallRail dynamic tracking number as the public GBP/citation phone number.",
+      "Present the before/after for approval — do not apply the change speculatively.",
+      "Mikey applies the approved change directly in Birdeye/GBP — an agent drafts, it does not log in or publish.",
+      "After the change is live, confirm it is consistent across GBP, site schema, and the website's visible NAP."
+    ],
+    "sourceNote": "Derived from docs/wordpress-safety.md (never use CallRail number as public NAP) and the LOCAL-phase tasks already in data/tasks.json (GBP cleanup, exteriors listing update)."
+  },
+  {
+    "id": "proc-new-page-build",
+    "department": "CONTENT",
+    "title": "Build a new location, service, or exteriors page that matches brand and GEO formatting from day one",
+    "objective": "Ship a new page that is on-brand, genuinely differentiated, and answer-ready — not a templated clone.",
+    "steps": [
+      "Confirm the URL, nav placement, and market mapping as an approved structure before building anything.",
+      "Pull the existing Avada brand tokens/template so the new page matches the site exactly — Avada/Fusion Builder is the page builder, not Elementor.",
+      "Write genuinely differentiated copy for this page — no cloned paragraphs shared with similar pages.",
+      "Add a 40-60 word direct-answer intro at the top of the page.",
+      "Add accurate LocalBusiness/Service/Breadcrumb schema and verify it per the schema-verification procedure.",
+      "Build the page in Draft and show a Preview link for approval.",
+      "Leave real image placeholders for Mikey's own photos rather than presenting stock/generic images as real project photos.",
+      "Publish only on explicit approval."
+    ],
+    "sourceNote": "Derived from the CONTENT/EXTERIORS-phase task patterns already in data/tasks.json (Boise page, Exteriors hub, individual service pages) and docs/wordpress-safety.md."
+  },
+  {
+    "id": "proc-cowork-task-launch",
+    "department": "OPS",
+    "title": "Hand a task to a Claude Code or Cowork session manually",
+    "objective": "Move a task to Doing and hand it off yourself — the dashboard no longer auto-launches anything, so know the manual copy/paste flow and how findings come back.",
+    "steps": [
+      "Before handing off, confirm the task's title, note, and execution steps are accurate — that exact content becomes the brief.",
+      "Move the card to Doing (drag on the board, or POST /api/tasks with col: \"doing\") — this only saves the task's state, it does not launch or open anything.",
+      "Open the task's \"Cowork execution plan\" and click \"Copy Cowork brief\" to copy the full operator brief to the clipboard.",
+      "Open a Claude Code or Cowork session yourself and paste the brief as the opening message.",
+      "Let the session work through to one of: Done, Draft ready, Blocked, or Needs approval, per the Final Report Format baked into the brief.",
+      "Bring findings back through you: paste observations into the Memory tab (POST /api/memory/append), add unverified claims to data/verification-queue.json, and log decisions in memory/decisions.md.",
+      "Only move the card to Done once the deliverable and verification are actually confirmed — not just because the session reported success."
+    ],
+    "sourceNote": "Derived from docs/cowork-contract.md and memory/decisions.md (the 2026-07-16 decision removing the auto-launch feature that dec-secure-launch had hardened)."
+  },
+  {
+    "id": "proc-repo-onboarding",
+    "department": "OPS",
+    "title": "Orient a new agent session (Claude Code, Codex, or Cowork) before it touches this repo",
+    "objective": "Make sure any session working in this repo reads the right context before acting on a Bartlett fact or touching the live site.",
+    "steps": [
+      "Read docs/README.md for the system overview — what each data/memory/docs file is for.",
+      "Read data/site-facts.json and memory/decisions.md before using any Bartlett fact (served markets, NAP, claims, review counts, rankings, page status).",
+      "Treat data/tasks.json and data/cadence.json as the execution source of truth for what to work on.",
+      "Read the safety docs relevant to the work at hand: docs/wordpress-safety.md, docs/ads-safety.md, docs/ai-search-rules.md.",
+      "Check data/verification-queue.json for open, unresolved claims before treating anything as settled."
+    ],
+    "sourceNote": "Derived from the READ FIRST section already baked into every Cowork brief (public/brief.mjs buildPrompt) and docs/README.md."
+  },
+  {
+    "id": "proc-data-file-edit",
+    "department": "OPS",
+    "title": "Edit a data/*.json file directly without corrupting the brain",
+    "objective": "Make a direct edit to a data file (outside the dashboard UI) safely, when the UI doesn't cover the change needed.",
+    "steps": [
+      "Prefer the dashboard/API paths (POST /api/tasks, /api/cadence, /api/archive) when the change is something the UI already supports — they validate automatically.",
+      "For a direct file edit, make the change, then immediately run `npm run validate`.",
+      "If validation fails, fix the file and re-run — never leave or commit a data file that fails validation.",
+      "Remember direct edits do not get the server's automatic pre-write backup — the safety net for a direct edit is validation plus normal git history."
+    ],
+    "sourceNote": "Derived from docs/README.md (writeValidated / backupThenWrite path) and scripts/validate.mjs."
+  }
+]

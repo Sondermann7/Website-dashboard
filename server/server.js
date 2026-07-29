@@ -1,18 +1,39 @@
 import http from 'node:http';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { spawn } from 'node:child_process';
 import { validateAll } from '../scripts/validate.mjs';
-import { buildPrompt } from '../public/brief.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DEFAULT_DATA_DIR = path.resolve(__dirname, '..', 'data');
-const DEFAULT_MEMORY_DIR = path.resolve(__dirname, '..', 'memory');
+// SEED_* is what ships in the image/repo (git-tracked, read-only in spirit).
+// ACTIVE_* is where the server actually reads/writes — normally the same as
+// SEED_*, but on Railway these point at a mounted volume instead, since a
+// container's own filesystem is rebuilt from the image on every deploy and
+// restart. See seedActiveDirsIfEmpty() below for the one-time copy that
+// bridges the two on a volume's first boot.
+const SEED_DATA_DIR = path.resolve(__dirname, '..', 'data');
+const SEED_MEMORY_DIR = path.resolve(__dirname, '..', 'memory');
+const DEFAULT_DATA_DIR = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : SEED_DATA_DIR;
+const DEFAULT_MEMORY_DIR = process.env.MEMORY_DIR ? path.resolve(process.env.MEMORY_DIR) : SEED_MEMORY_DIR;
 const DEFAULT_PUBLIC_DIR = path.resolve(__dirname, '..', 'public');
-const COWORK_LAUNCH_SCRIPT = path.join(__dirname, 'cowork-launch.ps1');
+
+/**
+ * On first boot against a fresh (empty) mounted volume, seed it from the
+ * data/memory shipped in the image so the dashboard isn't blank. Never
+ * overwrites an already-seeded volume — this only fires once, the moment
+ * ACTIVE_DIR has no tasks.json/log.md of its own yet.
+ */
+export function seedActiveDirsIfEmpty(){
+  if (DEFAULT_DATA_DIR !== SEED_DATA_DIR && !fs.existsSync(path.join(DEFAULT_DATA_DIR, 'tasks.json'))) {
+    fs.mkdirSync(DEFAULT_DATA_DIR, { recursive: true });
+    fs.cpSync(SEED_DATA_DIR, DEFAULT_DATA_DIR, { recursive: true });
+  }
+  if (DEFAULT_MEMORY_DIR !== SEED_MEMORY_DIR && !fs.existsSync(path.join(DEFAULT_MEMORY_DIR, 'log.md'))) {
+    fs.mkdirSync(DEFAULT_MEMORY_DIR, { recursive: true });
+    fs.cpSync(SEED_MEMORY_DIR, DEFAULT_MEMORY_DIR, { recursive: true });
+  }
+}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -107,68 +128,63 @@ function appendMemoryLog(memoryDir, text){
 }
 
 /**
- * Tasks whose col just became "doing" in `nextTasks` but weren't "doing"
- * in `prevTasks` (or are brand new). Pure/diff-only so it's cheaply testable
- * without touching the filesystem or spawning anything.
+ * Split memory/log.md into individual dated entries for display. Each entry
+ * starts with a "### <heading>" line (either a raw ISO timestamp from the
+ * Memory tab, or a "YYYY-MM-DD — title" heading from a hand-written/direct
+ * entry) followed by its body text. Returned newest-first so the dashboard
+ * doesn't bury today's entry at the bottom of a long-running file.
  */
-export function detectNewlyMovedToDoing(prevTasks, nextTasks){
-  const prevById = new Map(prevTasks.map(t => [t.id, t]));
-  return nextTasks.filter(t => t.col === 'doing' && prevById.get(t.id)?.col !== 'doing');
-}
-
-/**
- * Fully automatic, no-confirmation launch: spawns a new terminal window
- * running the Claude Code CLI with the task's full Cowork brief as the
- * initial prompt, in read-only `plan` permission mode (a launched session
- * can research and propose but not execute tool actions without a human
- * approving the plan afterward — defense in depth even though the brief's
- * own text already tells it to stay read-only first).
- *
- * SECURITY: task fields (title, notes, exec steps) are user/API-writable via
- * POST /api/tasks. They must never be interpolated into a command line that
- * cmd.exe or PowerShell parses as syntax (quotes/&/|/^ etc. are exploitable
- * even when Node's spawn passes arguments as an array — cmd.exe's own `start`
- * re-tokenizes its full command line using rules Node's argv-escaping doesn't
- * account for). So the brief is written to a server-generated temp file
- * (name derived from crypto.randomUUID(), never from task data) and handed
- * to a fixed, checked-in wrapper script (cowork-launch.ps1) that reads the
- * file and passes its content to Start-Process as a real parameter VALUE,
- * not as re-parsed shell text. The only things ever placed on the actual
- * cmd.exe command line are: a hard-coded title, the wrapper script's own
- * fixed path, and the temp file's server-generated path — never task data.
- *
- * Windows-only (uses cmd.exe's `start` + PowerShell). Fire-and-forget —
- * callers don't await completion of the spawned session.
- */
-export function launchCowork(task, { spawnFn = spawn, tmpDir = os.tmpdir() } = {}){
-  const brief = buildPrompt(task);
-  const launchId = crypto.randomUUID();
-  const briefFile = path.join(tmpDir, `bartlett-cowork-${launchId}.txt`);
-  fs.writeFileSync(briefFile, brief, 'utf8');
-
-  const child = spawnFn('cmd.exe', [
-    '/c', 'start', 'Cowork Task',
-    'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass',
-    '-File', COWORK_LAUNCH_SCRIPT,
-    '-BriefFile', briefFile,
-  ], {
-    detached: true,
-    stdio: 'ignore',
-    windowsHide: false,
+function readMemoryEntries(memoryDir){
+  const file = path.join(memoryDir, 'log.md');
+  if (!fs.existsSync(file)) return [];
+  const text = fs.readFileSync(file, 'utf8');
+  const parts = text.split(/^### /m).slice(1);
+  const entries = parts.map(part => {
+    const newline = part.indexOf('\n');
+    const heading = (newline === -1 ? part : part.slice(0, newline)).trim();
+    const body = (newline === -1 ? '' : part.slice(newline + 1)).trim();
+    return { heading, body };
   });
-  if (child && typeof child.unref === 'function') child.unref();
-  return child;
+  return entries.reverse();
 }
 
 /**
  * Origin-based CSRF guard for mutating routes. Browsers always attach an
  * Origin header on cross-origin requests — including "simple" form POSTs
  * (e.g. a malicious page posting text/plain JSON to this local port), which
- * would otherwise reach /api/tasks with attacker-chosen task content and
- * silently trigger launchCowork(). No Origin header at all (curl, same-page
- * requests in some older engines) is allowed through; a *present* Origin
- * that doesn't match this server's own host is rejected.
+ * would otherwise reach /api/tasks (or /api/cadence, /api/archive,
+ * /api/memory/append) with attacker-chosen content and silently rewrite the
+ * file-backed brain. No Origin header at all (curl, same-page requests in
+ * some older engines) is allowed through; a *present* Origin that doesn't
+ * match this server's own host is rejected.
  */
+function timingSafeEqualStr(a, b){
+  const bufA = Buffer.from(a); const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
+/**
+ * Gate the whole dashboard behind HTTP Basic Auth whenever DASH_USER/DASH_PASS
+ * are both set (the deployed/live case) — with no dashboard-level accounts or
+ * sessions to build, this is the smallest addition that stops an unauthenticated
+ * visitor from reading or editing the file-backed brain. Unset (the local-dev
+ * default) leaves the server open, matching its previous behavior.
+ */
+export function checkBasicAuth(req){
+  const user = process.env.DASH_USER;
+  const pass = process.env.DASH_PASS;
+  if (!user || !pass) return true;
+  const header = req.headers.authorization || '';
+  const match = /^Basic (.+)$/.exec(header);
+  if (!match) return false;
+  let decoded;
+  try { decoded = Buffer.from(match[1], 'base64').toString('utf8'); } catch { return false; }
+  const sep = decoded.indexOf(':');
+  if (sep === -1) return false;
+  return timingSafeEqualStr(decoded.slice(0, sep), user) && timingSafeEqualStr(decoded.slice(sep + 1), pass);
+}
+
 export function isSameOriginRequest(req){
   const origin = req.headers.origin;
   if (!origin) return true;
@@ -183,7 +199,6 @@ export function createServer({
   dataDir = DEFAULT_DATA_DIR,
   memoryDir = DEFAULT_MEMORY_DIR,
   publicDir = DEFAULT_PUBLIC_DIR,
-  launchCoworkFn = launchCowork,
 } = {}){
   async function routeApi(req, res, parsed){
     try {
@@ -204,12 +219,9 @@ export function createServer({
 
       if (parsed.pathname === '/api/tasks' && req.method === 'POST') {
         const body = JSON.parse((await readBody(req)) || '[]');
-        const prevTasks = readJson(dataDir, 'tasks.json', []);
         const result = writeValidated(dataDir, 'tasks.json', body);
         if (!result.ok) return json(res, 400, { error: 'Invalid tasks payload', details: result.errors });
-        const launched = detectNewlyMovedToDoing(prevTasks, body);
-        launched.forEach(task => launchCoworkFn(task));
-        return json(res, 200, { ok: true, launchedCowork: launched.map(t => t.id) });
+        return json(res, 200, { ok: true });
       }
 
       if (parsed.pathname === '/api/cadence' && req.method === 'POST') {
@@ -224,6 +236,10 @@ export function createServer({
         const result = writeValidated(dataDir, 'archive.json', body);
         if (!result.ok) return json(res, 400, { error: 'Invalid archive payload', details: result.errors });
         return json(res, 200, { ok: true });
+      }
+
+      if (parsed.pathname === '/api/memory' && req.method === 'GET') {
+        return json(res, 200, { entries: readMemoryEntries(memoryDir) });
       }
 
       if (parsed.pathname === '/api/memory/append' && req.method === 'POST') {
@@ -250,6 +266,13 @@ export function createServer({
   }
 
   return http.createServer((req, res) => {
+    if (!checkBasicAuth(req)) {
+      res.writeHead(401, {
+        'WWW-Authenticate': 'Basic realm="Bartlett Ops Brain"',
+        'Content-Type': 'text/plain; charset=utf-8',
+      });
+      return res.end('Authentication required');
+    }
     const parsed = new URL(req.url, 'http://localhost');
     if (parsed.pathname.startsWith('/api/')) return routeApi(req, res, parsed);
     return routeStatic(res, parsed.pathname);
@@ -258,6 +281,7 @@ export function createServer({
 
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
+  seedActiveDirsIfEmpty();
   const PORT = Number(process.env.PORT || 4178);
   const server = createServer({});
   server.listen(PORT, () => {

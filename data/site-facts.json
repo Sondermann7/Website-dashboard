@@ -27,7 +27,43 @@
     "id": "fact-pleasant-grove-closed",
     "fact": "The Pleasant Grove (UT) office is closed. Its 4 cities (Provo, Orem, Lehi, American Fork) are believed to have moved to Murray.",
     "category": "geography",
-    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "Plan explicitly requires confirming the 4 cities belong to Murray (not Ogden) before any redirect work." }
+    "verify": { "status": "contradicted", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "CONTRADICTED 2026-07-27: the 4 cities are still actively served — Pleasant Grove and Ogden offices consolidated into Murray, they were not closed/abandoned. The dashboard task that treated this as 'remove and redirect the pages' was itself corrected the same day — see fact-office-consolidation-murray and memory/log.md (2026-07-27 entry) for the full correction, and data/tasks.json (tfdbea2ddec9a4c85) for the task fix." }
+  },
+  {
+    "id": "fact-office-consolidation-murray",
+    "fact": "Pleasant Grove and Ogden offices consolidated into the Murray, UT office; the cities they served (incl. Provo, Orem, Lehi, American Fork) are still actively serviced, not dropped. Correct action for those page/office claims is copy/NAP fixes, not page removal or redirects.",
+    "category": "geography",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-27 Cowork debrief: Pleasant Grove (post 7387) and Ogden (post 5946) pages live-checked, Murray (post 6940) page updated with NAP", "checkedAt": "2026-07-27", "note": "Corrects fact-pleasant-grove-closed, which had this backwards (treated consolidation as closure requiring removal)." }
+  },
+  {
+    "id": "fact-murray-nap",
+    "fact": "Murray, UT office NAP: 1935 E Vine St #240, Murray, UT 84121 · (801) 509-6464.",
+    "category": "identity",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-27 Cowork debrief — added to live Murray page (post 6940) intro paragraph, matches the GBP screenshot provided", "checkedAt": "2026-07-27", "note": "GBP values themselves are user-stated (from a screenshot), not independently pulled from the GBP dashboard." }
+  },
+  {
+    "id": "fact-gtm-container-ids",
+    "fact": "GTM account 6290459631, container 217451651, workspace 5 (GTM-M92NH73X) has exactly 3 tags: BLACKSTONE (Google Ads Conversion), Conversion Linker (Initialization – All Pages), and formSubmission (Custom HTML). formSubmission only pushes a dataLayer event that triggers itself and feeds no conversion — it's hollow.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-27 Cowork debrief, live GTM check", "checkedAt": "2026-07-27", "note": "Deleting formSubmission was attempted same day but blocked by a GTM 'stale data' error; still pending as of 2026-07-27." }
+  },
+  {
+    "id": "fact-gtm-double-load-sitekit",
+    "fact": "GTM-M92NH73X loads twice on the live site. The second load is Google Site Kit's Tag Manager module, which duplicates the GTM4WP plugin's load of the same container — Site Kit itself warns against placing two tags at once.",
+    "category": "platform",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-27 Cowork debrief — live DOM showed two gtm.js tags, Site Kit Settings confirmed Tag Manager module connected to the same container", "checkedAt": "2026-07-27", "note": "This is a container double-LOAD, distinct from the earlier (now-retired) GA4 double-fire suspicion, which was checked and found not to be happening." }
+  },
+  {
+    "id": "fact-lead-capture-fields-missing",
+    "fact": "No hidden gclid/UTM fields exist on gform_3 (Home Inspection form) and no attribution cookie is set on page load with gclid/utm_source present in the URL. The Customer-Service form (id 4) only has First/Last Name, Phone, Email, Full Address, Service Area, and Comments — no source-capture fields.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-27 Cowork debrief — tested by loading the homepage with ?gclid=TESTCONFIRM123&utm_source=testsrc… and inspecting form fields/cookies", "checkedAt": "2026-07-27", "note": "Confirms fact-utm-gclid-not-captured directly at the field level rather than inferring it." }
+  },
+  {
+    "id": "fact-gravity-forms-inventory",
+    "fact": "13 active Gravity Forms sitewide, including dedicated ad-specific forms: Google Ads (id 10, 6 entries), Google Ads Blackstone HERO (id 14, 3 entries), Google Ads Spokane 0% (id 16, 27 entries), Google Ads Spokane No Payment (id 17, 17 entries); main lead form is Home Inspection (id 3, 1,145 entries).",
+    "category": "tooling",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-27 Cowork debrief — Gravity Forms admin", "checkedAt": "2026-07-27", "note": "Whether these ad-specific forms capture Source URL/referrer on entries was not checked this session — see data/verification-queue.json: vq-google-ads-forms-source-url." }
   },
   {
     "id": "fact-california-closed",
@@ -57,13 +93,103 @@
     "id": "fact-tracking-gaps",
     "fact": "GA4/GSC/Google Ads/CallRail tracking has known gaps that need verification (e.g. a suspected GA4 double-fire via Site Kit + GTM).",
     "category": "tracking",
-    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "See data/measurement-map.json (pending) for the full audit once run." }
+    "verify": { "status": "retired", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "Superseded by the July 14/16 Lead Tracking & Attribution audit — see fact-ga4-setup, fact-google-ads-conversion-tracking, fact-gtm-installed-inactive, and related facts below for the actual findings. The 'GA4 double-fire' suspicion specifically was checked and is not the case: GA4 is confirmed single-fire via MonsterInsights + direct gtag.js." }
+  },
+  {
+    "id": "fact-ga4-setup",
+    "fact": "GA4 property G-DMW97ZSJ6N is live via MonsterInsights + a direct gtag.js call, confirmed single-fire. Organic search, direct traffic, and referral all land here correctly. The Google Ads account (279-115-8719) has been linked to this GA4 property since 2023-05-10, so Ads click/cost/keyword data does flow into GA4 reporting.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "Website tracking outline.pdf (Jul 16, rev. 2), live-checked via GA4 Admin -> Product Links -> Google Ads Links", "checkedAt": "2026-07-16", "note": "This corrects the July 14 Lead Tracking & Attribution audit, which incorrectly stated the GA4-Google Ads link didn't exist. Since that audit has been confirmed wrong on at least this one point, its other not-yet-independently-checked claims should be treated with real skepticism, not taken at face value." }
+  },
+  {
+    "id": "fact-google-ads-conversion-tracking",
+    "fact": "Google Ads conversion ID AW-11173534158 fires on two real actions: Gravity Form submission (gform_confirmation_loaded) and a click on any tel: phone link. Confirmed single-fire as of 2026-07-15 after a duplicate hardcoded snippet was found and deactivated. CallRail assigns tracking numbers to Google Ads traffic so inbound calls from that source attribute back to the campaign, but the Google Ads CallRail number pool is undersized (6 numbers) and swaps too fast to reliably attribute every call — the mechanism works but is currently leaking precision.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "BARTLE_1.pdf (Jul 14 audit) + Website tracking outline.pdf (Jul 16 rev. 2)", "checkedAt": "2026-07-16", "note": "The July 14 audit proposed resizing the CallRail pool from 6 to 7+ numbers as a Critical/5-minute fix; not yet confirmed done." }
+  },
+  {
+    "id": "fact-lead-intake-webhooks",
+    "fact": "Three lead intake paths write directly into SalesTrak via dedicated n8n webhooks: Gravity Forms (13 forms sitewide, incl. the homepage Complimentary Roof Inspection form) via a 'web-st' webhook with an AI spam-filter and address-cleanup step; the Roofle widget via a 'roofle-st' webhook using the same dedup engine as everything else (address + RoofLink ID match); and Hatch AI voice/chat via an 'h-st' webhook, with AI extracting structured fields from the call/chat transcript. Every lead, from any path, lands in SalesTrak's Lead Source field.",
+    "category": "tooling",
+    "verify": { "status": "observed", "confidence": "high", "source": "Website tracking outline.pdf (Jul 16 rev. 2), citing the Jul 15 SalesTrak <-> RoofLink n8n trigger outline and a real Roofle webhook payload example", "checkedAt": "2026-07-16", "note": "The Hatch AI voice/chat intake wasn't accounted for in the July 14 audit at all." }
+  },
+  {
+    "id": "fact-utm-gclid-not-captured",
+    "fact": "Gravity Forms has no field capturing UTM parameters or gclid — a lead from a Google Ads click, a Facebook click, or organic search all look identical once they hit a form. The Roofle webhook payload does already include the landing page URL (externalUrl) and a dedicated querystring field meant to hold UTM/gclid data, confirmed via a real payload example — but querystring was null on the one example seen because that lead's click had no query string on it.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "medium", "source": "Website tracking outline.pdf (Jul 16 rev. 2)", "checkedAt": "2026-07-16", "note": "Open question (see data/verification-queue.json: vq-roofle-querystring-populates) is whether querystring actually populates on a UTM-tagged visit and whether n8n's roofle-st mapping forwards externalUrl/querystring into SalesTrak at all." }
+  },
+  {
+    "id": "fact-salestrak-lead-source-generic",
+    "fact": "SalesTrak's Lead Source field already has categories for Google Ads, Organic, Facebook, Instagram, Meta Ads, and Roofle, but nearly all web leads land as the generic value 'Website' — the categories exist but aren't being populated with real source data.",
+    "category": "tooling",
+    "verify": { "status": "observed", "confidence": "high", "source": "BARTLE_1.pdf (Jul 14 audit) + Website tracking outline.pdf (Jul 16 rev. 2)", "checkedAt": "2026-07-16", "note": "" }
+  },
+  {
+    "id": "fact-gtm-installed-inactive",
+    "fact": "Google Tag Manager (GTM-M92NH73X) is installed sitewide, but its three tags (a Google Ads conversion tag, Conversion Linker, and a custom formSubmission event tag) don't fire on any real visitor action today. It isn't hurting anything, but it isn't tracking anything beyond what GA4/direct gtag.js already cover.",
+    "category": "platform",
+    "verify": { "status": "observed", "confidence": "high", "source": "BARTLE_1.pdf (Jul 14 audit) + Website tracking outline.pdf (Jul 16 rev. 2)", "checkedAt": "2026-07-16", "note": "An orphaned gforms_submission trigger already exists in the container and is correctly named, per the July 14 audit's rebuild roadmap — it just has no real source event or tag attached." }
+  },
+  {
+    "id": "fact-no-meta-pixel",
+    "fact": "No Meta Pixel exists on the site — zero visibility into paid social (Facebook/Instagram) traffic or conversions today.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "Website tracking outline.pdf (Jul 16 rev. 2)", "checkedAt": "2026-07-16", "note": "Both audits treat this as a clean future build, not a fix, if/when Meta Ads launches." }
+  },
+  {
+    "id": "fact-no-cross-channel-identity",
+    "fact": "No mechanism today connects a website visit to a later phone call from the same person (e.g. someone browses, doesn't convert, calls two days later) — cross-channel identity resolution is not attempted at all.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "BARTLE_1.pdf (Jul 14 audit) + Website tracking outline.pdf (Jul 16 rev. 2)", "checkedAt": "2026-07-16", "note": "Both audits flag this as an advanced, longer-term capability rather than a current gap that needs fixing now." }
+  },
+  {
+    "id": "fact-email-marketing-unaudited",
+    "fact": "Hostinger Reach (email marketing) is installed and active on the site but entirely unaudited, blocked on IT/Hostinger access. Unknown whether it's tracked, or sending campaigns, at all.",
+    "category": "tooling",
+    "verify": { "status": "unverified", "confidence": "low", "source": "BARTLE_1.pdf (Jul 14 audit) + Website tracking outline.pdf (Jul 16 rev. 2)", "checkedAt": null, "note": "Blocked pending IT contact's involvement or Hostinger credentials being shared directly." }
+  },
+  {
+    "id": "fact-middleman-dashboard-scope",
+    "fact": "The middleman dashboard (marketing.bartlett-it.com) reads CallRail-tagged phone sources plus LSA and reports on them, but Roofle's ~1,267 contacts and any future Meta leads are invisible to it today, even though SalesTrak already has Lead Source categories for them.",
+    "category": "tooling",
+    "verify": { "status": "observed", "confidence": "high", "source": "BARTLE_1.pdf (Jul 14 audit) + Website tracking outline.pdf (Jul 16 rev. 2)", "checkedAt": "2026-07-16", "note": "" }
   },
   {
     "id": "fact-dashboard-claims-unreliable",
     "fact": "Some claims carried over from the previous static dashboard may be stale or simply wrong (e.g. the 'Boise is dead' assumption was contradicted by a later GSC pull showing 183 clicks, +18%).",
     "category": "meta",
     "verify": { "status": "observed", "confidence": "medium", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "This is the whole reason this system tags every imported claim with a verify block instead of trusting it by default." }
+  },
+  {
+    "id": "fact-taxonomy-sitemap-cleanup",
+    "fact": "10 junk/thin taxonomy sitemaps were noindexed via Yoast (testimonial-tag, offer-type, slide-page, element_category, fusion_tb_category, categories/blog-posts, tags/post_tag [26 thin archives], service-category, tesimonial-format, author archives). State archives (Idaho/Utah) were kept since they have real value. sitemap_index.xml went from 14 entries down to 7. sitemap_index.xml was also submitted in Google Search Console for the first time ever (Status: Success).",
+    "category": "platform",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-28 Cowork debrief", "checkedAt": "2026-07-28", "note": "Verified no harm done: GSC Links shows all 874 external backlinks point to homepage + real pages, zero to any noindexed taxonomy; GSC Performance shows every noindexed archive had 0 clicks in the prior 3 months." }
+  },
+  {
+    "id": "fact-backlink-distribution",
+    "fact": "874 total external backlinks, distributed across homepage and real location pages: SLC 41, Boise 32, Spokane 32, Pleasant Grove 13, Ogden 10, Kennesaw 8 (remainder to homepage/other real pages).",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-28 Cowork debrief, GSC Links report", "checkedAt": "2026-07-28", "note": "Pulled specifically to confirm the taxonomy-noindex cleanup didn't orphan any linked-to page." }
+  },
+  {
+    "id": "fact-near-me-ranking-reality",
+    "fact": "\"roofer near me\" ranking is location-personalized, not owned by a single page: Ogden ranks #2.5, SLC/Atlanta/Kennesaw ~#17, Boise ~#25, while the Spokane page (previously assumed to be wrongly capturing this term) sits at #52 with 10,697 impressions / 0 clicks. Total near-me clicks across all markets: ~3 in 3 months.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-28 Cowork debrief, GSC ranking + performance data", "checkedAt": "2026-07-28", "note": "Contradicts the earlier assumption that internal-linking the Spokane page's 'near me' intent to Boise/a service hub would fix this — see the corrected task tms56v6mauog8 in data/tasks.json." }
+  },
+  {
+    "id": "fact-indexing-breakdown-2026-07-23",
+    "fact": "GSC Pages report (data as of 2026-07-23): 269 pages indexed / 309 not indexed. Not-indexed breakdown: Crawled-not-indexed 184 (WP technical noise like /?p=277 and /wp-json/oembed/…, plus state/tag archives, plus a couple of real blog posts Google declined), 404 65 (deleted CA pages like /service-areas/brea-ca/, tag pagination, a /home link, and 2 real blog posts), redirect 30, canonical 23, noindex 7 (the taxonomy cleanup above).",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-28 Cowork debrief, live GSC Pages report", "checkedAt": "2026-07-28", "note": "This resolves data/verification-queue.json: vq-351-pages-not-indexed with real numbers and a cause breakdown — see that entry for the resolution note." }
+  },
+  {
+    "id": "fact-authority-score-realistic-target",
+    "fact": "Semrush Authority Score of 100 is not a realistic target for a local business — AS is a log-scale metric where national brands sit in the 80s-90s; a realistic strong target for Bartlett is roughly mid-30s to 40s. AS is driven ~90% by backlink profile.",
+    "category": "meta",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "2026-07-28 Cowork debrief — expert-stated general SEO knowledge, not a live Semrush pull", "checkedAt": null, "note": "Chosen first lever to move AS: disavowing ~319 identified spam backlinks (~140 domains) — see memory/decisions.md for the prioritization decision, and data/tasks.json for the pending disavow task." }
   },
   {
     "id": "fact-callrail-nap-rule",

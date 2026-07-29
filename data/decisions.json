@@ -34,5 +34,23 @@
     "confidence": "medium",
     "reversalConditions": "Mikey wants real-time Cowork read/write against this exact file tree; would require revisiting the local-only decision.",
     "source": "Mikey directly"
+  },
+  {
+    "id": "dec-disavow-first-as-lever",
+    "date": "2026-07-28",
+    "decision": "Prioritize disavowing ~319 identified spam backlinks (~140 domains) as the first move to raise Authority Score, ahead of new link-building outreach.",
+    "rationale": "Authority Score is ~90% a backlink-profile metric and a realistic strong target is ~mid-30s-40s (100 is unreachable for a local business — it's a log-scale metric where national brands sit in the 80s-90s). Cleaning up confirmed toxic links is the more contained first step before investing in new outreach.",
+    "confidence": "medium",
+    "reversalConditions": "Semrush toxicity data turns out to require manual export with no reliable way to confirm which domains are actually toxic, making the disavow list unreliable to compile safely.",
+    "source": "2026-07-28 Cowork debrief"
+  },
+  {
+    "id": "dec-railway-live-deploy",
+    "date": "2026-07-29",
+    "decision": "Deploy the Bartlett Ops Brain dashboard live on Railway (private, HTTP Basic Auth-gated, persistent volume) so it's reachable from home, while keeping local http://localhost:4178 available unauthenticated for on-machine work. No GitHub remote was created — deployed via direct `railway up` CLI upload, not a git-linked service.",
+    "rationale": "Mikey wants to work on this from home, not just this machine. This is the reversal condition explicitly named in dec-local-only ('Mikey explicitly asks to push to a private remote for backup or multi-machine access'), but only partially: the code/data now also lives on Railway's private infrastructure, but never touched a public (or even private) GitHub remote, since gh CLI wasn't available. Basic Auth and a persistent volume were added first since the server had zero authentication and no durable storage across container restarts/redeploys.",
+    "confidence": "high",
+    "reversalConditions": "Mikey wants GitHub-linked continuous deployment added (would need gh CLI installed or the repo connected via Railway's dashboard), or wants the live deploy taken down and to go back to local-only.",
+    "source": "Mikey directly, 2026-07-29 — see memory/log.md (2026-07-29 entry) for the full deploy record."
   }
 ]

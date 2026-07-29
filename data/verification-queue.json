@@ -13,11 +13,11 @@
     "id": "vq-351-pages-not-indexed",
     "claim": "GSC Indexing report (pulled Jul 1) reportedly showed 351 of 626 total pages excluded, only 275 indexed.",
     "sourceRef": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md — cycle task 'Investigate why 351 pages are not indexed'",
-    "status": "open",
+    "status": "resolved",
     "assignedTo": null,
     "addedAt": "2026-07-15",
-    "resolvedAt": null,
-    "resolution": null
+    "resolvedAt": "2026-07-28",
+    "resolution": "Re-pulled live 2026-07-28 (data as of 7/23): 269 indexed / 309 not indexed — close to the original magnitude, with a full cause breakdown now available (crawled-not-indexed 184, 404 65, redirect 30, canonical 23, noindex 7). See data/site-facts.json: fact-indexing-breakdown-2026-07-23 for the detail and drilldowns (WP technical noise, deleted CA pages, a couple of real blog posts Google declined or 404'd)."
   },
   {
     "id": "vq-boise-183-clicks",
@@ -46,6 +46,96 @@
     "status": "open",
     "assignedTo": "Bright Development",
     "addedAt": "2026-07-15",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-lsa-callrail-number",
+    "claim": "Unconfirmed whether Google Local Services Ads (LSA) has its own dedicated CallRail-tracked number, or whether LSA leads simply come in as phone calls to the same general Boise office number as everything else. If the latter, LSA calls aren't separately attributed at all — they look like generic phone volume, indistinguishable from organic or referral calls.",
+    "sourceRef": "Website tracking outline.pdf (Jul 16, rev. 2), Section 1 — labeled UNDER REVIEW",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-16",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-roofle-querystring-populates",
+    "claim": "A real Roofle webhook payload confirms a querystring field exists to hold UTM/gclid data, but it was null on the one example seen (that lead had no query string). Still unconfirmed: whether querystring actually populates when a lead arrives via a UTM-tagged link, and whether n8n's roofle-st mapping forwards externalUrl/querystring into SalesTrak at all, or drops them.",
+    "sourceRef": "Website tracking outline.pdf (Jul 16, rev. 2), Section 2 — labeled UNDER REVIEW; Jon is checking a recent roofle-st execution log in n8n to settle this",
+    "status": "open",
+    "assignedTo": "Jon",
+    "addedAt": "2026-07-16",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-google-ads-autotagging",
+    "claim": "Whether Google Ads auto-tagging (auto-appending gclid to landing page URLs) is turned on for account 279-115-8719. Assumed on by default, not confirmed.",
+    "sourceRef": "2026-07-27 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-27",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-ga4-analytics-duplicate-source",
+    "claim": "Mild tension between the Jul 16 audit's live check (GA4 confirmed single-fire) and observing both Site Kit Analytics and MonsterInsights active on the site. Not confirmed as an actual duplicate hit — the audit's page_view count wasn't independently re-verified this session, and consent mode gated direct beacon inspection.",
+    "sourceRef": "2026-07-27 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-27",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-google-ads-forms-source-url",
+    "claim": "Whether the dedicated Google Ads Gravity Forms (id 10, 14, 16, 17) capture a Source URL/referrer field on their entries. Not checked.",
+    "sourceRef": "2026-07-27 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-27",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-404-blog-posts-renamed",
+    "claim": "Two blog posts that are 404ing (prevent-roof-leaks-before-they-start, signs-you-need-a-new-roof) may have been renamed to /blog/roof-leak-warning-signs-every-homeowner-can-see/ rather than deleted. Unconfirmed.",
+    "sourceRef": "2026-07-28 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-28",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-home-404-source-link",
+    "claim": "Something on-site links to /home and to /wp-content/* paths that 404 — the source of those links hasn't been located yet.",
+    "sourceRef": "2026-07-28 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-28",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-state-pages-indexing-outcome",
+    "claim": "The kept state pages (e.g. /states/idaho/) are currently 'crawled, not indexed' — unconfirmed whether they'll earn indexing over time or are simply too thin to ever index.",
+    "sourceRef": "2026-07-28 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-28",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-semrush-toxicity-api-access",
+    "claim": "Unconfirmed whether the Semrush MCP/API can surface backlink toxicity data needed to compile the disavow list, or whether that data is UI-only and requires manual export.",
+    "sourceRef": "2026-07-28 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-28",
     "resolvedAt": null,
     "resolution": null
   }

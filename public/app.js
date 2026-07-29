@@ -285,7 +285,67 @@ async function appendMemory(){
     const res=await fetch('/api/memory/append',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:v})});
     if(!res.ok) throw new Error("bad status "+res.status);
     inp.value=""; showToast("Appended to memory/log.md");
+    renderMemory();
   }catch(e){ showToast("Couldn't reach the server — is it running?"); }
+}
+
+function formatMemHeading(h){
+  if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(h)){
+    const d=new Date(h);
+    if(!isNaN(d)) return d.toLocaleString(undefined,{month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit"});
+  }
+  return h;
+}
+
+// Lightweight markdown-lite renderer for log entry bodies: escapes HTML first
+// (this is untrusted freeform text from Cowork pastes), then turns **bold**
+// into <strong> and "- " lines into real <ul><li> lists, since the raw log
+// is written in that style throughout memory/log.md.
+function mdLite(raw){
+  const boldEsc = esc(raw).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  const lines = boldEsc.split("\n");
+  let html=""; let inList=false;
+  lines.forEach(line=>{
+    const trimmed=line.trim();
+    if(trimmed.startsWith("- ")){
+      if(!inList){ html+="<ul>"; inList=true; }
+      html+="<li>"+trimmed.slice(2)+"</li>";
+    } else if(trimmed===""){
+      if(inList){ html+="</ul>"; inList=false; }
+    } else if(inList && line.startsWith("  ")){
+      html+=" "+trimmed;
+    } else {
+      if(inList){ html+="</ul>"; inList=false; }
+      html+="<p>"+trimmed+"</p>";
+    }
+  });
+  if(inList) html+="</ul>";
+  return html;
+}
+
+async function renderMemory(){
+  const list=document.getElementById("memList"); const count=document.getElementById("memCount");
+  try{
+    const res=await fetch('/api/memory');
+    if(!res.ok) throw new Error("bad status "+res.status);
+    const {entries}=await res.json();
+    count.textContent="("+entries.length+")";
+    if(!entries.length){ list.innerHTML='<div class="empty">Nothing logged yet.</div>'; return; }
+    list.innerHTML="";
+    entries.forEach((e,i)=>{
+      const el=document.createElement("div"); el.className="mementry";
+      const head=document.createElement("button"); head.className="memhead";
+      head.innerHTML='<span class="arw">▸</span><span class="memdate">'+esc(formatMemHeading(e.heading))+'</span>';
+      const body=document.createElement("div"); body.className="membody"; body.hidden=i!==0;
+      body.innerHTML=mdLite(e.body);
+      head.classList.toggle("open",i===0);
+      head.addEventListener("click",()=>{ const open=body.hidden; body.hidden=!open; head.classList.toggle("open",open); });
+      el.appendChild(head); el.appendChild(body); list.appendChild(el);
+    });
+  }catch(e){
+    count.textContent="";
+    list.innerHTML='<div class="empty">Couldn\'t load memory/log.md — is the server running?</div>';
+  }
 }
 
 /* ===================== WIRE UP ===================== */
@@ -303,7 +363,7 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
 });
 
 function renderLegend(){ const host=document.getElementById("legend"); host.querySelectorAll(".ph").forEach(n=>n.remove()); PHASES.forEach(p=>{const s=document.createElement("span");s.className="ph ph-"+p;s.textContent=p;host.appendChild(s);}); }
-function renderAll(){ renderShell(); renderCycle(); renderCadence(); renderArchive(); }
+function renderAll(){ renderShell(); renderCycle(); renderCadence(); renderArchive(); renderMemory(); }
 
 /* ===================== INIT ===================== */
 (async function init(){

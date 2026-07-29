@@ -1,0 +1,243 @@
+[
+  {
+    "id": "tool-ref-wordpress",
+    "name": "WordPress",
+    "category": "Website / CMS",
+    "purpose": "The CMS the entire bartlettroofs.com website runs on. Every page, post, and location page lives here.",
+    "howWeUseIt": [
+      "All page/content edits happen in WordPress admin, built in Draft and shown in Preview before anything publishes.",
+      "The page builder is Avada/Fusion Builder — not Elementor. Global Avada templates affect many pages at once; never bulk-edit one without knowing every page it touches.",
+      "A custom post type named 'service-areas' powers the individual city/location pages (e.g. /service-areas/boise-id/).",
+      "Yoast (see separate entry) is installed on top of WordPress for SEO fields."
+    ],
+    "verifiedNotes": "Confirmed high-confidence (data/site-facts.json: fact-cms, fact-service-areas-cpt). The full active-plugin list was inventoried once (task ta983d02c21c843f2, done) — see memory/log.md and the dashboard's Archive tab for that snapshot rather than assuming it here.",
+    "cautions": [
+      "Never touch the live site unless explicitly asked — read-only discovery is the default.",
+      "Confirm a working, restorable backup exists before any live-site change.",
+      "Mikey logs in. Never ask for or handle WordPress or hosting passwords."
+    ],
+    "sourceNote": "docs/wordpress-safety.md, data/site-facts.json"
+  },
+  {
+    "id": "tool-ref-yoast",
+    "name": "Yoast SEO",
+    "category": "Website / SEO",
+    "purpose": "The SEO plugin controlling page titles, meta descriptions, XML sitemaps, and taxonomy indexing settings for the WordPress site.",
+    "howWeUseIt": [
+      "SEO title + meta description edits for any page happen here (WordPress → Yoast → the page's SEO tab).",
+      "The XML sitemap Yoast generates is what gets submitted to Google Search Console and Bing Webmaster Tools.",
+      "Yoast's Settings → Content Types / Taxonomies screen controls which taxonomies (e.g. testimonial-tag, element-category) get their own sitemap entries and indexing — utility taxonomies unrelated to real content should be disabled here to avoid wasting crawl budget."
+    ],
+    "verifiedNotes": "Confirmed high-confidence as the SEO plugin in use, not Rank Math (data/site-facts.json: fact-seo-plugin).",
+    "cautions": [
+      "Not Rank Math — don't propose Rank Math-specific instructions.",
+      "Verify any schema/meta change in View Source after publishing, not just the Yoast preview."
+    ],
+    "sourceNote": "docs/wordpress-safety.md, data/site-facts.json"
+  },
+  {
+    "id": "tool-ref-avada",
+    "name": "Avada / Fusion Builder",
+    "category": "Website / Page builder",
+    "purpose": "The visual page-building tool used to lay out every page on the site, including new location and service pages.",
+    "howWeUseIt": [
+      "New pages (Exteriors hub, service pages, location pages) are built by pulling the existing Avada brand tokens/template so they match the rest of the site.",
+      "Global Avada templates apply to many pages at once — a change to one propagates everywhere it's used."
+    ],
+    "verifiedNotes": "Confirmed high-confidence as the page builder in use, not Elementor (data/site-facts.json: fact-cms).",
+    "cautions": [
+      "Never bulk-edit an Avada global template without understanding every page it affects.",
+      "Build in Draft, show Preview, publish only on approval."
+    ],
+    "sourceNote": "docs/wordpress-safety.md"
+  },
+  {
+    "id": "tool-ref-gsc",
+    "name": "Google Search Console",
+    "category": "Measurement",
+    "purpose": "Google's own index/coverage/ranking data source — what's indexed, what's erroring, what's ranking and for which queries.",
+    "howWeUseIt": [
+      "Weekly: pull the last 7 days for new coverage errors and top gaining/losing pages or queries (see the Technical & Site Health SOP).",
+      "Used to confirm which page currently ranks for a given query before doing internal-linking or content work (e.g. the 'roofer near me' URL-targeting fix).",
+      "The 'Why pages aren't indexed' report is the primary tool for investigating the 351-of-626-pages-excluded issue.",
+      "Provides the submission target for the Yoast XML sitemap, and cross-checks Bing Webmaster Tools coverage."
+    ],
+    "verifiedNotes": "Access confirmed working (task t74893df606e34be5, done) with a 90-day baseline pulled — see memory/log.md for that snapshot. Known tracking gaps remain unverified (data/site-facts.json: fact-tracking-gaps) — treat GSC as reliable for indexing/ranking data but don't assume it reconciles perfectly with GA4/CallRail yet.",
+    "cautions": [
+      "One data pull is a snapshot, not a trend — always compare to the prior week/month before drawing a conclusion.",
+      "Confirm which GSC property (with/without www, http/https) is verified before citing numbers."
+    ],
+    "sourceNote": "data/cadence.json, data/tasks.json, data/site-facts.json"
+  },
+  {
+    "id": "tool-ref-ga4",
+    "name": "Google Analytics 4 (GA4)",
+    "category": "Measurement",
+    "purpose": "Primary web analytics/behavior tracking — traffic, conversions, and (once fixed) lead attribution.",
+    "howWeUseIt": [
+      "Weekly: cross-referenced with CallRail and Meta to confirm every lead has source/campaign attribution.",
+      "Used with Tag Assistant/DebugView to verify a tracking change actually fires one clean event, rather than assuming a fix worked.",
+      "Landing page performance (LCP, conversion rate, cost per lead) is reviewed here monthly alongside PageSpeed Insights and Meta."
+    ],
+    "verifiedNotes": "Access confirmed working with a 90-day baseline pulled (task t74893df606e34be5, done). A suspected double-fire (GA4 firing via both Site Kit and GTM simultaneously, inflating numbers) is an open Discovery task — treat current GA4 volume numbers as potentially overstated until that's resolved (data/site-facts.json: fact-tracking-gaps).",
+    "cautions": [
+      "Never change GA4 tracking or event/form destinations without explicit approval.",
+      "Verify with DebugView/a real test lead — don't assume a tracking change worked."
+    ],
+    "sourceNote": "docs/ads-safety.md, data/site-facts.json, data/tasks.json"
+  },
+  {
+    "id": "tool-ref-gtm",
+    "name": "Google Tag Manager (GTM)",
+    "category": "Measurement",
+    "purpose": "Tag/trigger management layer sitting in front of GA4, the Meta Pixel, and other tracking scripts.",
+    "howWeUseIt": [
+      "The likely source of the suspected GA4 double-fire (GA4 firing via both Site Kit and GTM) — GTM is the presumed single source of truth to keep once that's resolved.",
+      "Used to fire GA4, Meta Pixel, and CallRail tags on new ad landing pages, along with a defined UTM convention."
+    ],
+    "verifiedNotes": "Existence/use inferred from the GA4 de-dupe task and ads tracking tasks — the exact current tag/trigger configuration has not been audited yet. Treat as an open Discovery item, not a confirmed-clean setup.",
+    "cautions": [
+      "Never change GTM tags/triggers/destinations without explicit approval.",
+      "One change at a time; verify via Tag Assistant after each change."
+    ],
+    "sourceNote": "data/tasks.json (GA4 double-fire task), data/site-facts.json"
+  },
+  {
+    "id": "tool-ref-bing-webmaster",
+    "name": "Bing Webmaster Tools",
+    "category": "Measurement",
+    "purpose": "Bing's equivalent of Search Console — index coverage on Bing, and relevant to Microsoft/Copilot-style discovery.",
+    "howWeUseIt": [
+      "Account creation and sitemap submission (the Yoast XML sitemap URL) is a one-time setup task, followed up ~2 weeks later to check coverage."
+    ],
+    "verifiedNotes": "Not yet set up as of the last known status — this is an open task (t70b3e78f599c450c), not a live/confirmed account.",
+    "cautions": [
+      "Treat Bing as one important index source, not a guaranteed ChatGPT/Copilot citation lever."
+    ],
+    "sourceNote": "data/tasks.json"
+  },
+  {
+    "id": "tool-ref-semrush",
+    "name": "Semrush",
+    "category": "Research / Competitive intelligence",
+    "purpose": "Competitor research, keyword-gap analysis, backlink auditing, and domain authority tracking.",
+    "howWeUseIt": [
+      "Monthly: re-pull domain_rank, domain_organic (top 50), domain_organic_organic, and a keyword-gap batch, compared against the prior baseline.",
+      "The Backlink Audit / Backlinks report is used to identify and export confirmed spam/toxic referring domains (filtered by known spam anchor-text patterns) for a Google Search Console disavow file.",
+      "Initial full pull completed June 2026 — that data lives in Bartlett-SEO-Intelligence.html on the Desktop, not in this repo."
+    ],
+    "verifiedNotes": "Confirmed in active use (data/tasks.json: monthly Semrush cadence item, disavow-file task). The Backlink Audit toxicity tool is UI-only, not API-accessible — exports must be pulled manually.",
+    "cautions": [
+      "A human must review the disavow domain list before it's ever submitted to Google — never auto-submit."
+    ],
+    "sourceNote": "data/tasks.json, data/cadence.json"
+  },
+  {
+    "id": "tool-ref-callrail",
+    "name": "CallRail",
+    "category": "Lead tracking",
+    "purpose": "Call tracking with dynamic phone numbers, used to attribute inbound calls to their source/campaign.",
+    "howWeUseIt": [
+      "Weekly lead-review checks that GA4/CallRail/Meta attribution lines up for every new lead.",
+      "Part of the tracking stack wired into ad landing pages alongside GA4 and the Meta Pixel."
+    ],
+    "verifiedNotes": "Confirmed part of the real lead-flow stack (data/site-facts.json: fact-lead-stack), but the exact current wiring is an open Discovery task (mapping where contact/quote forms submit).",
+    "cautions": [
+      "Never use a CallRail dynamic tracking number as the public GBP/citation NAP phone number — this is a hard rule, not a style preference."
+    ],
+    "sourceNote": "data/site-facts.json (fact-callrail-nap-rule, fact-lead-stack)"
+  },
+  {
+    "id": "tool-ref-birdeye",
+    "name": "Birdeye",
+    "category": "Reviews / Local listings",
+    "purpose": "Manages Google Business Profile (GBP) listings, review requests, and review replies across every market/office.",
+    "howWeUseIt": [
+      "Weekly: check for new reviews on Google + Birdeye, draft replies for Mikey's approval, flag anything needing a phone call.",
+      "Monthly: pull new-review count + average rating per location against the 8-12/mo target; adjust ask timing/channel if a market is behind pace.",
+      "NAP/category/hours audits and updates go through here — Birdeye is the single place GBP listings get edited."
+    ],
+    "verifiedNotes": "Confirmed already owned/in use (data/tasks.json: 'Birdeye (already owned)'). The automated review-request-on-job-completion configuration and the per-market baseline are open build tasks, not yet live.",
+    "cautions": [
+      "Draft replies for approval — do not post without sign-off, especially for negative reviews.",
+      "Never use a CallRail number as the listed NAP phone number here."
+    ],
+    "sourceNote": "data/tasks.json, data/cadence.json"
+  },
+  {
+    "id": "tool-ref-meta-business-manager",
+    "name": "Meta Business Manager",
+    "category": "Paid media",
+    "purpose": "Manages Facebook/Instagram ad campaigns, the Meta Pixel, and domain verification for ad landing pages.",
+    "howWeUseIt": [
+      "Ad landing pages in /lp/ get the Meta Pixel wired in alongside GA4 and CallRail, with a defined UTM convention.",
+      "Domain verification for the ad landing-page domain has to be completed here before some ad features work."
+    ],
+    "verifiedNotes": "The landing-page build and tracking-wiring tasks (t{e2605450...}, t{f2104dbec...}) are open/not yet built — this is the intended architecture, not a confirmed-live setup.",
+    "cautions": [
+      "Meta domain verification and pixel wiring require Mikey to complete the actual steps in Meta Business Manager — an agent can guide, not log in on his behalf.",
+      "Never invent stats, service areas, or claims in ad copy — if a number isn't verified, don't use it."
+    ],
+    "sourceNote": "docs/ads-safety.md, data/tasks.json"
+  },
+  {
+    "id": "tool-ref-roofle",
+    "name": "Roofle",
+    "category": "Lead capture",
+    "purpose": "Instant roofing-quote tool embedded on the site, generating leads directly.",
+    "howWeUseIt": [
+      "One of the forms whose destination is being mapped in the open lead-flow-mapping task — where Roofle submissions actually land (CRM, email, or otherwise) is not yet fully confirmed."
+    ],
+    "verifiedNotes": "Confirmed part of the real lead-flow stack (data/site-facts.json: fact-lead-stack), but exact wiring is unverified/open (task t7bc1058ff4294488, currently in progress).",
+    "cautions": [
+      "Do not assume Roofle leads are reaching a tracked destination until the lead-flow map confirms it."
+    ],
+    "sourceNote": "data/site-facts.json, data/tasks.json"
+  },
+  {
+    "id": "tool-ref-gravity-forms",
+    "name": "Gravity Forms",
+    "category": "Lead capture",
+    "purpose": "The WordPress plugin powering the site's contact and quote forms.",
+    "howWeUseIt": [
+      "Same open question as Roofle — the lead-flow-mapping task documents notification emails, CRM/Zapier links, and CallRail/Roofle embedding for every form on the site."
+    ],
+    "verifiedNotes": "Confirmed part of the real lead-flow stack (data/site-facts.json: fact-lead-stack). Exact form-by-form destination wiring is unverified/open.",
+    "cautions": [
+      "Flag any form sending leads only to a personal inbox with no record — that's a real risk, not a hypothetical."
+    ],
+    "sourceNote": "data/site-facts.json, data/tasks.json"
+  },
+  {
+    "id": "tool-ref-salestrak",
+    "name": "SalesTrak",
+    "category": "CRM / Sales pipeline",
+    "purpose": "The CRM sales reps use to pin leads on a map, move jobs through Insurance/Cash workflows, and track everything from first contact through invoicing/A-R.",
+    "howWeUseIt": [
+      "Every lead becomes a pin/project in SalesTrak (Map → Add Project), tagged Residential/Commercial, Inbound/Self-Gen, with a Stage (Observed Damage / No Visible Damage / Aged Roof) and a Lead Source.",
+      "Jobs move through the Leads workflow, then automatically or manually into Insurance Jobs or Cash Jobs stages, then Approvals, then the post-sale Scheduling/Production/Invoicing/A-R stages.",
+      "Rooflink integration: moving a job into 'Inspection Scheduled' should auto-create it in Rooflink; if that doesn't happen, move the job back one stage and retry.",
+      "Marketing's interest in SalesTrak is primarily the Lead Source field (attribution) and the Lost Leads workflow (Not Interested / Interested in the Future / Not Enough Damage) — these should reconcile with GA4/CallRail/Meta attribution, not contradict it."
+    ],
+    "verifiedNotes": "Documented in detail in the separate Sales Representative SOP (Salestrak Desktop SOP.pdf, provided by Mikey). That SOP is the sales-team source of truth for SalesTrak procedure; this entry only summarizes the parts marketing needs to know for lead-source reconciliation.",
+    "cautions": [
+      "Marketing should read SalesTrak's Lead Source / Lost Leads data as a cross-check on attribution, not edit sales-side workflow stages directly.",
+      "See the full Sales Representative SOP for anything beyond attribution reconciliation — don't duplicate sales-process detail here."
+    ],
+    "sourceNote": "Salestrak Desktop SOP.pdf (provided by Mikey, 2026-07-15), data/site-facts.json (fact-lead-stack)"
+  },
+  {
+    "id": "tool-ref-automation-glue",
+    "name": "n8n / Zapier",
+    "category": "Automation",
+    "purpose": "Automation/integration glue connecting forms, CRM, and notification tools together.",
+    "howWeUseIt": [
+      "Exact workflows (which automations exist, what they connect) are part of the open lead-flow-mapping task — document any CRM/Zapier link found for each form."
+    ],
+    "verifiedNotes": "Confirmed part of the real lead-flow stack (data/site-facts.json: fact-lead-stack). No specific workflow has been confirmed/documented yet.",
+    "cautions": [
+      "Don't assume an automation exists or works until the lead-flow map confirms it."
+    ],
+    "sourceNote": "data/site-facts.json"
+  }
+]

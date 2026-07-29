@@ -94,6 +94,31 @@ function validateVerificationQueue(items, errors){
   });
 }
 
+function validateProcedures(items, errors){
+  if (!Array.isArray(items)) { errors.push('procedures.json: must be an array'); return; }
+  items.forEach((p,i)=>{
+    const ctx = `procedures[${i}] (${p && p.title})`;
+    if (!p || !isString(p.id)) errors.push(`${ctx}: missing id`);
+    if (!isString(p.department)) errors.push(`${ctx}: missing department`);
+    if (!isString(p.title)) errors.push(`${ctx}: missing title`);
+    if (!isString(p.objective)) errors.push(`${ctx}: missing objective`);
+    if (!Array.isArray(p.steps) || !p.steps.length) errors.push(`${ctx}: steps must be a non-empty array`);
+  });
+}
+
+function validateToolReference(items, errors){
+  if (!Array.isArray(items)) { errors.push('tool-reference.json: must be an array'); return; }
+  items.forEach((t,i)=>{
+    const ctx = `tool-reference[${i}] (${t && t.name})`;
+    if (!t || !isString(t.id)) errors.push(`${ctx}: missing id`);
+    if (!isString(t.name)) errors.push(`${ctx}: missing name`);
+    if (!isString(t.category)) errors.push(`${ctx}: missing category`);
+    if (!isString(t.purpose)) errors.push(`${ctx}: missing purpose`);
+    if (!Array.isArray(t.howWeUseIt) || !t.howWeUseIt.length) errors.push(`${ctx}: howWeUseIt must be a non-empty array`);
+    if (!isString(t.verifiedNotes)) errors.push(`${ctx}: missing verifiedNotes`);
+  });
+}
+
 function validatePendingScaffold(obj, filename, errors){
   if (!obj || typeof obj !== 'object') { errors.push(`${filename}: must be an object`); return; }
   if (obj.status !== 'pending') errors.push(`${filename}: status must be "pending" until real data lands`);
@@ -133,6 +158,12 @@ export function validateAll(dataDir = DATA_DIR){
 
   const verificationQueue = readJsonIfExists(dataDir, 'verification-queue.json');
   if (verificationQueue !== undefined) validateVerificationQueue(verificationQueue, errors);
+
+  const procedures = readJsonIfExists(dataDir, 'procedures.json');
+  if (procedures !== undefined) validateProcedures(procedures, errors);
+
+  const toolReference = readJsonIfExists(dataDir, 'tool-reference.json');
+  if (toolReference !== undefined) validateToolReference(toolReference, errors);
 
   for (const filename of PENDING_FILES){
     const scaffold = readJsonIfExists(dataDir, filename);

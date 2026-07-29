@@ -1,50 +1,30 @@
 # Cowork Read/Write Contract
 
 This repo is **strictly local, ever** (see `docs/operating-rules.md`) — there is no public
-remote, and no live network sync to a Cowork session is wired up. Cowork participates two ways:
-an **automatic local launch** the moment a task hits Doing, and a **manual brief-out/paste-back**
-loop for anything not covered by that (Cadence items, re-running a task, or working from a
-non-Windows machine).
+remote, and no live network sync to a Cowork session is wired up. Cowork participates one way:
+the **manual brief-out/paste-back** loop below. Handoff is always something Mikey does on purpose.
 
-## Automatic: moving a card to Doing launches a live session (2026-07-15)
+## Auto-launch removed (2026-07-16)
 
-Dragging a Cycle task card into the **Doing** column fully automatically spawns a new terminal
-window running the Claude Code CLI with the task's operator brief as its opening message — a live
-session starts immediately, with the same brief the "Copy Cowork brief" button produces, on
-**this machine**. This is Windows-only (`server/server.js` → `launchCowork()`, invoked from the
-`/api/tasks` POST handler via `detectNewlyMovedToDoing()`) and fires for every task that
-transitions into "doing", including from bulk edits — there is **no confirmation step and no
-pause to review the brief first**.
+A brief-lived feature auto-spawned a local Claude Code CLI session the moment a card moved to
+Doing (`server/server.js` → `launchCowork()`, invoked via `detectNewlyMovedToDoing()` from the
+`/api/tasks` POST handler; wrapper script `server/cowork-launch.ps1`). It was removed:
 
-This does not weaken any of the safety rules — the launched session receives the exact same
-MISSION / SAFETY RULES / STOP AND ASK BEFORE sections as the manual brief, so it still won't
-publish, delete, redirect, or touch tracking/NAP without asking. It also launches in
-**`--permission-mode plan`** (read-only/planning only) as an enforced default, not just a prompt
-instruction — the session can research and draft a plan but can't execute tool actions until
-Mikey engages with it and approves. What's automated is the *handoff*, not the permission to act
-unsupervised.
+- Moving several cards to Doing at once would have spawned several concurrent sessions
+  unattended — not something Mikey wants.
+- The longer-term direction is a **Claude Code on the web** handoff (a browser session with a
+  pre-filled task and live repo access), which needs the repo connected to a GitHub remote — that
+  would revisit the "strictly local, ever" decision and is deferred to a later design pass.
 
-**Hardened against injection and CSRF (2026-07-15, after a security review flagged the original
-version):** the brief is written to a server-generated temp file
-(`bartlett-cowork-<crypto.randomUUID()>.txt`) and handed to a fixed, checked-in wrapper script
-(`server/cowork-launch.ps1`) that reads it and passes the content to PowerShell's `Start-Process`
-as a real parameter value — never as text placed on a `cmd.exe`-parsed command line. Task fields
-(title, note, exec steps) are writable via an unauthenticated local POST, and `cmd.exe`'s `start`
-re-tokenizes its full command line using rules that make embedding untrusted text in it exploitable
-regardless of how carefully Node quotes its own argv array. All mutating `/api/*` routes also
-reject cross-origin `POST` requests (`isSameOriginRequest()`), closing the path where a malicious
-webpage could otherwise trigger a launch with attacker-chosen content. See `dec-secure-launch` in
-`memory/decisions.md` for the full writeup, including the empirical verification (a task titled
-with embedded quotes/`&`/backticks/newlines launched cleanly with no injected process).
+The command-injection hardening and the `--permission-mode plan` enforcement that used to gate the
+launched session (see the former `dec-secure-launch` writeup in `memory/decisions.md`) went away
+with the feature itself — there's no launch left to harden. The **CSRF protection is unaffected
+and still in force**: all mutating `/api/*` routes (`tasks`, `cadence`, `archive`,
+`memory/append`) still reject cross-origin `POST` requests via `isSameOriginRequest()`, since that
+guards the whole file-backed brain, not just the removed launch path.
 
-**Also fixed along the way:** `cmd.exe`'s `start` silently drops the whole launch if its argument
-contains a newline (no error surfaced) — the file-based approach above sidesteps this too, so the
-brief no longer needs to be collapsed to a single line the way an earlier version of this feature
-did.
-
-This is Claude Code CLI, not Claude Desktop and not Cowork specifically — this machine has no
-working `claude://` protocol handler for Claude Desktop (the registry key exists with an empty
-command), while `claude-cli://` → the Claude Code CLI binary is registered and fully scriptable.
+Moving a card to Doing today just saves its column — nothing opens automatically. Handoff is the
+manual flow below.
 
 ## Manual: Cowork gets the brief via copy/paste
 

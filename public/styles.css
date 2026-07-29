@@ -179,3 +179,18 @@ nav.tabs{ display:flex; flex-wrap:wrap; gap:4px; margin:22px 0 18px; border-bott
   background:var(--teal); border:none; border-radius:8px; padding:10px 16px; cursor:pointer; }
 .memwrap button:hover{ background:var(--teal-700); }
 .memhint{ font-size:12px; color:var(--muted); margin-top:8px; }
+
+.memlogwrap{ margin-top:18px; }
+.memlogtitle{ font-family:var(--display); font-size:17px; font-weight:600; text-transform:uppercase; letter-spacing:.03em; color:var(--slate); margin-bottom:12px; }
+.memlogtitle .tcount{ font:600 11px var(--mono); color:var(--faint); margin-left:6px; text-transform:none; letter-spacing:normal; }
+.mementry{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:10px 14px; margin-bottom:10px; box-shadow:0 1px 3px rgba(40,52,66,.06); }
+.memhead{ width:100%; display:flex; align-items:center; gap:7px; background:none; border:none; padding:6px 0; cursor:pointer; text-align:left; }
+.memhead .arw{ transition:transform .15s; display:inline-block; color:var(--teal-700); flex:none; }
+.memhead.open .arw{ transform:rotate(90deg); }
+.memdate{ font:700 11px var(--mono); color:var(--teal-700); text-transform:uppercase; letter-spacing:.03em; }
+.membody{ font-size:13px; color:var(--ink); line-height:1.55; margin-top:6px; padding-top:8px; border-top:1px dashed var(--line); }
+.membody p{ margin:0 0 8px; }
+.membody p:last-child{ margin-bottom:0; }
+.membody ul{ margin:0 0 8px; padding-left:18px; }
+.membody li{ margin-bottom:3px; }
+.membody strong{ color:var(--slate); }

@@ -8,6 +8,8 @@
     "start": "node server/server.js",
     "import": "node scripts/import.mjs",
     "validate": "node scripts/validate.mjs",
+    "sops": "node scripts/generate-sops.mjs",
+    "sop-pdfs": "node scripts/render-sop-pdfs.mjs",
     "test": "node --test"
   }
 }

@@ -99,3 +99,99 @@ Template for each entry:
   captured (would require a live-UI walkthrough per SOP), or wants one-off tasks included by
   default rather than promoted only when they prove repeatable.
 - Source: Mikey directly, 2026-07-15.
+
+### 2026-07-16 — SOP library extended to standing procedures (not just recurring cadence)
+- Decision: Added `data/procedures.json` — repeatable, safety/reversal-critical, or cross-tool
+  procedures that don't run on a fixed cadence but recur across many tasks (301 redirects, schema
+  verification, NAP/GBP updates, new-page builds, the Cowork auto-launch flow, new-agent
+  onboarding, direct data-file edits). `scripts/generate-sops.mjs` now renders these alongside the
+  cadence-based SOPs into the same `docs/sops/<department>/` tree (as `proc-*.md`, vs.
+  `weekly-*.md`/`monthly-*.md` for cadence items), added a new `OPS` department for
+  dashboard/repo-operations procedures that don't map to a marketing phase, and validated via a
+  new `validateProcedures()` check in `scripts/validate.mjs`. Fixed two generator bugs found while
+  doing this: `slugify()` was truncating filenames mid-word, and the Desktop mirror never deleted
+  files that a prior run had created — both fixed (word-boundary truncation; mirror dir is now
+  wiped before each copy).
+- Rationale: Mikey asked to build SOP systems for "anything I think" needs one, acting as Marketing
+  Director. Every procedure's steps and cautionary notes are derived from content already in this
+  repo (safety docs, task exec arrays, server.js comments, prior decisions) — nothing invented.
+- Confidence: medium
+- Reversal conditions: a procedure turns out to not match how the step is actually done once
+  observed live; Mikey wants procedures.json entries reorganized under a different department
+  scheme.
+- Source: Mikey directly, 2026-07-16.
+
+### 2026-07-16 — Auto-launch feature removed; handoff goes fully manual
+- Decision: Removed the auto-launch entirely — moving a card to Doing no longer spawns a Claude
+  Code CLI session. `detectNewlyMovedToDoing()` and `launchCowork()` are deleted from
+  `server/server.js`, `server/cowork-launch.ps1` is deleted, and `/api/tasks` now just writes and
+  validates. Handoff is the existing manual "Copy Cowork brief" → paste-into-a-session flow
+  (`proc-cowork-task-launch` in `data/procedures.json`, rewritten to match). This supersedes the
+  2026-07-15 "Moving a card to Doing fully-automatically launches a live Claude Code session"
+  decision, and supersedes the launch-mechanism half of `dec-secure-launch` — the CSRF guard
+  (`isSameOriginRequest()`) that decision also introduced stays in force, since it protects all
+  mutating routes, not just the removed launch.
+- Rationale: (1) moving several cards to Doing at once would spawn several concurrent sessions
+  unattended, which Mikey doesn't want; (2) the actual goal is a **Claude Code on the web** handoff
+  — a browser session opened with the specific task pre-loaded and live access to repo files — but
+  that requires connecting this repo to a GitHub remote, which revisits "strictly local, ever"
+  (`dec-local-only`) and needs its own design pass rather than being bolted onto the local
+  auto-launch. Going manual now is the simplest correct state in the meantime.
+- Confidence: high
+- Reversal conditions: Mikey decides on and approves a specific web-handoff design (repo on a
+  private GitHub remote, `claude.ai/code?prompt=...&repositories=...` pre-fill or equivalent) and
+  asks for it to be wired up.
+- Source: Mikey directly, 2026-07-16.
+
+### 2026-07-16 — SOP library split into Marketing & Media vs. Internal Ops; added tool reference + AI-work doc
+- Decision: Restructured `docs/sops/` into `marketing-media/` (recurring SOPs, standing
+  procedures, a new `data/tool-reference.json`-driven programs/tools reference, and a hand-written
+  `ai-assisted-work.md`) and `internal-ops/` (the 3 OPS/dashboard-tooling procedures, moved out of
+  the marketing library per Mikey's explicit call). Desktop mirror renamed from `Marketing SOPs` to
+  `SOPs`, with only the `Marketing and Media` subfolder mirrored — internal-ops stays repo-only.
+  The old `Desktop/Marketing SOPs` folder was deleted (not just superseded) to avoid a stale
+  duplicate.
+- Rationale: Mikey wants a genuine "hit by a bus" continuity bar — someone with zero context should
+  be able to open this folder and know which program does what and how marketing/media actually
+  runs, without wading through internal dashboard-tooling docs that aren't content/media work.
+  Tool-reference entries are grounded only in what's already verified/documented in this repo
+  (`data/site-facts.json`, task `where`/`exec` fields, `data/tool-registry.json`) — anything not
+  yet confirmed live is explicitly marked open/pending rather than invented, consistent with this
+  system's core rule.
+- Confidence: medium
+- Reversal conditions: Mikey wants OPS docs back inside the marketing library after all; a
+  tool-reference entry turns out to describe a tool/workflow incorrectly once observed live.
+- Source: Mikey directly, 2026-07-16.
+
+### 2026-07-28 — Disavow ~319 spam backlinks as the first Authority Score lever
+- Decision: Prioritize disavowing ~319 identified spam backlinks (~140 domains) as the first move
+  to raise Authority Score, ahead of new link-building outreach.
+- Rationale: Authority Score is ~90% a backlink-profile metric and a realistic strong target is
+  ~mid-30s-40s (100 is unreachable for a local business — it's a log-scale metric where national
+  brands sit in the 80s-90s). Cleaning up confirmed toxic links is the more contained first step
+  before investing in new outreach.
+- Confidence: medium
+- Reversal conditions: Semrush toxicity data turns out to require manual export with no reliable
+  way to confirm which domains are actually toxic, making the disavow list unreliable to compile
+  safely.
+- Source: 2026-07-28 Cowork debrief. See data/tasks.json (task t3f1b2e6a9c74d0a) for the pending
+  execution steps.
+
+### 2026-07-29 — Deployed live to Railway for home/remote access
+- Decision: Deploy the Bartlett Ops Brain dashboard live on Railway (private, HTTP Basic
+  Auth-gated, persistent volume) so it's reachable from home, while keeping local
+  http://localhost:4178 available unauthenticated for on-machine work. No GitHub remote was
+  created — deployed via direct `railway up` CLI upload, not a git-linked service.
+- Rationale: Mikey wants to work on this from home, not just this machine. This is the reversal
+  condition explicitly named in dec-local-only ("Mikey explicitly asks to push to a private remote
+  for backup or multi-machine access"), but only partially: the code/data now also lives on
+  Railway's private infrastructure, but never touched a public (or even private) GitHub remote,
+  since gh CLI wasn't available. Basic Auth and a persistent volume were added first since the
+  server had zero authentication and no durable storage across container restarts/redeploys.
+- Confidence: high
+- Reversal conditions: Mikey wants GitHub-linked continuous deployment added (needs gh CLI
+  installed, or the repo connected via Railway's own dashboard), or wants the live deploy taken
+  down and to go back to local-only.
+- Source: Mikey directly, 2026-07-29. See memory/log.md (2026-07-29 entry) for the full deploy
+  record, including the persistence verification (restart test) and two Railway CLI quirks hit
+  along the way.

@@ -1,8 +1,8 @@
 [
   {
     "id": "ta51b5f5937634bf5",
-    "order": 0,
-    "col": "todo",
+    "order": 1784149689969,
+    "col": "done",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "HIGH",
@@ -49,8 +49,8 @@
   },
   {
     "id": "tea43a26dc345480e",
-    "order": 2,
-    "col": "todo",
+    "order": 1785188091765,
+    "col": "doing",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "HIGH",
@@ -73,7 +73,7 @@
   },
   {
     "id": "tc6a4d452325e49c2",
-    "order": 3,
+    "order": 1785188089869,
     "col": "todo",
     "w": "W1",
     "ph": "LINKS",
@@ -126,10 +126,11 @@
     "w": "W1",
     "ph": "CONTENT",
     "pri": "HIGH",
-    "t": "Remove the closed Pleasant Grove location completely",
-    "note": "PG office is closed; its 4 cities (Provo, Orem, Lehi, American Fork) moved to Murray. Strip + redirect cleanly — no 404s.",
+    "t": "Fix Pleasant Grove/Ogden office-claim copy and Murray NAP (offices consolidated — cities still served, do NOT remove/redirect pages)",
+    "note": "CORRECTED 2026-07-27: Pleasant Grove and Ogden offices consolidated into Murray, they were NOT closed. Their cities (Provo, Orem, Lehi, American Fork, etc.) are still actively serviced — the original 'strip + redirect' plan below would have destroyed rankings for live markets and must not be executed. Correct action was office-claim/NAP copy fixes only, which are now done: Pleasant Grove (post 7387) and Ogden (post 5946) pages checked clean of false Bartlett-office claims, Murray (post 6940) page updated with NAP '1935 E Vine St #240, Murray, UT 84121 · (801) 509-6464' and Yoast keyphrase 'roofing company in Murray'.",
     "where": "WordPress + Yoast",
     "exec": [
+      "SUPERSEDED — do not execute the steps below. Kept for history only; see note above for what actually happened.",
       "Read-only: crawl for every PG asset — office page, 4 city pages, menu/footer links, sitemap entries, NAP/schema mentions.",
       "Confirm the 4 cities belong to Murray (not Ogden) before changing anything.",
       "Propose a removal map: 301-redirect the 4 city pages to Murray equivalents; redirect/remove the PG office page.",
@@ -138,17 +139,17 @@
       "Re-crawl for orphan links and 404s; confirm every redirect resolves."
     ],
     "verify": {
-      "status": "unverified",
-      "confidence": "low",
-      "source": null,
-      "checkedAt": null,
-      "note": ""
+      "status": "observed",
+      "confidence": "high",
+      "source": "2026-07-27 Cowork debrief",
+      "checkedAt": "2026-07-27",
+      "note": "Original task premise was wrong (see fact-pleasant-grove-closed, now contradicted, and fact-office-consolidation-murray). Task title/note/exec rewritten in place rather than deleted, so the history of the mistake stays visible."
     }
   },
   {
     "id": "t7bc1058ff4294488",
-    "order": 1784145786927,
-    "col": "doing",
+    "order": 1785185554781,
+    "col": "done",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "HIGH",
@@ -171,8 +172,8 @@
   },
   {
     "id": "t52ac1e6916ef4743",
-    "order": 1784145815286,
-    "col": "doing",
+    "order": 1785188070051,
+    "col": "done",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "HIGH",
@@ -342,7 +343,7 @@
   {
     "id": "t1640624ab8e54734",
     "order": 14,
-    "col": "todo",
+    "col": "done",
     "w": "W1",
     "ph": "CONTENT",
     "pri": "MED",
@@ -485,8 +486,8 @@
   },
   {
     "id": "t0ea3a33d43894014",
-    "order": 20,
-    "col": "todo",
+    "order": 1785188180706,
+    "col": "doing",
     "w": "W2",
     "ph": "LOCAL",
     "pri": "MED",
@@ -509,8 +510,8 @@
   },
   {
     "id": "te2605450cf2a4d35",
-    "order": 21,
-    "col": "todo",
+    "order": 1785188178736,
+    "col": "doing",
     "w": "W3",
     "ph": "ADS",
     "pri": "HIGH",
@@ -533,8 +534,8 @@
   },
   {
     "id": "tf2104dbec34b46ce",
-    "order": 22,
-    "col": "todo",
+    "order": 1785188176906,
+    "col": "doing",
     "w": "W3",
     "ph": "ADS",
     "pri": "HIGH",
@@ -557,8 +558,8 @@
   },
   {
     "id": "t4766fcdd9f0e4ae0",
-    "order": 23,
-    "col": "todo",
+    "order": 1785188174900,
+    "col": "doing",
     "w": "W3",
     "ph": "ADS",
     "pri": "MED",
@@ -605,8 +606,8 @@
   },
   {
     "id": "t258184122c7f47fa",
-    "order": 25,
-    "col": "todo",
+    "order": 1785188171491,
+    "col": "doing",
     "w": "W3",
     "ph": "RESEARCH",
     "pri": "MED",
@@ -629,8 +630,8 @@
   },
   {
     "id": "t02b79aa7e7114c07",
-    "order": 26,
-    "col": "todo",
+    "order": 1785188165948,
+    "col": "doing",
     "w": "W1",
     "ph": "CONTENT",
     "pri": "HIGH",
@@ -677,8 +678,8 @@
   },
   {
     "id": "ta7b8269d44ab4b40",
-    "order": 28,
-    "col": "todo",
+    "order": 1785188153792,
+    "col": "doing",
     "w": "W1",
     "ph": "CONTENT",
     "pri": "MED",
@@ -725,8 +726,8 @@
   },
   {
     "id": "td48504491d214554",
-    "order": 30,
-    "col": "todo",
+    "order": 1785188146519,
+    "col": "doing",
     "w": "W4",
     "ph": "GEO",
     "pri": "HIGH",
@@ -749,8 +750,8 @@
   },
   {
     "id": "tf4969edd82aa49b1",
-    "order": 31,
-    "col": "todo",
+    "order": 1785188144335,
+    "col": "doing",
     "w": "W4",
     "ph": "GEO",
     "pri": "HIGH",
@@ -773,8 +774,8 @@
   },
   {
     "id": "t9825af7845314b17",
-    "order": 32,
-    "col": "todo",
+    "order": 1785188142695,
+    "col": "doing",
     "w": "W4",
     "ph": "GEO",
     "pri": "MED",
@@ -797,8 +798,8 @@
   },
   {
     "id": "t00dbdf5e11724780",
-    "order": 33,
-    "col": "todo",
+    "order": 1785188140942,
+    "col": "doing",
     "w": "W4",
     "ph": "GEO",
     "pri": "MED",
@@ -821,8 +822,8 @@
   },
   {
     "id": "t61d7d5ee77524f64",
-    "order": 34,
-    "col": "todo",
+    "order": 1785188134737,
+    "col": "doing",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "HIGH",
@@ -868,8 +869,8 @@
   },
   {
     "id": "tc6286175f2434d6c",
-    "order": 36,
-    "col": "todo",
+    "order": 1785188122620,
+    "col": "doing",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "HIGH",
@@ -892,8 +893,8 @@
   },
   {
     "id": "t16f3711bb20a4cd6",
-    "order": 37,
-    "col": "todo",
+    "order": 1785188117568,
+    "col": "doing",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "MED",
@@ -916,8 +917,8 @@
   },
   {
     "id": "t0ee3a1e49d014569",
-    "order": 38,
-    "col": "todo",
+    "order": 1784149785125,
+    "col": "done",
     "w": "W1",
     "ph": "DISCOVERY",
     "pri": "MED",
@@ -952,6 +953,82 @@
       "Run the remaining priority AI-visibility prompts across all 5 engines for the OC Platinum query and log results.",
       "Prioritize building the OC Platinum authority page given the confirmed false claim."
     ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tmrnss1gvdox6",
+    "order": 1785188097962,
+    "col": "doing",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "Fix dead-inbox lead notifications (Gravity Forms)",
+    "note": "CONFIRMED 2026-07-15: 4 of 13 active forms (Home Inspection-1,115 entries, Customer-Service-32, Send Message-218, Google Ads-6) route admin notifications to contact@aquamarine-rail-495460.hostingersite.com, a dead Hostinger staging address. 1,371+ entries with unconfirmed delivery, including paid-search leads. Remaining 9 forms + Roofle integration not yet checked. BLOCKED: need Mikey's decision on correct destination (real inbox vs SalesTrak/CRM feed) before changing anything.",
+    "where": "",
+    "exec": [],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tmrnssriakqj7",
+    "order": 1785188065252,
+    "col": "done",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "Find remaining GTM container double-fire source",
+    "note": "GTM-M92NH73X container script confirmed loading twice on live pages (verified via console script scan). Google Ads conversion tag AW-11173534158 duplicate was already found and fixed (redundant Code Snippets entry, deactivated). This second duplicate's source is NOT yet found - ruled out: Site Kit (never connected), all 9 code snippets, Avada theme options, functions.php, MonsterInsights, inactive plugins. DB dry-run confirms exactly 2 wp_options rows store the ID; one is GTM4WP's own legit settings row. Needs direct phpMyAdmin access to finish - the in-plugin detail view hit a security-check error.",
+    "where": "",
+    "exec": [],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tmrntdp745q5n",
+    "order": 1785188093389,
+    "col": "doing",
+    "w": "W1",
+    "ph": "DISCOVERY",
+    "pri": "HIGH",
+    "t": "UTM tracking — one-pager on frontend attribution (Facebook/Meta pixel, LSA, Gravity Forms UTM capture, call tracking)",
+    "note": "Scoping first before writing: need Meta Business Manager/Pixel status, whether Google LSA is active + how it's attributed, whether Gravity Forms captures UTM/gclid/fbclid on submit, and whether call tracking (DNI) exists. IT vs Mikey ownership TBD per item.",
+    "where": "",
+    "exec": [],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": ""
+    }
+  },
+  {
+    "id": "tms56v6mauog8",
+    "order": 1785275379010,
+    "col": "todo",
+    "w": "W1",
+    "ph": "LOCAL",
+    "pri": "MED",
+    "t": "Capture 'roofer near me' via GBP + reviews + local pages (not internal links)",
+    "note": "Replaces the internal-linking approach (marked done — wrong lever). GSC verified: near-me is location-personalized — Ogden already ranks #2.5, SLC/Atlanta/Kennesaw ~17, Boise ~25; the Spokane page sits at #52 with 0 clicks and isn't blocking anything. ~3 total near-me clicks in 3 months. No single page can 'own' a national near-me term. Real levers: GBP cleanup, Birdeye reviews, and stronger local service-area pages (ties to those tasks).",
+    "where": "",
+    "exec": [],
     "verify": {
       "status": "unverified",
       "confidence": "low",
