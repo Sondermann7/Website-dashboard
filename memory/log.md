@@ -358,3 +358,104 @@ data/verification-queue.json, and data/tasks.json)*
   `railway volume add`; passing the explicit service and environment *IDs* instead worked cleanly.
   Lesson: prefer IDs over names for `railway volume` subcommands, and disable MSYS path conversion
   for any Railway CLI flag that takes a literal `/`-prefixed path.
+
+### 2026-07-29 — Link prospecting, city-page triage, redirect pilot, and surgical fixes to Murray & Boise
+
+**Confirmed / Done**
+- Link-building prospect list delivered as Bartlett-LinkBuilding-Prospects.xlsx and .pdf (26
+  targets, no outreach sent). Backlink statuses verified live against Semrush backlinks_refdomains
+  (top 300 by authority). Observed.
+- Owens Corning, GAF, and CertainTeed confirmed NOT in the current backlink profile (they would sit
+  at DA 80+ near the top; only indeed, yahoo, bing, bbb.org appear in that band). Observed via
+  Semrush.
+- "Already linking" set confirmed present in Semrush: bbb.org (78), inc.com (59), expertise.com
+  (41), veluxusa.com (41), roofingcontractor.com (38), idahobusinessreview.com (35), polyglass.us
+  (31), threebestrated.com (29), bomaidaho.org (16). Observed.
+- City-page performance pulled from Semrush resource_organic_unique: salt-lake-city-ut = 1,704
+  visits / 187 kw (about 49% of service-area traffic); ogden-ut 724; spokane-wa 551; boise-id only
+  101 from 86 kw. Observed.
+- Duplication of thin templates confirmed by fetching /service-areas/ammon-id/ and
+  /service-areas/post-falls-id/ live and comparing (about 90% identical body, only city name
+  swapped). Observed.
+- Deliverables built: Bartlett-CityPage-Triage.xlsx, Bartlett-Consolidation-Map.xlsx,
+  Bartlett-CityPage-Plan.xlsx (hub-and-spoke around 4 offices), Murray-Boise-Content-Drafts.md
+  (v3, dash-free). Observed.
+- Pilot 301 redirects created in Yoast Premium Redirects: service-areas/kalispell-mt/,
+  whitefish-mt/, bigfork-mt/, columbia-falls-mt/, lakeside-mt/, las-vegas-nv/, all to
+  /service-areas/, all type 301. Verified in the redirect list, and live-tested las-vegas-nv which
+  landed on /service-areas/. Observed.
+- Murray page (post 6940): 10 legacy internal links repointed off /roofing/... to
+  /residential-roofing/...; one Salt Lake Valley climate sentence added. Saved (revisions 19);
+  reload confirmed legacy /roofing/ = 0, residential-roofing = 10, "ice dam" = 1, "Salt Lake
+  Valley" = 2. No content removed (length grew 169,842 to 170,207). Observed.
+- Boise page (post 365): 11 legacy internal links repointed to /residential-roofing/...; 1 external
+  Owens Corning /roofing/ link correctly left intact; one Foothills wildfire sentence added. Saved
+  (revisions 33); reload confirmed internal /roofing/ = 0, residential-roofing = 13, Foothills = 1.
+  No content removed. Observed.
+- Standing rules recorded: no dashes in any output; write in a human voice and follow Google
+  fundamentals rather than chasing AI-detector scores (Google penalizes low-value scaled content,
+  not AI authorship). Source-backed by Google's gen-AI guidance doc.
+
+**In Progress**
+- Repair-link destination on Murray and Boise. State: 3 "repair" links per page currently point to
+  /residential-roofing/roof-repair/; originally they were /roofing/repair/, which the site 301s to
+  /commercial-roofing/repair/. Next step: decide residential vs commercial, then either set all
+  repair links deliberately to that target, or revert the 3 per page back to /roofing/repair/ to
+  restore original behavior.
+- Content differentiation (task t02b79aa7e7114c07). Hub enrichment for Murray and Boise done;
+  consolidation of the ~40+ thin fold pages NOT done. Next step: leave the 6-redirect pilot 1-2
+  weeks, watch GSC Page Indexing, then run the remaining folds in batches per
+  Bartlett-Consolidation-Map.xlsx.
+- Redirect-hop cleanup on the other 4 hubs (SLC, Ogden, Spokane, Kennesaw). Not started,
+  deprioritized. Whether those pages even contain legacy /roofing/ links is unverified.
+
+**Corrected / Contradicted**
+- Old belief: every city page is a thin boilerplate clone. Corrected: the hub and sub-market pages
+  are already built out and localized (Murray is about 170k characters with a cost calculator and
+  local FAQ; Boise about 265k with an existing high-desert climate section). Only the small-town
+  pages are thin. Known by reading the pages live in the editor today.
+- Old belief: the /roofing/... links are dead/broken. Corrected: they are 301 redirects, not 404s
+  (/roofing/ to /residential-roofing/, /roofing/repair/ to /commercial-roofing/repair/). Verified
+  by web-fetching both URLs and seeing the redirect target.
+- Old belief (from the plan): roughly 73 service-area pages. Corrected: the WordPress list shows
+  113 service-area pages (109 orphaned). The earlier 31/32 count came from a truncated sitemap
+  fetch. Observed in the WP Service Areas list.
+- Old framing: MT/NV/OR pages should be cut as "not served." Corrected: installs have been done in
+  all of them; the real model is office-based hub-and-spoke around 4 full offices (Boise,
+  Murray/SLC, Spokane, Kennesaw/Atlanta). User-stated. This directly contradicts
+  fact-stale-state-pages in data/site-facts.json — corrected there, see fact-hub-and-spoke-model.
+
+**Blocked**
+- Manufacturer directory links (Owens Corning, GAF, CertainTeed) and paid memberships/chambers:
+  blocked on access and budget — creating accounts, logging into contractor portals, or paying
+  needs Mikey directly.
+- Task 10 (delete hollow formSubmission GTM tag): still parked per earlier hold and a prior GTM
+  stale-data error.
+
+**New Open Questions**
+- Correct destination for a generic city-page "Roof Repair" / "Storm Damage" CTA: residential roof
+  repair vs. commercial repair. Settles by intent plus checking each link's section — on Boise the
+  3 repair links sit near "Storm Damage" and "Roof Repair" headings.
+- Whether SLC, Ogden, Spokane, and Kennesaw hub pages contain legacy /roofing/ links. Settles by
+  opening each editor and counting.
+- Whether the /roofing/repair/ to /commercial-roofing/repair/ redirect is intentional or a legacy
+  misconfiguration. Settles by asking whoever set up the redirects (possibly Bright Development,
+  the site's dev per the footer).
+- The plan's page groupings were built on the truncated ~73 count; they need reconciliation against
+  the real 113 pages before scaling consolidation.
+
+**Mistakes / Lessons**
+- Labeled the /roofing/ links "dead" without checking status codes; they were 301 redirects.
+  Lesson: verify HTTP status before calling a link dead.
+- Generalized from 2 thin samples (Ammon, Post Falls) to assume all city pages were thin; the hub
+  pages were already built out. Lesson: read the specific page before planning edits.
+- Repointed 3 repair links per page from commercial (via redirect) to residential based on the
+  wrong "dead link" premise. Caught by a challenge on review. Nothing broke, but the destination
+  changed and is now pending a deliberate decision.
+- First "Update" click on the Murray climate edit did not commit; caught by a "Leave site? unsaved
+  changes" dialog on navigate. Re-clicked Update and confirmed via the "Post updated" banner and
+  revision bump. Lesson: confirm the save banner or revision increment before assuming a WordPress
+  save committed.
+- JavaScript tool returns were blocked by the "Cookie/query string data" filter whenever output
+  contained URLs or query strings. Lesson: strip URLs out of JS return values (recurring — third
+  time this exact lesson has appeared in this log).

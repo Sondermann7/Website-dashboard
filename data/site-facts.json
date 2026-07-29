@@ -81,7 +81,43 @@
     "id": "fact-stale-state-pages",
     "fact": "There are stale/unserved-state location page archives (reportedly MT/NV/OR/WY) that need triage.",
     "category": "geography",
-    "verify": { "status": "unverified", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "Part of the 109-city-page tiering task." }
+    "verify": { "status": "contradicted", "confidence": "low", "source": "Bartlett-Ops-Brain-Build-Plan-AMENDED.md", "checkedAt": null, "note": "CONTRADICTED 2026-07-29: installs have been done in MT/NV/OR — they are not simply 'unserved' pages to cut. See fact-hub-and-spoke-model for the corrected framing." }
+  },
+  {
+    "id": "fact-hub-and-spoke-model",
+    "fact": "Bartlett operates on an office-based hub-and-spoke model around 4 full offices: Boise, Murray/SLC, Spokane, and Kennesaw/Atlanta. Small-town service-area pages (including MT/NV/OR towns) represent real completed installs, not stale/unserved markets to be cut — they are spokes off the nearest office hub.",
+    "category": "geography",
+    "verify": { "status": "user-stated", "confidence": "medium", "source": "2026-07-29 Cowork debrief", "checkedAt": "2026-07-29", "note": "Corrects fact-stale-state-pages, which had this backwards (treated hub-and-spoke small-town pages as candidates for removal)." }
+  },
+  {
+    "id": "fact-service-area-page-count",
+    "fact": "WordPress's Service Areas list shows 113 service-area pages total, 109 of them orphaned (not linked from primary nav). An earlier ~73-page estimate came from a truncated sitemap fetch and undercounts the real total.",
+    "category": "platform",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-29 Cowork debrief, live WP Service Areas list", "checkedAt": "2026-07-29", "note": "Any consolidation/tiering plan built on the ~73 count (see task t02b79aa7e7114c07) needs reconciling against this real 113/109 figure before scaling." }
+  },
+  {
+    "id": "fact-city-page-traffic-distribution",
+    "fact": "Per Semrush resource_organic_unique: salt-lake-city-ut gets 1,704 visits/mo from 187 keywords (~49% of all service-area traffic); ogden-ut 724 visits; spokane-wa 551 visits; boise-id only 101 visits from 86 keywords, despite Boise being treated as a flagship market elsewhere in this system's tasks.",
+    "category": "tracking",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-29 Cowork debrief, live Semrush pull", "checkedAt": "2026-07-29", "note": "Worth reconciling against fact-dashboard-claims-unreliable and the existing Boise-focused tasks (e.g. 'Boise page: authority first, copy last') — SLC is currently carrying far more organic weight than Boise." }
+  },
+  {
+    "id": "fact-legacy-roofing-url-redirects",
+    "fact": "Legacy /roofing/... URLs are live 301 redirects, not broken/dead links: /roofing/ redirects to /residential-roofing/, and /roofing/repair/ redirects to /commercial-roofing/repair/ (residential vs. commercial split not obviously intentional — see open question).",
+    "category": "platform",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-29 Cowork debrief, live web-fetch of both URLs", "checkedAt": "2026-07-29", "note": "On 2026-07-29, 10 legacy /roofing/ links on the Murray page and 11 on the Boise page were repointed directly to /residential-roofing/... (bypassing the redirect hop) based on an initial wrong assumption these were dead links. The repair-link subset (3 per page) is pending a decision on whether residential or commercial is actually correct — see data/verification-queue.json." }
+  },
+  {
+    "id": "fact-redirect-pilot-live",
+    "fact": "6 thin/duplicate small-town service-area pages have a live pilot 301 redirect to /service-areas/: kalispell-mt, whitefish-mt, bigfork-mt, columbia-falls-mt, lakeside-mt, las-vegas-nv. Verified live (las-vegas-nv tested and lands on /service-areas/).",
+    "category": "platform",
+    "verify": { "status": "observed", "confidence": "high", "source": "2026-07-29 Cowork debrief, Yoast Premium Redirects + live test", "checkedAt": "2026-07-29", "note": "This is the first real data for data/redirect-map.json, which has sat as an empty pending scaffold since 2026-07-15 (needs actual approved redirect work to populate, per docs/README.md). Not yet migrated into that file — plan is to watch GSC Page Indexing for 1-2 weeks before scaling to the remaining ~40+ thin pages per Bartlett-Consolidation-Map.xlsx." }
+  },
+  {
+    "id": "fact-content-style-rules",
+    "fact": "Standing content-writing rules: no dashes (em/en dashes or hyphens used as punctuation) in any written output; write in a human voice; follow Google's actual content-quality fundamentals rather than optimizing to defeat AI-detector scores.",
+    "category": "rule",
+    "verify": { "status": "source-backed", "confidence": "high", "source": "2026-07-29 Cowork debrief, citing Google's published gen-AI content guidance", "checkedAt": "2026-07-29", "note": "Google's guidance penalizes low-value scaled/unoriginal content, not content because it was AI-assisted — the rule is about quality and voice, not about evading detection." }
   },
   {
     "id": "fact-lead-stack",

@@ -79,7 +79,7 @@
     "ph": "LINKS",
     "pri": "HIGH",
     "t": "Launch the link-building program — 5–10 local referring domains/mo",
-    "note": "MISSING FROM v1 ENTIRELY. Authority Score 22 is the ceiling on everything else — top Boise competitors win on backlinks, not content. Without this, 'roofing boise' stalls at position 8–15 regardless of on-page quality.",
+    "note": "UPDATED 2026-07-29: prospect list delivered (Bartlett-LinkBuilding-Prospects.xlsx/.pdf, 26 targets), verified live against Semrush backlinks_refdomains — no outreach sent yet. Confirmed Owens Corning, GAF, and CertainTeed are NOT currently in the backlink profile; confirmed already-linking set includes bbb.org, inc.com, expertise.com, veluxusa.com, roofingcontractor.com, idahobusinessreview.com, polyglass.us, threebestrated.com, bomaidaho.org. Manufacturer directory listings and paid memberships/chambers are blocked on account access and budget — needs Mikey directly to create accounts, log into contractor portals, or pay. MISSING FROM v1 ENTIRELY originally. Authority Score 22 is the ceiling on everything else — top Boise competitors win on backlinks, not content.",
     "where": "Outreach sheet + email",
     "exec": [
       "Build the Month-1 target list: GAF/CertainTeed/Owens Corning certification profiles, Boise Metro Chamber, BBB, 2 supplier partner pages, 1 local sponsorship (youth sports/HOA), 1 journalist pitch (storm season angle).",
@@ -88,11 +88,11 @@
       "Log every acquired link; report new referring domains monthly vs the 682 baseline."
     ],
     "verify": {
-      "status": "unverified",
-      "confidence": "low",
-      "source": null,
-      "checkedAt": null,
-      "note": ""
+      "status": "observed",
+      "confidence": "high",
+      "source": "2026-07-29 Cowork debrief, live Semrush pull",
+      "checkedAt": "2026-07-29",
+      "note": "Prospect list and backlink-gap analysis done; no outreach emails sent, no manufacturer/chamber accounts created — those need Mikey's access/budget."
     }
   },
   {
@@ -636,20 +636,21 @@
     "ph": "CONTENT",
     "pri": "HIGH",
     "t": "Tier the 109 city pages",
-    "note": "Keep and differentiate served markets; noindex or 301 only after tracker review. Duplicate location pages weaken human trust and AI-search confidence.",
+    "note": "UPDATED 2026-07-29: real count is 113 service-area pages (109 orphaned), not the ~73 the plan originally used (that came from a truncated sitemap fetch) — reconcile any grouping against the real count. Triage/consolidation deliverables now exist: Bartlett-CityPage-Triage.xlsx, Bartlett-Consolidation-Map.xlsx, Bartlett-CityPage-Plan.xlsx (hub-and-spoke around 4 offices: Boise, Murray/SLC, Spokane, Kennesaw/Atlanta — see fact-hub-and-spoke-model). Hub-page enrichment for Murray and Boise is done (internal links repointed, local content added). A 6-page pilot 301 redirect batch is live (kalispell-mt, whitefish-mt, bigfork-mt, columbia-falls-mt, lakeside-mt, las-vegas-nv, all to /service-areas/) — plan is to watch GSC Page Indexing for 1-2 weeks before running the remaining ~40+ thin fold pages in batches. Keep and differentiate served markets; noindex or 301 only after tracker review. Duplicate location pages weaken human trust and AI-search confidence.",
     "where": "WordPress + Yoast + GSC",
     "exec": [
-      "Read-only: list all 109 pages with target city, office, GSC traffic, backlinks, and index status.",
+      "Read-only: list all 113 pages with target city, office, GSC traffic, backlinks, and index status.",
       "Tier: KEEP+differentiate, NOINDEX, or 301-redirect with a written reason and target URL.",
       "Show the per-page decision tracker for approval before any change.",
-      "Execute in small batches; verify no traffic-earning page is lost."
+      "Execute in small batches; verify no traffic-earning page is lost.",
+      "Watch GSC Page Indexing on the 6-page pilot redirect for 1-2 weeks before scaling to the remaining fold pages per Bartlett-Consolidation-Map.xlsx."
     ],
     "verify": {
-      "status": "unverified",
-      "confidence": "low",
-      "source": null,
-      "checkedAt": null,
-      "note": ""
+      "status": "observed",
+      "confidence": "high",
+      "source": "2026-07-29 Cowork debrief",
+      "checkedAt": "2026-07-29",
+      "note": "Real page count (113/109 orphaned) and hub-and-spoke framing confirmed live; consolidation of remaining thin pages beyond the 6-page pilot is not yet done."
     }
   },
   {
@@ -684,7 +685,7 @@
     "ph": "CONTENT",
     "pri": "MED",
     "t": "Fix stale geography",
-    "note": "Resolve CA, Pleasant Grove, and unserved-state signals only after confirming the canonical market map.",
+    "note": "UPDATED 2026-07-29: the canonical market map is now confirmed as an office-based hub-and-spoke model around 4 full offices (Boise, Murray/SLC, Spokane, Kennesaw/Atlanta) — see fact-hub-and-spoke-model. MT/NV/OR small-town pages are real completed-install spokes, not stale/unserved pages to cut (this corrects fact-stale-state-pages, now marked contradicted). Resolve CA, Pleasant Grove, and unserved-state signals only after confirming the canonical market map.",
     "where": "WordPress + Yoast + redirect tracker",
     "exec": [
       "List every page, title, meta description, schema mention, menu/footer link, and archive with stale geography.",
@@ -693,11 +694,11 @@
       "Verify in Preview, publish approved changes, and re-crawl to confirm."
     ],
     "verify": {
-      "status": "unverified",
-      "confidence": "low",
-      "source": null,
-      "checkedAt": null,
-      "note": ""
+      "status": "observed",
+      "confidence": "medium",
+      "source": "2026-07-29 Cowork debrief",
+      "checkedAt": "2026-07-29",
+      "note": "The canonical market map itself is now confirmed (hub-and-spoke, 4 offices); the CA/homepage-title cleanup this task originally scoped is still not done."
     }
   },
   {
@@ -1035,6 +1036,31 @@
       "source": null,
       "checkedAt": null,
       "note": ""
+    }
+  },
+  {
+    "id": "trepairlink29a",
+    "order": 1785362000000,
+    "col": "todo",
+    "w": "W1",
+    "ph": "CONTENT",
+    "pri": "HIGH",
+    "t": "Decide residential vs. commercial destination for city-page repair links",
+    "note": "On 2026-07-29, 3 'Roof Repair'/'Storm Damage' links per page on Murray and Boise were repointed to /residential-roofing/roof-repair/, based on a wrong assumption the original /roofing/repair/ links were dead. They were actually live 301 redirects to /commercial-roofing/repair/ — so the destination changed from commercial to residential without a deliberate decision behind it. Needs Mikey to decide which is actually correct for those CTAs, then either confirm the residential destination sitewide or revert the 3 links per page back to /roofing/repair/. Also unconfirmed whether SLC/Ogden/Spokane/Kennesaw hub pages have the same legacy /roofing/ links needing the same fix.",
+    "where": "WordPress (Murray post 6940, Boise post 365) + Yoast redirects",
+    "exec": [
+      "Show Mikey the 3 repair-link locations per page and what each CTA/heading says (Boise's sit near 'Storm Damage' and 'Roof Repair' headings).",
+      "Get a decision: residential, commercial, or per-section based on context.",
+      "Apply the decided destination consistently across Murray and Boise's repair links.",
+      "Check SLC, Ogden, Spokane, and Kennesaw hub pages for the same legacy /roofing/ pattern and apply the same fix if present.",
+      "Confirm with whoever set up the original redirects (site footer credits Bright Development) whether /roofing/repair/ -> /commercial-roofing/repair/ was intentional."
+    ],
+    "verify": {
+      "status": "unverified",
+      "confidence": "low",
+      "source": null,
+      "checkedAt": null,
+      "note": "Blocked on Mikey's decision — see data/verification-queue.json: vq-repair-link-destination."
     }
   }
 ]

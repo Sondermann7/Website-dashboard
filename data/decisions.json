@@ -52,5 +52,14 @@
     "confidence": "high",
     "reversalConditions": "Mikey wants GitHub-linked continuous deployment added (would need gh CLI installed or the repo connected via Railway's dashboard), or wants the live deploy taken down and to go back to local-only.",
     "source": "Mikey directly, 2026-07-29 — see memory/log.md (2026-07-29 entry) for the full deploy record."
+  },
+  {
+    "id": "dec-content-style-rules",
+    "date": "2026-07-29",
+    "decision": "Standing content-writing rules for all written output: no dashes (em/en dashes or hyphens used as punctuation), write in a human voice, and follow Google's actual content-quality fundamentals rather than trying to defeat AI-detector scores.",
+    "rationale": "Google's published gen-AI content guidance penalizes low-value, unoriginal, at-scale content, not content because it was AI-assisted. Optimizing to fool an AI-detector targets the wrong signal entirely; optimizing for genuine quality and voice addresses what Google actually penalizes.",
+    "confidence": "high",
+    "reversalConditions": "Mikey explicitly asks for a different style rule, or Google's guidance changes in a way that contradicts this framing.",
+    "source": "Mikey directly, 2026-07-29 — see memory/log.md (2026-07-29 entry, Murray-Boise-Content-Drafts.md v3)."
   }
 ]

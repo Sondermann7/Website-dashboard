@@ -138,5 +138,35 @@
     "addedAt": "2026-07-28",
     "resolvedAt": null,
     "resolution": null
+  },
+  {
+    "id": "vq-repair-link-destination",
+    "claim": "Unconfirmed whether the generic city-page 'Roof Repair' / 'Storm Damage' CTA links should point at residential or commercial roof repair. On Murray and Boise, 3 such links per page were repointed to /residential-roofing/roof-repair/ on 2026-07-29 based on a since-corrected 'dead link' assumption; the original target (via redirect) was /commercial-roofing/repair/.",
+    "sourceRef": "2026-07-29 Cowork debrief",
+    "status": "open",
+    "assignedTo": "Mikey",
+    "addedAt": "2026-07-29",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-other-hubs-legacy-roofing-links",
+    "claim": "Unconfirmed whether the SLC, Ogden, Spokane, and Kennesaw hub pages contain the same legacy /roofing/... internal links that were found and repointed on Murray and Boise.",
+    "sourceRef": "2026-07-29 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-29",
+    "resolvedAt": null,
+    "resolution": null
+  },
+  {
+    "id": "vq-roofing-repair-redirect-intentional",
+    "claim": "Unconfirmed whether /roofing/repair/ redirecting to /commercial-roofing/repair/ (rather than /residential-roofing/repair/) is an intentional split or a legacy misconfiguration from whoever originally set up the site's redirects (possibly Bright Development, per the site footer).",
+    "sourceRef": "2026-07-29 Cowork debrief",
+    "status": "open",
+    "assignedTo": null,
+    "addedAt": "2026-07-29",
+    "resolvedAt": null,
+    "resolution": null
   }
 ]

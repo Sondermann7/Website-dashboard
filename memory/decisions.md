@@ -195,3 +195,17 @@ Template for each entry:
 - Source: Mikey directly, 2026-07-29. See memory/log.md (2026-07-29 entry) for the full deploy
   record, including the persistence verification (restart test) and two Railway CLI quirks hit
   along the way.
+
+### 2026-07-29 — Standing content-writing rules: no dashes, human voice, Google fundamentals over AI-detector scores
+- Decision: All written output follows three standing rules: no dashes (em/en dashes or hyphens
+  used as punctuation), write in a human voice, and follow Google's actual content-quality
+  fundamentals rather than trying to defeat AI-detector scores.
+- Rationale: Google's published gen-AI content guidance penalizes low-value, unoriginal, at-scale
+  content, not content because it was AI-assisted. Optimizing to fool an AI-detector targets the
+  wrong signal entirely; optimizing for genuine quality and voice addresses what Google actually
+  penalizes.
+- Confidence: high
+- Reversal conditions: Mikey explicitly asks for a different style rule, or Google's guidance
+  changes in a way that contradicts this framing.
+- Source: Mikey directly, 2026-07-29 — see memory/log.md (2026-07-29 entry, second session,
+  Murray-Boise-Content-Drafts.md v3).
