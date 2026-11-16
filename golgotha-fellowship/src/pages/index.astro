@@ -33,8 +33,12 @@ const gallery = [
   { name: 'gallery-1', alt: 'Worship leaders seen from behind, facing a large outdoor congregation under white tents' },
   { name: 'gallery-2', alt: 'Two worship leaders singing, one playing acoustic guitar' },
   { name: 'gallery-3', alt: 'People standing in worship at an outdoor service' },
-  { name: 'gallery-4', alt: 'A speaker at the Golgotha Fellowship podium with the worship team, seen from the congregation' },
-  { name: 'gallery-5', alt: 'A speaker teaching at an outdoor service, seen over the heads of the congregation' },
+  { name: 'gallery-4', alt: 'Pastor Marty at the Golgotha Fellowship podium with the worship team, seen from the congregation' },
+  { name: 'gallery-5', alt: 'Pastor Marty teaching at an outdoor service, seen over the heads of the congregation' },
+  { name: 'gallery-6', alt: 'A man worships with his hands raised, surrounded by the congregation' },
+  { name: 'gallery-7', alt: 'A couple listening together at an outdoor service' },
+  { name: 'gallery-8', alt: 'A worship leader singing and playing guitar' },
+  { name: 'gallery-9', alt: 'A man at an outdoor church gathering, with families in the background' },
 ];
 const holdFast = 'Hold fast.'.split('');
 ---
@@ -42,7 +46,7 @@ const holdFast = 'Hold fast.'.split('');
   <!-- 1. Hero: congregation photo, invitation, and this week's service card -->
   <section class="hero on-dark relative isolate overflow-hidden bg-navy text-white">
     <Photo name="hero" alt="" want="HERO: the congregation on a Sunday morning (wide, landscape)" eager sizes="100vw" widths={[640, 1024, 1600, 2400]} class="hero-photo absolute inset-0 -z-20 h-full w-full object-cover" />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep/95 via-navy/80 to-navy/40"></div>
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep/90 via-navy/70 to-navy/25"></div>
     <div class="container-site grid gap-10 py-14 md:py-20 lg:min-h-[41rem] lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14">
       <div>
         <p class="eyebrow hero-rise mb-5">Downtown Nampa, Idaho</p>
@@ -86,7 +90,7 @@ const holdFast = 'Hold fast.'.split('');
       <div class="relative" data-reveal>
         <Photo name="welcome" alt={`People worshipping with raised hands at a ${church.name} service`} want="Congregation / fellowship: people together, candid" class="aspect-[4/3] w-full rounded-[var(--radius-card)] object-cover" />
         <div class="absolute -bottom-8 -right-3 hidden w-[44%] overflow-hidden rounded-[var(--radius-card)] border-[6px] border-paper shadow-xl sm:block md:-right-8">
-          <Photo name="welcome-inset" alt="A man worships with his hands raised, surrounded by the congregation" want="Second people photo (square)" class="aspect-square w-full object-cover" sizes="25vw" />
+          <Photo name="pastor-marty" alt={`${church.seniorPastor.name}, senior pastor, smiling as he teaches`} want="Pastor Marty portrait" class="aspect-[4/5] w-full object-cover" sizes="25vw" />
         </div>
       </div>
       <div>
@@ -96,7 +100,7 @@ const holdFast = 'Hold fast.'.split('');
         <p class="lede mt-4 text-body">{church.seniorPastor.name}, known to most of us as {church.seniorPastor.known}, serves as our senior pastor.</p>
         <div class="mt-8 flex flex-wrap gap-3" data-reveal>
           <Button href="/about">Our story &amp; mission</Button>
-          <Button href="/leadership" variant="secondary">Meet our leadership</Button>
+          <Button href="/pastor-marty" variant="secondary">Meet Pastor Marty</Button>
         </div>
         <ReviewFlag class="mt-6">Replace with Pastor Marty’s own welcome in his words. Headline and copy need pastoral approval.</ReviewFlag>
       </div>

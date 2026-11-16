@@ -30,7 +30,7 @@ const topics = [
 const nav = migrated ? toc.map((h) => ({ id: h.slug, title: h.text })) : topics;
 ---
 <Base title="What We Believe" description={`What ${church.name} in Nampa, Idaho believes about Scripture, Jesus Christ, salvation, the Holy Spirit, and the return of Christ.`}>
-  <PageHero eyebrow="What we believe" title={migrated ? entry.data.title : 'What we believe'} lede="Everything we teach comes from the Bible. Here is what we believe it says." />
+  <PageHero photo="page-beliefs" eyebrow="What we believe" title={migrated ? entry.data.title : 'What we believe'} lede="Everything we teach comes from the Bible. Here is what we believe it says." />
 
   <Section id="statement">
     <div class="grid gap-10 lg:grid-cols-[16rem_1fr] lg:gap-16">

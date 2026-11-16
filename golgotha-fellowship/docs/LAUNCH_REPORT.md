@@ -136,6 +136,30 @@ connected Google Drive or Canva):
 | Exact Golgotha navy | Not sampled. `#13294B` is a stand-in; one token to change. |
 | Live look at the Netlify preview and biodwell.com | Not seen. Bartlett patterns came from its source repo and saved screenshots; biodwell only from notes in that repo. |
 
+## Revision 3 (2026-11-16): real brand, photos, Pastor Marty page
+
+- **Logo, dove, navy.** Lifted from phone screenshots of the church's own graphics. Navy
+  is `#313D65`. All three are low-resolution stand-ins: replace with original files.
+- **Photos.** 26 photos cropped from screenshots of the church's Facebook albums fill the
+  homepage, every inner-page header, the men's and women's tiles and the pastor page.
+  About 1,200 px wide. Confirm the photographer (Jaimee Hubert posted the album) and the
+  people shown are happy to appear. No kids, youth or building-exterior photos yet.
+- **Pastor Marty page** (`/pastor-marty`, data in `src/config/pastor.ts`). Built from web
+  search summaries, not from the church site: Treasure Valley Men's Conference speaker
+  bio (ministry roles), Amazon/Audible listings (four books, degrees, 25+ years),
+  Apple Podcasts (Hold Fast), Revelation Roundtable (founder). "Former sports writer"
+  is on the owner's word. Not included because unconfirmed: the Oregon men's conference,
+  fiction titles listed on Audible, years married, a "Calvary Boise" listing.
+  **Pastor Marty must approve this page.**
+- **Still not done: matching the old website's writing.** `golgothafellowship.org` is
+  still blocked from the build environment, so no page text has been read from it.
+  The Statement of Faith, the old homepage copy, leadership bios, missions and the
+  teaching archive are NOT migrated. Fix: allow the host in the environment's network
+  settings, or paste/export the page text.
+- Conflicts seen in the church's own graphics, not applied: "Sunday 10 AM, East Valley
+  Middle School, 4085 E Greenhurst Rd" (old location) and "Wednesday potluck 6:30,
+  Bible study 7:00" (site says Wednesday 6:00 PM). Confirm Wednesday.
+
 ## Design decisions to confirm
 
 - Navy `#13294B` and gold `#C19A4B` are stand-ins until the logo is supplied.

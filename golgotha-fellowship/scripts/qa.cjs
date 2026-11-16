@@ -12,7 +12,7 @@ const path = require('node:path');
 
 const base = process.argv[2] || 'http://localhost:4321';
 const out = path.resolve(process.argv[3] || 'qa');
-const pages = ['/', '/new-here', '/about', '/beliefs', '/leadership', '/teachings', '/ministries', '/ministries/kids', '/ministries/youth', '/ministries/men', '/ministries/women', '/ministries/outreach', '/ministries/missions', '/events', '/prayer', '/contact', '/get-involved', '/give', '/thanks', '/404'];
+const pages = ['/', '/new-here', '/about', '/beliefs', '/leadership', '/pastor-marty', '/teachings', '/ministries', '/ministries/kids', '/ministries/youth', '/ministries/men', '/ministries/women', '/ministries/outreach', '/ministries/missions', '/events', '/prayer', '/contact', '/get-involved', '/give', '/thanks', '/404'];
 const widths = [390, 768, 1024, 1440];
 
 (async () => {

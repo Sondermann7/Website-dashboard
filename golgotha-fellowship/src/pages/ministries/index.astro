@@ -10,7 +10,7 @@ import { church } from '../../config/church';
 const ministries = (await getCollection('ministries')).filter((m) => m.data.status !== 'todo').sort((a, b) => a.data.order - b.data.order);
 ---
 <Base title="Ministries" description={`Kids, youth, men’s and women’s ministries, outreach and missions at ${church.name} in Nampa, Idaho.`}>
-  <PageHero eyebrow="Ministries" title="A place for every age and stage" lede="Grow in God’s Word alongside others, and find a place to serve." />
+  <PageHero photo="page-ministries" eyebrow="Ministries" title="A place for every age and stage" lede="Grow in God’s Word alongside others, and find a place to serve." />
   <Section id="all" title="Our ministries">
     <ul class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {ministries.map((m) => <li><MinistryCard ministry={m} /></li>)}

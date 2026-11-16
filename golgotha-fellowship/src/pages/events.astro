@@ -8,7 +8,7 @@ import ConnectCta from '../components/ConnectCta.astro';
 import { church, addressOneLine } from '../config/church';
 ---
 <Base title="Events & Weekly Schedule" description={`Weekly services, Bible studies and upcoming events at ${church.name}, ${addressOneLine}.`}>
-  <PageHero eyebrow="Events" title="Gather with us" lede="Here is what happens every week, and anything special coming up." />
+  <PageHero photo="page-events" eyebrow="Events" title="Gather with us" lede="Here is what happens every week, and anything special coming up." />
   <Section id="weekly" eyebrow="Every week" title="Weekly schedule">
     <div class="max-w-4xl"><Schedule /></div>
     <p class="mt-5 text-body">All gatherings are at {addressOneLine} unless noted.</p>

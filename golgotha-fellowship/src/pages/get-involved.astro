@@ -6,7 +6,7 @@ import FormBlock from '../components/FormBlock.astro';
 import { church } from '../config/church';
 ---
 <Base title="Get Involved" description={`Serve and get connected at ${church.name} in Nampa, Idaho: greeters, kids and youth ministry, worship, audio/video, outreach, home groups and more.`}>
-  <PageHero eyebrow="Get involved" title="Find a place to serve and belong" lede="The church is not a building or a program — it is people. Here are some of the ways to be part of this fellowship." />
+  <PageHero photo="page-get-involved" eyebrow="Get involved" title="Find a place to serve and belong" lede="The church is not a building or a program — it is people. Here are some of the ways to be part of this fellowship." />
   <Section id="areas" eyebrow="Ways to serve" title="Where you can help">
     <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {church.serveAreas.map((a) => <li class="card flex min-h-14 items-center px-5 py-3 font-semibold">{a}</li>)}

@@ -13,7 +13,7 @@ import { getTeachings } from '../../lib/teachings';
 const items = await getTeachings();
 ---
 <Base title="Bible Teachings" description={`Watch and listen to verse-by-verse Bible teaching from ${church.name} in Nampa, Idaho. Free on YouTube and on Hold Fast radio.`}>
-  <PageHero eyebrow="Teachings" title="Bible teaching, line by line" lede="We teach through Scripture simply and systematically. Every teaching is free — no account or sign-in needed.">
+  <PageHero photo="page-teachings" eyebrow="Teachings" title="Bible teaching, line by line" lede="We teach through Scripture simply and systematically. Every teaching is free — no account or sign-in needed.">
     <Button href={church.youtube.channelUrl} external goal="watch"><Play size={18} aria-hidden="true" /> Watch on YouTube</Button>
   </PageHero>
 

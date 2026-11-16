@@ -9,8 +9,11 @@
   role: Senior Pastor
   group: pastors
   order: 1
+  photo: martin-sondermann
+  bio: Pastor Marty teaches the Bible verse by verse at Golgotha Fellowship and on Hold Fast radio. He is also an author and conference speaker.
+  link: /pastor-marty
   status: confirm
-  reviewNote: Approved short biography and portrait needed.
+  reviewNote: Bio and portrait are stand-ins. Replace with approved versions.
 - id: doug-turner
   name: Doug Turner
   role: Prison and Jail Outreach Pastor

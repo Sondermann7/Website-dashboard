@@ -1,0 +1,155 @@
+---
+import BookOpen from '@lucide/astro/icons/book-open';
+import Radio from '@lucide/astro/icons/radio';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import Photo from '../components/Photo.astro';
+import ConnectCta from '../components/ConnectCta.astro';
+import ReviewFlag from '../components/ReviewFlag.astro';
+import { church } from '../config/church';
+import { pastor } from '../config/pastor';
+
+const radio = church.radio.status !== 'todo' ? church.radio : null;
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: pastor.name,
+  alternateName: pastor.known,
+  jobTitle: pastor.role,
+  worksFor: { '@id': `${church.siteUrl}/#church` },
+  sameAs: [pastor.authorPage],
+};
+---
+<Base title={`${pastor.known}: ${pastor.name}, ${pastor.role}`} description={`Meet ${pastor.name}, senior pastor of ${church.name} in Nampa, Idaho: Bible teacher, author, and host of the Hold Fast radio program.`}>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(person)} />
+  <PageHero eyebrow={pastor.role} title={`Meet ${pastor.known}`} lede={`${pastor.name} teaches the Bible verse by verse at ${church.name} and on Hold Fast radio.`} photo="page-pastor">
+    <Button href="/teachings" variant="gold" goal="watch">Hear a teaching</Button>
+    <Button href="#books" variant="outline-light">His books</Button>
+  </PageHero>
+
+  <!-- Biography -->
+  <section aria-labelledby="bio-heading" class="bg-paper py-16 md:py-28">
+    <div class="container-site grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+      <div data-reveal>
+        <Photo name="pastor-marty" alt={`${pastor.name} smiling as he teaches from a podium`} want="Pastor Marty portrait" eager class="aspect-[4/5] w-full rounded-[var(--radius-card)] object-cover" sizes="(min-width: 64rem) 40vw, 100vw" />
+      </div>
+      <div>
+        <p class="eyebrow mb-4">About</p>
+        <h2 id="bio-heading">A pastor who <em>opens the Book.</em></h2>
+        <div class="mt-7 space-y-5 text-[1.08rem] leading-relaxed">
+          {pastor.bio.map((p, i) => <p class:list={['lede', i === 0 && 'text-[length:var(--text-lede)]', i > 0 && 'text-body']}>{p}</p>)}
+        </div>
+        <ReviewFlag class="mt-7">Biography assembled from the Treasure Valley Men’s Conference speaker bio, the Amazon author page and a search summary of the church’s leadership page. Replace with Pastor Marty’s own approved biography. Confirm “former sports writer” and each role.</ReviewFlag>
+
+        <div class="mt-12 grid gap-10 sm:grid-cols-2">
+          <div>
+            <h3 class="!font-sans !text-[0.8rem] !font-bold uppercase !tracking-[0.16em] text-blue">In ministry</h3>
+            <ol class="mt-5 border-l-2 border-line">
+              {pastor.ministry.map((m) => (
+                <li class="relative pb-5 pl-6 last:pb-0">
+                  <span class="absolute -left-[7px] top-2 h-3 w-3 rounded-full bg-gold" aria-hidden="true"></span>
+                  <p class="font-semibold leading-snug">{m.title}</p>
+                  {m.note && <p class="text-[0.95rem] text-body">{m.note}</p>}
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div>
+            <h3 class="!font-sans !text-[0.8rem] !font-bold uppercase !tracking-[0.16em] text-blue">Education</h3>
+            <ul class="mt-5 space-y-3.5">
+              {pastor.education.map((e) => <li class="border-b border-line pb-3.5 leading-snug last:border-0">{e}</li>)}
+            </ul>
+            <ReviewFlag class="mt-4">Degrees are from the Amazon author page (doctorate also on the leadership page). Confirm exact titles.</ReviewFlag>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hold Fast -->
+  <section aria-labelledby="holdfast-heading" class="bg-stone py-16 md:py-28">
+    <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
+      <div>
+        <p class="eyebrow mb-4">Radio and podcast</p>
+        <h2 id="holdfast-heading">{pastor.podcast.name}, <em>every weekday.</em></h2>
+        <p class="lede mt-6 text-[length:var(--text-lede)] leading-relaxed">Hold Fast is the radio ministry of {church.name}: Pastor Marty teaching through the Bible verse by verse, chapter by chapter, and book by book.</p>
+        {radio && (
+          <dl class="mt-8 divide-y divide-line border-y border-line">
+            {radio.broadcasts.map((b) => (
+              <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4">
+                <dt class="flex items-center gap-2.5 font-semibold"><Radio size={18} class="text-gold-deep" aria-hidden="true" />{b.station}</dt>
+                <dd class="text-body">{b.when}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        <div class="mt-8 flex flex-wrap gap-3" data-reveal>
+          <Button href={pastor.podcast.url} external goal="watch">Listen to the podcast</Button>
+          <Button href={church.youtube.channelUrl} variant="secondary" external goal="watch">Watch on YouTube</Button>
+        </div>
+        <ReviewFlag class="mt-6">Confirm current stations and air times. A search also lists Hold Fast on 94.1 The Voice.</ReviewFlag>
+      </div>
+      <div data-reveal>
+        <Photo name="pastor-bw" alt={`${pastor.known} speaking into a microphone at a podium`} want="Pastor Marty teaching" class="aspect-[3/2] w-full rounded-[var(--radius-card)] object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Books -->
+  <section id="books" aria-labelledby="books-heading" class="bg-paper py-16 md:py-28">
+    <div class="container-site">
+      <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-2xl">
+          <p class="eyebrow mb-4">Author</p>
+          <h2 id="books-heading">Books by <em>{pastor.known}</em></h2>
+        </div>
+        <Button href={pastor.authorPage} variant="secondary" external>Author page on Amazon</Button>
+      </div>
+      <ul class="grid gap-6 md:grid-cols-2">
+        {pastor.books.map((b) => (
+          <li class="card relative flex gap-6 p-6 md:p-8">
+            <span class="hidden h-28 w-20 shrink-0 items-center justify-center rounded-sm bg-navy text-gold-light shadow-md sm:flex" aria-hidden="true"><BookOpen size={28} /></span>
+            <div class="flex min-w-0 flex-col">
+              <p class="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-gold-deep">{b.year}</p>
+              <h3 class="mt-1 !text-[1.45rem] !font-bold">
+                <a class="card-link no-underline after:absolute after:inset-0 after:content-['']" href={b.url} target="_blank" rel="noopener">{b.title}<span class="sr-only"> (opens in a new tab)</span></a>
+              </h3>
+              <p class="mt-1 font-display italic text-body">{b.subtitle}</p>
+              {b.about && <p class="mt-3 text-[0.98rem] text-body">{b.about}</p>}
+              <p class="mt-auto flex items-center gap-1.5 pt-4 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-blue" aria-hidden="true">View book <ArrowRight size={16} /></p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <ReviewFlag class="mt-6">Titles and years are from Amazon and Audible listings. Confirm the list is complete and which editions to link. Send cover images to replace the navy stand-ins.</ReviewFlag>
+    </div>
+  </section>
+
+  <!-- Speaking -->
+  <section aria-labelledby="speaking-heading" class="bg-sky py-16 md:py-28">
+    <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
+      <div data-reveal>
+        <Photo name="pastor-conference" alt={`${pastor.known} with a friend at an outdoor men’s conference booth`} want="Pastor Marty at a conference" class="aspect-[4/5] w-full rounded-[var(--radius-card)] object-cover sm:aspect-[4/3]" />
+      </div>
+      <div>
+        <p class="eyebrow mb-4">Speaking</p>
+        <h2 id="speaking-heading">Beyond <em>the pulpit.</em></h2>
+        <ul class="mt-8 divide-y divide-navy/15 border-y border-navy/15">
+          {pastor.speaking.map((s) => (
+            <li class="py-5">
+              <p class="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-blue">{s.note}</p>
+              <p class="mt-1 font-display text-[1.45rem] font-bold leading-tight"><a class="underline decoration-gold decoration-2 underline-offset-4 hover:decoration-navy" href={s.url} target="_blank" rel="noopener">{s.name}<span class="sr-only"> (opens in a new tab)</span></a></p>
+            </li>
+          ))}
+        </ul>
+        <p class="lede mt-7 text-body">To invite Pastor Marty to speak, contact the church office.</p>
+        <p class="mt-6" data-reveal><Button href="/contact">Contact the church</Button></p>
+        <ReviewFlag class="mt-6">Add other events (for example the Oregon men’s conference), with names, dates and links. None could be confirmed by search.</ReviewFlag>
+      </div>
+    </div>
+  </section>
+
+  <ConnectCta />
+</Base>

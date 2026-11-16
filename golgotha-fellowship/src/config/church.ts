@@ -219,6 +219,7 @@ export const footerNav = [
     links: [
       { label: 'About Us', href: '/about' },
       { label: 'What We Believe', href: '/beliefs' },
+      { label: 'Pastor Marty', href: '/pastor-marty' },
       { label: 'Leadership', href: '/leadership' },
       { label: 'Give', href: '/give' },
     ],

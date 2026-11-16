@@ -2,6 +2,7 @@
 import Radio from '@lucide/astro/icons/radio';
 import { church } from '../config/church';
 import ReviewFlag from './ReviewFlag.astro';
+import { pastor } from '../config/pastor';
 const r = church.radio;
 ---
 {r.status !== 'todo' && (
@@ -14,6 +15,7 @@ const r = church.radio;
         <div><dt class="font-semibold">{b.station}</dt><dd class="text-body">{b.when}</dd></div>
       ))}
     </dl>
+    <p class="mt-4"><a class="link inline-flex min-h-11 items-center" href={pastor.podcast.url} target="_blank" rel="noopener" data-goal="watch">Listen to the Hold Fast podcast<span class="sr-only"> (opens in a new tab)</span></a></p>
     {r.status === 'confirm' && <ReviewFlag class="mt-4">Confirm current Hold Fast stations and air times.</ReviewFlag>}
   </div>
 )}

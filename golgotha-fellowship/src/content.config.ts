@@ -50,6 +50,8 @@ const leadership = defineCollection({
     /** Only an approved biography. Leave empty rather than writing one. */
     bio: z.string().optional(),
     photo: z.string().optional(),
+    /** Optional page with a fuller biography. */
+    link: z.string().optional(),
     status,
     reviewNote: z.string().optional(),
   }),
