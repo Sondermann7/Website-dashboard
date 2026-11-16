@@ -30,7 +30,7 @@ const faqSchema = {
 ---
 <Base title="I’m New: Plan Your Visit" description={`Plan your first visit to ${church.name} in downtown Nampa, Idaho. Service times, directions, what to wear, kids ministry and what to expect.`}>
   <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
-  <PageHero photo="page-new-here" eyebrow="I’m new" title="Plan your visit" lede="You are welcome here. Here is everything you need to know before your first Sunday — no sign-up and no surprises.">
+  <PageHero next="white" photo="page-new-here" eyebrow="I’m new" title="Plan your visit" lede="You are welcome here. Here is everything you need to know before your first Sunday — no sign-up and no surprises.">
     <Button href={directionsUrl} external goal="directions">Get directions</Button>
     <Button href={church.youtube.channelUrl} variant="secondary" external goal="watch">Watch a teaching first</Button>
   </PageHero>

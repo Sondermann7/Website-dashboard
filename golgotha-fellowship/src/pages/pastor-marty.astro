@@ -32,8 +32,8 @@ const person = {
   <!-- Biography -->
   <section aria-labelledby="bio-heading" class="bg-paper py-16 md:py-28">
     <div class="container-site grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-      <div data-reveal>
-        <Photo name="pastor-marty" alt={`${pastor.name} smiling as he teaches from a podium`} want="Pastor Marty portrait" eager class="aspect-[4/5] w-full rounded-[var(--radius-card)] object-cover" sizes="(min-width: 64rem) 40vw, 100vw" />
+      <div class="framed frame-left mb-4 ml-4" data-reveal>
+        <Photo name="pastor-marty" alt={`${pastor.name} smiling as he teaches from a podium`} want="Pastor Marty portrait" eager class="aspect-[4/5] w-full object-cover" sizes="(min-width: 64rem) 40vw, 100vw" />
       </div>
       <div>
         <p class="eyebrow mb-4">About</p>
@@ -91,8 +91,8 @@ const person = {
         </div>
         <ReviewFlag class="mt-6">Confirm current stations and air times. A search also lists Hold Fast on 94.1 The Voice.</ReviewFlag>
       </div>
-      <div data-reveal>
-        <Photo name="pastor-bw" alt={`${pastor.known} speaking into a microphone at a podium`} want="Pastor Marty teaching" class="aspect-[3/2] w-full rounded-[var(--radius-card)] object-cover" />
+      <div class="framed mr-4 mb-4" data-reveal>
+        <Photo name="pastor-bw" alt={`${pastor.known} speaking into a microphone at a podium`} want="Pastor Marty teaching" class="aspect-[3/2] w-full object-cover" />
       </div>
     </div>
   </section>
@@ -110,7 +110,7 @@ const person = {
       <ul class="grid gap-6 md:grid-cols-2">
         {pastor.books.map((b) => (
           <li class="card relative flex gap-6 p-6 md:p-8">
-            <span class="hidden h-28 w-20 shrink-0 items-center justify-center rounded-sm bg-navy text-gold-light shadow-md sm:flex" aria-hidden="true"><BookOpen size={28} /></span>
+            <span class="hidden h-28 w-20 shrink-0 items-center justify-center rounded-sm bg-navy text-gold-light shadow-[var(--shadow-lift)] sm:flex" aria-hidden="true"><BookOpen size={28} /></span>
             <div class="flex min-w-0 flex-col">
               <p class="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-gold-deep">{b.year}</p>
               <h3 class="mt-1 !text-[1.45rem] !font-bold">
@@ -130,8 +130,8 @@ const person = {
   <!-- Speaking -->
   <section aria-labelledby="speaking-heading" class="bg-sky py-16 md:py-28">
     <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
-      <div data-reveal>
-        <Photo name="pastor-conference" alt={`${pastor.known} with a friend at an outdoor men’s conference booth`} want="Pastor Marty at a conference" class="aspect-[4/5] w-full rounded-[var(--radius-card)] object-cover sm:aspect-[4/3]" />
+      <div class="framed frame-left mb-4 ml-4" data-reveal>
+        <Photo name="pastor-conference" alt={`${pastor.known} with a friend at an outdoor men’s conference booth`} want="Pastor Marty at a conference" class="aspect-[4/5] w-full object-cover sm:aspect-[4/3]" />
       </div>
       <div>
         <p class="eyebrow mb-4">Speaking</p>

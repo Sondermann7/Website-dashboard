@@ -9,7 +9,7 @@ const list = allGatherings
   .filter((g) => g.status !== 'todo' && (!ids || ids.includes(g.id)))
   .sort((a, b) => DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day));
 ---
-<ul class="divide-y divide-line overflow-hidden rounded-[var(--radius-card)] border border-line bg-white">
+<ul class="divide-y divide-line overflow-hidden rounded-[var(--radius-card)] bg-white shadow-[var(--shadow-card)] ring-1 ring-navy/5">
   {list.map((g) => (
     <li class="grid gap-1 px-5 py-4 sm:grid-cols-[9rem_1fr_auto] sm:items-baseline sm:gap-6">
       <span class="font-semibold text-blue">{g.day}</span>

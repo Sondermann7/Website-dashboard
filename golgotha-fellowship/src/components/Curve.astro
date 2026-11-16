@@ -1,0 +1,13 @@
+---
+/**
+ * Soft curved edge at the bottom of a section, filled with the colour of the section
+ * below, so blocks flow into each other instead of meeting at a hard line.
+ * The parent must be `relative`. Purely decorative.
+ */
+interface Props { fill: 'paper' | 'stone' | 'white' | 'navy' | 'navy-deep'; flip?: boolean }
+const { fill, flip = false } = Astro.props;
+const colour = `var(--color-${fill})`;
+---
+<svg class:list={['curve pointer-events-none absolute inset-x-0 -bottom-px block w-full', flip && '-scale-x-100']} viewBox="0 0 1440 64" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <path fill={colour} d="M0 40C240 12 520 4 760 22s520 34 680 10V64H0Z" />
+</svg>

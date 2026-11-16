@@ -1,6 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import Dove from './Dove.astro';
+import Motif from './Motif.astro';
 import { church, footerNav, primaryGatherings, addressOneLine, directionsUrl, telHref, mailHref } from '../config/church';
 import { joinTimes } from '../lib/format';
 const year = new Date().getFullYear();
@@ -11,7 +12,7 @@ const social = [
 ];
 const fl = 'inline-flex min-h-11 min-w-11 items-center text-paper underline decoration-mist/40 underline-offset-4 hover:decoration-paper';
 ---
-<footer class="bg-navy-deep pb-24 text-paper on-dark md:pb-0">
+<footer class="relative bg-navy-deep pb-24 text-paper on-dark md:pb-0">
   <div class="container-site grid gap-12 py-14 md:py-20 lg:grid-cols-[1.35fr_2fr]">
     <div>
       <Logo tone="light" />
@@ -46,7 +47,7 @@ const fl = 'inline-flex min-h-11 min-w-11 items-center text-paper underline deco
   </div>
   <div class="border-t border-paper/15">
     <div class="container-site flex flex-col gap-3 py-6 text-[0.9rem] text-mist md:flex-row md:items-center md:justify-between">
-      <p>© {year} {church.name} · {addressOneLine}</p>
+      <p class="flex items-center gap-3"><Motif kind="fish" stroke={2} class="h-4 w-8 shrink-0 text-gold-light/70" /><span>© {year} {church.name} · {addressOneLine}</span></p>
       <ul class="flex flex-wrap gap-x-6">
         {social.map((s) => (
           <li><a class={fl} href={s.href} target="_blank" rel="noopener me" data-goal={s.goal}>{s.label}<span class="sr-only"> (opens in a new tab)</span></a></li>

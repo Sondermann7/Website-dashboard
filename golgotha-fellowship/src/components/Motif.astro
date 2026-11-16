@@ -1,0 +1,26 @@
+---
+/**
+ * Decorative line motifs, drawn here (not any organisation's artwork):
+ *   cross    - a simple Latin cross in one stroke weight
+ *   fish     - the ichthys, two crossing arcs
+ *   ornament - a short rule, a small cross, and a rule (section accent)
+ * Always aria-hidden: they are decoration, never content.
+ */
+interface Props { kind: 'cross' | 'fish' | 'ornament'; class?: string; stroke?: number }
+const { kind, class: cls = '', stroke = 1.5 } = Astro.props;
+---
+{kind === 'cross' && (
+  <svg class={cls} viewBox="0 0 60 100" fill="none" stroke="currentColor" stroke-width={stroke} stroke-linecap="round" aria-hidden="true" focusable="false">
+    <path d="M30 4v92M10 30h40" />
+  </svg>
+)}
+{kind === 'fish' && (
+  <svg class={cls} viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width={stroke} stroke-linecap="round" aria-hidden="true" focusable="false">
+    <path d="M6 44C30 8 72 4 112 44M6 16c24 36 66 40 106 0" />
+  </svg>
+)}
+{kind === 'ornament' && (
+  <svg class={cls} viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width={stroke} stroke-linecap="round" aria-hidden="true" focusable="false">
+    <path d="M4 12h40M76 12h40M60 3v18M54 9h12" />
+  </svg>
+)}
