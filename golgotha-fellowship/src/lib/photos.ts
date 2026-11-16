@@ -10,6 +10,10 @@ const photos = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/photos/**/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG}',
   { eager: true },
 );
+/** Preview-only stock stand-ins. Loaded only when PUBLIC_STANDINS=true (npm run build:preview). */
+const standins = import.meta.env.PUBLIC_STANDINS === 'true'
+  ? import.meta.glob<{ default: ImageMetadata }>('/src/assets/standins/*.{jpg,jpeg,png,webp}', { eager: true })
+  : {};
 const brand = import.meta.glob<{ default: ImageMetadata }>('/src/assets/brand/*.{png,webp,svg,PNG}', {
   eager: true,
 });
@@ -20,6 +24,6 @@ function find(files: Record<string, { default: ImageMetadata }>, prefix: string,
   return hit ? files[hit].default : undefined;
 }
 
-export const getPhoto = (name?: string) => find(photos, '/src/assets/photos/', name);
+export const getPhoto = (name?: string) => find(photos, '/src/assets/photos/', name) ?? find(standins, '/src/assets/standins/', name);
 /** "logo" for light backgrounds, "logo-light" for dark; "calvary-dove(-light)" is the affiliation mark. */
 export const getLogo = (variant: 'logo' | 'logo-light' | 'calvary-dove' | 'calvary-dove-light') => find(brand, '/src/assets/brand/', variant);

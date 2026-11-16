@@ -8,3 +8,6 @@ dist/
 reference/screenshots/
 qa/
 .DS_Store
+
+# Preview-only stock stand-ins (not redistributable)
+src/assets/standins/*.jpg
