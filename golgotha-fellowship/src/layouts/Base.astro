@@ -1,7 +1,7 @@
 ---
-import '@fontsource-variable/inter/wght.css';
-import '@fontsource/dm-serif-display/latin-400.css';
 import '../styles/global.css';
+import serifFont from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
+import sansFont from '@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
@@ -35,8 +35,10 @@ const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {(noindex || REVIEW) && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="preload" href={serifFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <meta name="theme-color" content="#182A2B" />
+    <meta name="theme-color" content="#13294B" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={church.name} />
     <meta property="og:title" content={fullTitle} />
@@ -67,6 +69,46 @@ const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
     </main>
     <Footer />
     <MobileBar />
+    <div class="progress" aria-hidden="true"></div>
+    <script is:inline>
+      // Motion. Does nothing (and hides nothing) without IntersectionObserver or with "reduce motion" on.
+      (function () {
+        if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var root = document.documentElement;
+        root.classList.add('mo');
+        var sel = 'main :is(h2, .eyebrow, .lede, .card, .tile, [data-reveal], .prose > *, dl > div, .review-flag)';
+        var els = [].filter.call(document.querySelectorAll(sel), function (el) {
+          return !el.closest('.hero, form, dialog, [data-no-mo]') && !(el.parentElement && el.parentElement.closest('[data-mo]'));
+        });
+        els.forEach(function (el) {
+          if (el.closest('[data-mo]')) return;
+          var i = [].indexOf.call(el.parentElement.children, el);
+          el.setAttribute('data-mo', '');
+          if (el.matches('.card, .tile, li > *, dl > div') || el.parentElement.matches('li')) {
+            var row = el.parentElement.matches('li') ? [].indexOf.call(el.parentElement.parentElement.children, el.parentElement) : i;
+            el.style.setProperty('--mo-d', Math.min(row * 50, 250) + 'ms');
+          }
+        });
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+        document.querySelectorAll('[data-mo]').forEach(function (el) { io.observe(el); });
+        var bar = document.querySelector('.progress'), kin = document.querySelectorAll('[data-kinetic]'), tick = false;
+        function frame() {
+          tick = false;
+          var max = root.scrollHeight - innerHeight;
+          root.classList.toggle('scrolled', scrollY > 8);
+          if (bar) bar.style.setProperty('--p', max > 0 ? (scrollY / max).toFixed(4) : 0);
+          kin.forEach(function (k) {
+            var r = k.getBoundingClientRect();
+            var t = 1 - Math.min(1, Math.max(0, (r.top + r.height * 0.5) / innerHeight));
+            k.style.setProperty('--k', Math.min(1, Math.max(0, t * 1.6)).toFixed(3));
+          });
+        }
+        addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(frame); } }, { passive: true });
+        frame();
+      })();
+    </script>
 
     {ga4 && (
       <>

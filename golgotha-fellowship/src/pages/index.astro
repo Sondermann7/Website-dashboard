@@ -1,186 +1,224 @@
 ---
 import { getCollection } from 'astro:content';
-import BookOpen from '@lucide/astro/icons/book-open';
-import Heart from '@lucide/astro/icons/heart';
-import Baby from '@lucide/astro/icons/baby';
+import Check from '@lucide/astro/icons/check';
 import Play from '@lucide/astro/icons/play';
+import MapPin from '@lucide/astro/icons/map-pin';
 import ArrowRight from '@lucide/astro/icons/arrow-right';
-import Users from '@lucide/astro/icons/users';
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
-import Section from '../components/Section.astro';
-import ServiceBand from '../components/ServiceBand.astro';
 import Photo from '../components/Photo.astro';
+import Dove from '../components/Dove.astro';
 import MinistryCard from '../components/MinistryCard.astro';
 import EventList from '../components/EventList.astro';
-import RadioCard from '../components/RadioCard.astro';
 import ConnectCta from '../components/ConnectCta.astro';
 import ReviewFlag from '../components/ReviewFlag.astro';
-import { church } from '../config/church';
-import { getPhoto } from '../lib/photos';
+import { church, primaryGatherings, directionsUrl, telHref } from '../config/church';
 import { getTeachings } from '../lib/teachings';
-import { formatDate } from '../lib/format';
+import { formatDate, joinTimes } from '../lib/format';
 
-const hero = getPhoto('hero');
-const pastorPhoto = getPhoto('pastor-marty');
-const teachings = (await getTeachings()).slice(0, 3);
-const [latest, ...more] = teachings;
-const homeMinistries = (await getCollection('ministries'))
-  .filter((m) => m.data.showOnHome && m.data.status !== 'todo')
-  .sort((a, b) => a.data.order - b.data.order);
+const [latest] = await getTeachings();
+const ministries = (await getCollection('ministries'))
+  .filter((m) => m.data.status !== 'todo')
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4);
+const radio = church.radio.status !== 'todo' ? church.radio : null;
 
-const expect = [
-  { icon: BookOpen, title: 'The Bible, line by line', text: 'Our services are centered on Scripture. We teach through the Bible simply and systematically, so you hear the whole counsel of God’s Word.', href: '/teachings', link: 'Hear a teaching' },
-  { icon: Heart, title: 'Come as you are', text: 'Services are casual. You do not need to dress up, know the songs, or have it all together. Following Jesus is a relationship grounded in His love and grace.', href: '/new-here', link: 'Plan your visit' },
-  { icon: Baby, title: 'A place for your kids', text: 'Nursery and children’s ministry through sixth grade are available on Sundays, with children’s ministry on Wednesday evenings too. A greeter will help you check in.', href: '/ministries/kids', link: 'About kids ministry' },
+const promises = ['Casual, come-as-you-are services', 'The Bible taught line by line', 'Nursery and kids ministry through 6th grade'];
+const sunday = [
+  { photo: 'sunday-teaching', want: 'Pastor teaching from an open Bible on a Sunday', title: 'We open the Bible', text: 'The heart of every service is God’s Word, taught simply and systematically, line by line.', href: '/teachings', link: 'Hear a teaching' },
+  { photo: 'sunday-fellowship', want: 'People greeting each other / talking in the lobby', title: 'You come as you are', text: 'Services are casual. No dress code, no pressure. Following Jesus is a relationship grounded in His love and grace.', href: '/new-here', link: 'Plan your visit' },
+  { photo: 'kids', want: 'Kids ministry classroom (released photos only)', title: 'Your kids are cared for', text: 'Nursery and children’s ministry through sixth grade on Sundays, and children’s ministry on Wednesdays. A greeter helps you check in.', href: '/ministries/kids', link: 'About kids ministry' },
 ];
+const holdFast = 'Hold fast.'.split('');
 ---
 <Base title={`${church.name} | Bible-Teaching Church in Nampa, Idaho`} description={`${church.shortDescription} Sundays at 8:30 and 10:30 AM, Wednesdays at 6:00 PM.`}>
-  <!-- 1. Hero -->
-  <section class="on-dark relative isolate overflow-hidden bg-ink text-cream">
-    {hero && (
-      <>
-        <Photo name="hero" alt="" eager sizes="100vw" widths={[640, 1024, 1600, 2400]} class="absolute inset-0 -z-20 h-full w-full object-cover" />
-        <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink/90 via-ink/75 to-ink/45"></div>
-      </>
-    )}
-    {!hero && <div class="absolute inset-y-0 right-0 -z-10 hidden w-[38%] bg-ink-soft lg:block" aria-hidden="true"></div>}
-    <div class="container-site grid gap-10 py-20 md:py-28 lg:grid-cols-[1.6fr_1fr] lg:items-end lg:py-36">
+  <!-- 1. Hero: congregation photo, invitation, and this week's service card -->
+  <section class="hero on-dark relative isolate overflow-hidden bg-navy text-white">
+    <Photo name="hero" alt="" want="HERO: the congregation on a Sunday morning (wide, landscape)" eager sizes="100vw" widths={[640, 1024, 1600, 2400]} class="hero-photo absolute inset-0 -z-20 h-full w-full object-cover" />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep/95 via-navy/80 to-navy/40"></div>
+    <div class="container-site grid gap-10 py-14 md:py-20 lg:min-h-[41rem] lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14">
       <div>
-        <p class="eyebrow mb-5">{church.address.areaNote}, Idaho</p>
-        <h1 class="max-w-[14ch] text-[length:var(--text-display)] leading-[1.04]">Come grow in God’s Word with us.</h1>
-        <p class="mt-6 max-w-xl text-[length:var(--text-lede)] leading-relaxed text-mist">{church.shortDescription}</p>
-        <div class="mt-9 flex flex-wrap gap-3">
-          <Button href="/new-here" variant="light" goal="plan-visit">Plan Your Visit</Button>
+        <p class="eyebrow hero-rise mb-5">Downtown Nampa, Idaho</p>
+        <h1 class="hero-rise text-[length:var(--text-display)] leading-[1.02]" style="--mo-d:50ms">Come grow in <em>God’s Word</em> with us.</h1>
+        <p class="hero-rise mt-6 max-w-xl text-[length:var(--text-lede)] leading-relaxed text-white/90" style="--mo-d:120ms">{church.shortDescription}</p>
+        <ul class="hero-rise mt-6 grid gap-2.5" style="--mo-d:160ms">
+          {promises.map((p) => <li class="flex items-start gap-2.5 font-semibold"><Check size={20} class="mt-1 shrink-0 text-gold-light" aria-hidden="true" />{p}</li>)}
+        </ul>
+        <div class="hero-rise mt-8 flex flex-wrap gap-3" style="--mo-d:200ms">
+          <Button href="/new-here" variant="gold" goal="plan-visit">Plan Your Visit <ArrowRight size={18} aria-hidden="true" /></Button>
           <Button href="/teachings" variant="outline-light" goal="watch"><Play size={18} aria-hidden="true" /> Watch a Teaching</Button>
         </div>
       </div>
-      {!hero && (
-        <div class="hidden border-l-2 border-clay pl-7 lg:block">
-          <p class="eyebrow">Hebrews 10:23–25 · Acts 2:42</p>
-          <p class="mt-3 font-display text-[1.55rem] leading-snug text-cream">Holding fast to our hope, gathering together, and continuing in the apostles’ doctrine, fellowship, communion and prayer.</p>
+
+      <aside aria-labelledby="visit-card-heading" class="on-light hero-rise rounded-[var(--radius-card)] bg-white p-6 text-navy shadow-2xl md:p-8" style="--mo-d:250ms">
+        <p class="eyebrow">Join us this week</p>
+        <h2 id="visit-card-heading" class="mt-2 !text-[1.9rem]">Service times</h2>
+        <dl class="mt-5 divide-y divide-line border-y border-line">
+          {primaryGatherings.map((g) => (
+            <div class="flex items-baseline justify-between gap-4 py-3.5">
+              <dt class="font-semibold text-body">{g.day}s</dt>
+              <dd class="text-right font-display text-[1.45rem] font-bold leading-tight">{joinTimes(g.times)}</dd>
+            </div>
+          ))}
+        </dl>
+        <address class="mt-5 flex gap-3 not-italic">
+          <MapPin size={22} class="mt-0.5 shrink-0 text-gold-deep" aria-hidden="true" />
+          <span>{church.address.street}<br />{church.address.city}, {church.address.regionName} {church.address.postalCode}</span>
+        </address>
+        <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+          <a class="btn btn-primary" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions">Get directions<span class="sr-only"> (opens in a new tab)</span></a>
+          <a class="btn btn-secondary" href={telHref} data-goal="call" aria-label={`Call ${church.phone.display}`}>{church.phone.display}</a>
         </div>
-      )}
+      </aside>
     </div>
-    <ReviewFlag class="container-site mb-6 !w-auto">Hero photo: add a real, approved congregation photo as src/assets/photos/hero.jpg. Headline and supporting copy need pastoral approval.</ReviewFlag>
   </section>
 
-  <!-- 2. Service times -->
-  <ServiceBand />
-
-  <!-- 3. What to expect -->
-  <Section id="expect" eyebrow="Your first visit" title="What to expect at Golgotha Fellowship" intro="No pressure and no pretense — just people opening the Bible together.">
-    <ul class="grid gap-5 md:grid-cols-3">
-      {expect.map((c) => (
-        <li class="card relative flex flex-col p-6 md:p-8">
-          <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-sage-muted text-sage"><c.icon size={26} aria-hidden="true" /></span>
-          <h3 class="mt-5">{c.title}</h3>
-          <p class="mt-3 text-body">{c.text}</p>
-          <p class="mt-auto pt-5"><a class="card-link link inline-flex min-h-11 items-center gap-1.5 after:absolute after:inset-0 after:content-['']" href={c.href}>{c.link} <ArrowRight size={18} aria-hidden="true" /></a></p>
-        </li>
-      ))}
-    </ul>
-    <p class="mt-10"><Button href="/new-here" variant="secondary" goal="plan-visit">Everything you need for your first visit</Button></p>
-  </Section>
-
-  <!-- 4. Pastoral welcome -->
-  <Section id="welcome" tone="sage">
-    <div class:list={['grid gap-10 lg:items-center', pastorPhoto && 'lg:grid-cols-[0.8fr_1.2fr]']}>
-      <Photo name="pastor-marty" alt={`${church.seniorPastor.name}, senior pastor of ${church.name}`} class="aspect-[4/5] w-full max-w-md rounded-[var(--radius-card)] object-cover" />
-      <div class="max-w-2xl">
-        <p class="eyebrow mb-3">Welcome</p>
-        <h2 id="welcome-heading">Meet {church.seniorPastor.known}</h2>
-        <p class="mt-5 text-[length:var(--text-lede)] leading-relaxed">{church.seniorPastor.name} — {church.seniorPastor.known} to most of us — serves as senior pastor of {church.name}.</p>
-        <p class="mt-4 text-body">We are a fellowship of ordinary people learning to follow Jesus together. We hold fast to God’s Word, we look for Christ’s return, and we would love for you to join us.</p>
-        <div class="mt-7 flex flex-wrap gap-3">
-          <Button href="/leadership" variant="secondary">Meet our leadership</Button>
-          <Button href="/about" variant="secondary">About our church</Button>
+  <!-- 2. Welcome -->
+  <section aria-labelledby="welcome-heading" class="bg-paper py-16 md:py-28">
+    <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
+      <div class="relative" data-reveal>
+        <Photo name="welcome" alt={`People gathered at ${church.name}`} want="Congregation / fellowship: people together, candid" class="aspect-[4/3] w-full rounded-[var(--radius-card)] object-cover" />
+        <div class="absolute -bottom-8 -right-3 hidden w-[44%] overflow-hidden rounded-[var(--radius-card)] border-[6px] border-paper shadow-xl sm:block md:-right-8">
+          <Photo name="pastor-marty" alt={`${church.seniorPastor.name}, senior pastor`} want="Pastor Marty portrait" class="aspect-[4/5] w-full object-cover" sizes="25vw" />
         </div>
-        <ReviewFlag class="mt-6">Replace with Pastor Marty’s own approved welcome message, and add an approved portrait as src/assets/photos/pastor-marty.jpg.</ReviewFlag>
+      </div>
+      <div>
+        <p class="eyebrow mb-4">Welcome to Golgotha</p>
+        <h2 id="welcome-heading">A church family that <em>opens the Bible</em> together.</h2>
+        <p class="lede mt-6 text-[length:var(--text-lede)] leading-relaxed">We are ordinary people learning to follow Jesus. We hold fast to God’s Word, we look for Christ’s return, and we would love for you to join us.</p>
+        <p class="lede mt-4 text-body">{church.seniorPastor.name}, known to most of us as {church.seniorPastor.known}, serves as our senior pastor.</p>
+        <div class="mt-8 flex flex-wrap gap-3" data-reveal>
+          <Button href="/about">Our story &amp; mission</Button>
+          <Button href="/leadership" variant="secondary">Meet our leadership</Button>
+        </div>
+        <ReviewFlag class="mt-6">Replace with Pastor Marty’s own welcome in his words. Headline and copy need pastoral approval.</ReviewFlag>
       </div>
     </div>
-  </Section>
+  </section>
 
-  <!-- 5. Latest teaching -->
-  <Section id="teaching" tone="white" eyebrow="Bible teaching" title={latest ? 'Latest teaching' : 'Watch and listen'} intro="Teachings are free to watch. No account or sign-in needed.">
-    <div class="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-      {latest ? (
-        <article class="card relative overflow-hidden">
-          {latest.thumbnail && <img src={latest.thumbnail} alt="" width="480" height="360" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />}
-          <div class="p-6 md:p-8">
-            <p class="text-[0.95rem] text-body">{formatDate(latest.date)}{latest.speaker && ` · ${latest.speaker}`}</p>
-            <h3 class="mt-2 !text-[1.75rem]">
-              <a class="card-link no-underline after:absolute after:inset-0 after:content-['']" href={latest.href ?? latest.videoUrl} data-goal="watch" {...(latest.href ? {} : { target: '_blank', rel: 'noopener' })}>{latest.title}{!latest.href && <span class="sr-only"> (opens in a new tab)</span>}</a>
-            </h3>
-            {latest.passage && <p class="mt-2 font-semibold text-sage">{latest.passage}</p>}
-            <p class="mt-5 flex items-center gap-2 font-semibold text-sage" aria-hidden="true"><Play size={18} /> Watch now</p>
-          </div>
-        </article>
-      ) : (
-        <div class="on-dark flex flex-col justify-between rounded-[var(--radius-card)] bg-ink p-7 text-cream md:p-10">
-          <div>
-            <h3 class="!text-[1.9rem]">Teachings on YouTube</h3>
-            <p class="mt-3 max-w-lg text-mist">Watch current and past teachings from {church.name} on our YouTube channel.</p>
-          </div>
-          <div class="mt-8 flex flex-wrap gap-3">
-            <Button href={church.youtube.channelUrl} variant="light" external goal="watch"><Play size={18} aria-hidden="true" /> Watch on YouTube</Button>
+  <!-- 3. A Sunday at Golgotha -->
+  <section aria-labelledby="sunday-heading" class="bg-stone py-16 md:py-28">
+    <div class="container-site">
+      <div class="mb-12 max-w-3xl">
+        <p class="eyebrow mb-4">Your first visit</p>
+        <h2 id="sunday-heading">What a Sunday at Golgotha <em>looks like</em></h2>
+      </div>
+      <ol class="grid gap-6 md:grid-cols-3">
+        {sunday.map((c, i) => (
+          <li class="card relative flex flex-col overflow-hidden">
+            <Photo name={c.photo} alt="" want={c.want} class="aspect-[4/3] w-full object-cover" sizes="(min-width: 48rem) 33vw, 100vw" />
+            <div class="flex flex-1 flex-col p-6 md:p-7">
+              <span class="font-display text-[1.05rem] font-bold italic text-gold-deep" aria-hidden="true">0{i + 1}</span>
+              <h3 class="mt-1 !text-[1.5rem] !font-bold">{c.title}</h3>
+              <p class="mt-3 text-body">{c.text}</p>
+              <p class="mt-auto pt-5"><a class="card-link link inline-flex min-h-11 items-center gap-1.5 after:absolute after:inset-0 after:content-['']" href={c.href}>{c.link} <ArrowRight size={18} aria-hidden="true" /></a></p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4. Teaching panel: navy, photo fading into colour -->
+  <section aria-labelledby="teaching-heading" class="bg-paper py-16 md:py-28">
+    <div class="container-site">
+      <div class="on-dark relative isolate overflow-hidden rounded-[var(--radius-panel)] bg-navy text-white shadow-[0_30px_60px_-30px_rgb(11_26_49/0.6)]" data-reveal data-no-mo>
+        <div class="absolute inset-y-0 right-0 -z-20 hidden w-[58%] md:block">
+          <Photo name="teaching" alt="" want="Teaching in progress: pastor at the pulpit, or the room during a study" class="h-full w-full object-cover" sizes="60vw" />
+        </div>
+        <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-navy from-[44%] via-navy/85 via-[58%] to-navy/10 md:block"></div>
+        <div class="max-w-2xl p-7 md:p-14 lg:p-16">
+          <p class="eyebrow mb-4">Bible teaching</p>
+          <h2 id="teaching-heading">{latest ? 'Latest teaching' : <>Watch and listen, <em>any time.</em></>}</h2>
+          {latest ? (
+            <div class="mt-6">
+              <p class="text-mist">{formatDate(latest.date)}{latest.speaker && ` · ${latest.speaker}`}</p>
+              <p class="mt-1 font-display text-[1.7rem] font-bold leading-tight">{latest.title}</p>
+              {latest.passage && <p class="mt-1 font-semibold text-gold-light">{latest.passage}</p>}
+            </div>
+          ) : (
+            <ul class="mt-7 space-y-5">
+              <li class="border-l-2 border-gold-light pl-4"><p class="font-bold">Free on YouTube</p><p class="text-mist">Current and past teachings. No account or sign-in needed.</p></li>
+              {radio && <li class="border-l-2 border-gold-light pl-4"><p class="font-bold">On the radio: {radio.name}</p><p class="text-mist">{radio.broadcasts.map((b) => `${b.station}, ${b.when.toLowerCase()}`).join(' · ')}</p></li>}
+              <li class="border-l-2 border-gold-light pl-4"><p class="font-bold">Line by line</p><p class="text-mist">We teach through books of the Bible, simply and systematically.</p></li>
+            </ul>
+          )}
+          <div class="mt-9 flex flex-wrap gap-3">
+            <Button href={latest ? (latest.href ?? latest.videoUrl ?? '/teachings') : church.youtube.channelUrl} variant="gold" external={!latest?.href} goal="watch"><Play size={18} aria-hidden="true" /> {latest ? 'Watch now' : 'Watch on YouTube'}</Button>
             <Button href="/teachings" variant="outline-light">All teachings</Button>
           </div>
-          <ReviewFlag class="mt-6">Add the YouTube channel ID in src/config/church.ts and the newest teaching appears here automatically.</ReviewFlag>
-        </div>
-      )}
-      <div class="grid content-start gap-5">
-        {more.map((t) => (
-          <a class="card block p-5 no-underline" href={t.href ?? t.videoUrl} {...(t.href ? {} : { target: '_blank', rel: 'noopener' })}>
-            <span class="text-[0.9rem] text-body">{formatDate(t.date, { weekday: undefined })}</span>
-            <span class="mt-1 block font-display text-[1.25rem] leading-snug">{t.title}</span>
-          </a>
-        ))}
-        <RadioCard />
-        {latest && <p><Button href="/teachings" variant="secondary">Browse all teachings</Button></p>}
-      </div>
-    </div>
-  </Section>
-
-  <!-- 6. Ministries -->
-  <Section id="ministries" eyebrow="For every age" title="Find your place" intro="From the nursery to Bible studies, there is a place for you and your family.">
-    <ul class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-      {homeMinistries.map((m) => <li><MinistryCard ministry={m} /></li>)}
-      <li>
-        <article class="card relative flex h-full flex-col p-6 md:p-7">
-          <span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-sage-muted text-sage"><Users size={26} aria-hidden="true" /></span>
-          <h3 class="mt-4"><a class="card-link no-underline after:absolute after:inset-0 after:content-['']" href="/ministries">Community &amp; Bible studies</a></h3>
-          <p class="mt-3 text-body">Men’s and women’s ministries, outreach, missions, and many ways to serve alongside others.</p>
-          <p class="mt-auto flex items-center gap-1.5 pt-5 font-semibold text-sage" aria-hidden="true">See all ministries <ArrowRight size={18} /></p>
-        </article>
-      </li>
-    </ul>
-  </Section>
-
-  <!-- 7. Beliefs + mission -->
-  <Section id="beliefs" tone="ink">
-    <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
-      <div>
-        <p class="eyebrow mb-3">What we believe</p>
-        <h2 id="beliefs-heading">Anchored in Scripture, centered on Jesus Christ</h2>
-      </div>
-      <div>
-        <p class="text-[length:var(--text-lede)] leading-relaxed text-mist">We believe the Bible is the inspired, authoritative Word of God, that salvation is by God’s grace through faith in Jesus Christ alone, and that He is coming again.</p>
-        <p class="mt-4 text-mist">{church.affiliation.summary}</p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <Button href="/beliefs" variant="light">Read what we believe</Button>
-          <Button href="/about" variant="outline-light">Our mission</Button>
         </div>
       </div>
+      {radio?.status === 'confirm' && <ReviewFlag class="mt-5">Confirm Hold Fast stations and air times. Add the YouTube channel ID in src/config/church.ts and the newest teaching shows here automatically.</ReviewFlag>}
     </div>
-  </Section>
+  </section>
+
+  <!-- 5. Ministries as photo tiles -->
+  <section aria-labelledby="ministries-heading" class="bg-paper pb-16 md:pb-28">
+    <div class="container-site">
+      <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-2xl">
+          <p class="eyebrow mb-4">For every age</p>
+          <h2 id="ministries-heading">Find <em>your place</em> here.</h2>
+        </div>
+        <Button href="/ministries" variant="secondary">All ministries</Button>
+      </div>
+      <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {ministries.map((m) => <li><MinistryCard ministry={m} /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6. "Hold fast." band (Hebrews 10:23): the letters spread as the page scrolls -->
+  <section aria-labelledby="holdfast-heading" class="bg-paper pb-16 md:pb-28">
+    <div class="container-site">
+      <div class="on-dark overflow-hidden rounded-[var(--radius-panel)] bg-navy-deep px-6 py-16 text-center text-white md:py-24" data-kinetic data-no-mo>
+        <h2 id="holdfast-heading" class="font-display !text-[clamp(3.2rem,11vw,9rem)] !leading-none text-gold-light" aria-label="Hold fast.">
+          {holdFast.map((ch, i) => (
+            <span aria-hidden="true" class="inline-block whitespace-pre will-change-transform" style={`transform:translateX(calc(var(--k,0) * ${((i - (holdFast.length - 1) / 2) * 0.09).toFixed(3)}em))`}>{ch}</span>
+          ))}
+        </h2>
+        <p class="mx-auto mt-8 max-w-2xl text-[length:var(--text-lede)] text-mist">Holding fast to our hope, and gathering together to encourage one another, all the more as the Day approaches.</p>
+        <p class="mt-3 text-[0.8rem] font-bold uppercase tracking-[0.16em] text-gold-light">Hebrews 10:23–25</p>
+        <p class="mt-9"><Button href="/new-here" variant="gold" goal="plan-visit">Join us this Sunday</Button></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Beliefs and affiliation -->
+  <section aria-labelledby="beliefs-heading" class="bg-stone py-16 md:py-28">
+    <div class="container-site grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
+      <div>
+        <p class="eyebrow mb-4">What we believe</p>
+        <h2 id="beliefs-heading">Anchored in Scripture. Centered on <em>Jesus Christ.</em></h2>
+        <p class="lede mt-6 text-[length:var(--text-lede)] leading-relaxed">We believe the Bible is the inspired, authoritative Word of God, that salvation is by God’s grace through faith in Jesus Christ alone, and that He is coming again.</p>
+        <div class="mt-8 flex flex-wrap gap-3" data-reveal>
+          <Button href="/beliefs">Read what we believe</Button>
+          <Button href="/about" variant="secondary">Our mission</Button>
+        </div>
+      </div>
+      <div class="card flex flex-col justify-center gap-5 p-7 md:p-10">
+        <Dove class="h-20 w-auto self-start" />
+        <p class="text-[0.8rem] font-bold uppercase tracking-[0.16em] text-blue">Calvary Chapel</p>
+        <p class="text-[1.1rem] leading-relaxed">{church.affiliation.summary}</p>
+      </div>
+    </div>
+  </section>
 
   <!-- 8. Events -->
-  <Section id="events" tone="white" eyebrow="Gather with us" title="Upcoming events">
-    <EventList limit={3} />
-    <p class="mt-8"><Button href="/events" variant="secondary">Weekly schedule &amp; events</Button></p>
-  </Section>
+  <section aria-labelledby="events-heading" class="bg-paper py-16 md:py-28">
+    <div class="container-site">
+      <div class="mb-10 flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p class="eyebrow mb-4">Gather with us</p>
+          <h2 id="events-heading">Upcoming events</h2>
+        </div>
+        <Button href="/events" variant="secondary">Weekly schedule</Button>
+      </div>
+      <EventList limit={3} />
+    </div>
+  </section>
 
-  <!-- 9. Prayer + connect -->
+  <!-- 9. Prayer and connection -->
   <ConnectCta />
 </Base>

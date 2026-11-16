@@ -21,5 +21,5 @@ function find(files: Record<string, { default: ImageMetadata }>, prefix: string,
 }
 
 export const getPhoto = (name?: string) => find(photos, '/src/assets/photos/', name);
-/** "logo" for light backgrounds, "logo-light" for dark backgrounds. */
-export const getLogo = (variant: 'logo' | 'logo-light') => find(brand, '/src/assets/brand/', variant);
+/** "logo" for light backgrounds, "logo-light" for dark; "calvary-dove(-light)" is the affiliation mark. */
+export const getLogo = (variant: 'logo' | 'logo-light' | 'calvary-dove' | 'calvary-dove-light') => find(brand, '/src/assets/brand/', variant);

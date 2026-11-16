@@ -11,24 +11,24 @@ const path = cleanPath(Astro.url.pathname);
 const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
 const timesLine = primaryGatherings.map((g) => `${g.day}s ${joinTimes(g.times)}`).join('  ·  ');
 ---
-<aside aria-label="Service times and contact" class="hidden bg-ink text-cream on-dark lg:block">
+<aside aria-label="Service times and contact" class="hidden bg-navy-deep text-paper on-dark lg:block">
   <div class="container-site flex min-h-11 items-center justify-between gap-6 text-[0.85rem]">
     <p class="flex items-center gap-2 text-mist">
       <span>{timesLine}</span><span aria-hidden="true">·</span>
-      <a class="inline-flex min-h-11 items-center gap-1.5 text-cream underline-offset-4 hover:underline" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions">
+      <a class="inline-flex min-h-11 items-center gap-1.5 text-paper underline-offset-4 hover:underline" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions">
         <MapPin size={15} aria-hidden="true" />{church.address.street}, {church.address.city}<span class="sr-only"> — get directions (opens in a new tab)</span>
       </a>
     </p>
     <ul class="flex items-center gap-6">
-      <li><a class="inline-flex min-h-11 items-center gap-1.5 text-cream underline-offset-4 hover:underline" href={telHref} data-goal="call"><Phone size={15} aria-hidden="true" />{church.phone.display}</a></li>
+      <li><a class="inline-flex min-h-11 items-center gap-1.5 text-paper underline-offset-4 hover:underline" href={telHref} data-goal="call"><Phone size={15} aria-hidden="true" />{church.phone.display}</a></li>
       {utilityNav.map((l) => (
-        <li><a class="inline-flex min-h-11 items-center text-cream underline-offset-4 hover:underline" href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a></li>
+        <li><a class="inline-flex min-h-11 items-center text-paper underline-offset-4 hover:underline" href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a></li>
       ))}
     </ul>
   </div>
 </aside>
 
-<header class="sticky top-0 z-40 border-b border-line bg-cream/95 backdrop-blur-sm">
+<header class="site-header sticky top-0 z-40 border-b border-line bg-white">
   <div class="container-site flex min-h-[4.25rem] items-center justify-between gap-4 md:min-h-[4.75rem]">
     <Logo />
     <nav aria-label="Main" class="hidden lg:block">
@@ -38,7 +38,7 @@ const timesLine = primaryGatherings.map((g) => `${g.day}s ${joinTimes(g.times)}`
             <a
               href={l.href}
               aria-current={isCurrent(l.href) ? 'page' : undefined}
-              class="inline-flex min-h-11 items-center rounded-full px-3.5 text-[0.95rem] font-semibold text-ink underline-offset-8 decoration-clay decoration-2 hover:bg-sand aria-[current=page]:underline xl:px-4"
+              class="inline-flex min-h-11 items-center px-3.5 text-[0.86rem] font-bold uppercase tracking-[0.1em] text-navy underline-offset-8 decoration-gold decoration-2 hover:underline aria-[current=page]:underline xl:px-4"
             >{l.label}</a>
           </li>
         ))}
@@ -54,7 +54,7 @@ const timesLine = primaryGatherings.map((g) => `${g.day}s ${joinTimes(g.times)}`
   </div>
 </header>
 
-<dialog id="mobile-menu" aria-label="Site menu" class="m-0 ml-auto h-dvh max-h-none w-full max-w-md overflow-y-auto bg-cream p-0 text-ink lg:hidden">
+<dialog id="mobile-menu" aria-label="Site menu" class="m-0 ml-auto h-dvh max-h-none w-full max-w-md overflow-y-auto bg-paper p-0 text-navy lg:hidden">
   <div class="flex min-h-[4.25rem] items-center justify-between border-b border-line px-5">
     <span class="font-display text-[1.4rem]">Menu</span>
     <button type="button" id="menu-close" class="btn btn-secondary !min-h-11 !px-4"><XIcon size={20} aria-hidden="true" /> Close</button>
@@ -64,13 +64,13 @@ const timesLine = primaryGatherings.map((g) => `${g.day}s ${joinTimes(g.times)}`
       {[{ label: 'Home', href: '/' }, ...mainNav, { label: 'Give', href: '/give' }, ...utilityNav].map((l) => (
         <li>
           <a href={l.href} aria-current={(l.href === '/' ? path === '/' : isCurrent(l.href)) ? 'page' : undefined}
-            class="flex min-h-14 items-center justify-between font-display text-[1.5rem] no-underline aria-[current=page]:text-sage">
+            class="flex min-h-14 items-center justify-between font-display text-[1.5rem] no-underline aria-[current=page]:text-blue">
             {l.label}<span aria-hidden="true" class="font-sans text-base text-body">→</span>
           </a>
         </li>
       ))}
     </ul>
-    <div class="mt-6 rounded-[var(--radius-card)] bg-sand p-5 text-[0.98rem]">
+    <div class="mt-6 rounded-[var(--radius-card)] bg-stone p-5 text-[0.98rem]">
       <p class="font-semibold">Service times</p>
       {primaryGatherings.map((g) => <p>{g.day}s — {joinTimes(g.times)}</p>)}
       <p class="mt-3">{addressOneLine}</p>
@@ -97,7 +97,7 @@ const timesLine = primaryGatherings.map((g) => `${g.day}s ${joinTimes(g.times)}`
   })();
 </script>
 <noscript>
-  <nav aria-label="Main (no JavaScript)" class="border-b border-line bg-sand lg:hidden">
+  <nav aria-label="Main (no JavaScript)" class="border-b border-line bg-stone lg:hidden">
     <ul class="container-site flex flex-wrap gap-x-5 gap-y-1 py-2">
       {[...mainNav, { label: 'Give', href: '/give' }, ...utilityNav].map((l) => <li><a class="link inline-flex min-h-11 items-center" href={l.href}>{l.label}</a></li>)}
     </ul>

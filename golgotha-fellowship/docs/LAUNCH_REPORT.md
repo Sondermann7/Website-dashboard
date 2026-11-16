@@ -77,8 +77,8 @@ reference pack are mapped.
 | Interactive targets under 44×44 px | 0 |
 | axe-core (WCAG 2.0/2.1/2.2 A + AA, best practices) | 0 violations, all pages, mobile + desktop |
 | JavaScript errors | 0 |
-| Lighthouse mobile: `/`, `/new-here`, `/beliefs`, `/contact` | Performance 100 · Accessibility 100 · Best Practices 100 · SEO 100 |
-| LCP / CLS / TBT (home) | 1.4 s / 0.001 / 20 ms |
+| Lighthouse mobile: `/`, `/new-here`, `/beliefs` (revision 2) | Performance 100 · Accessibility 100 · Best Practices 100 · SEO 100 |
+| LCP / CLS (home, revision 2) | 0.8 s / 0.001 |
 | Keyboard | Skip link is first tab stop; mobile menu opens, Escape closes, focus returns to the Menu button |
 | Form backend | 10 automated tests pass (validation, spam, injection, delivery failure, unconfigured) |
 | Form UI | Inline errors, focus moves to first invalid field, failure message tells the visitor to call/email |
@@ -105,11 +105,40 @@ are tagged with `data-goal`. Nothing loads until an ID is set.
 After launch: submit the sitemap in Search Console, update the Google Business Profile
 website link, and ask churchstation.io to correct the old address and service time.
 
+## Design (revision 2, 2026-11-16)
+
+Rebuilt after owner feedback that revision 1 read as a generic template. Patterns are
+taken from the approved Bartlett rebuild (`Bartlett-Roofs/bartlett-website-rebuild`,
+version 9) and the biodwell.com motion notes recorded in that repo:
+
+- Full-bleed photo hero with a navy fade, accent word in the headline, check-mark
+  promises, and a white "Service times" card where Bartlett has its inspection form.
+- Photo-led sections: welcome split with an inset portrait, three photo cards for a
+  Sunday, a rounded navy teaching panel whose photo fades into the colour, ministries
+  as photo tiles.
+- "Hold fast." word band (Hebrews 10:23, also the name of the church's radio program)
+  whose letters spread as the page scrolls: the biodwell "Breathe" idea.
+- Motion: blocks rise 18px from 98.5% over .45s, 50 ms stagger capped at 250 ms, header
+  shadow on scroll, gold progress line, button sweep. Transform and opacity only;
+  nothing is hidden without JavaScript; all of it is off under "reduce motion".
+- Navy + gold palette, Source Serif 4 headings, Source Sans 3 text, squared buttons.
+
+**Not done, because the files could not be obtained from the build environment**
+(the Netlify preview, biodwell.com, the church site, Wix media, Facebook and Instagram
+are all blocked by the session's network policy; nothing for Golgotha was found in the
+connected Google Drive or Canva):
+
+| Needed | Status |
+|---|---|
+| Real photos (11 homepage/ministry slots) | None supplied. Review build shows labeled "Photo needed" boxes; the public build shows plain navy. **The design does not work without them.** |
+| Official Golgotha logo | Not supplied. Name set in type. |
+| Calvary Chapel dove | Not supplied, not redrawn. Slots in the footer and beliefs section. |
+| Exact Golgotha navy | Not sampled. `#13294B` is a stand-in; one token to change. |
+| Live look at the Netlify preview and biodwell.com | Not seen. Bartlett patterns came from its source repo and saved screenshots; biodwell only from notes in that repo. |
+
 ## Design decisions to confirm
 
-- Palette is the **proposed** one (ink / cream / sage / clay / sand), not checked against
-  the logo, which was unavailable. Clay is decoration-only (3.9:1 on cream).
-- Fonts: DM Serif Display + Inter (per the build brief; the token file suggested Source
-  Serif 4 + Atkinson Hyperlegible Next). Swapping is a two-line change.
+- Navy `#13294B` and gold `#C19A4B` are stand-ins until the logo is supplied.
+- Headline copy and accent words need pastoral approval.
 - The favicon and social image are type-only stand-ins until the logo arrives.
 - Navigation is flat (no dropdowns) so nothing depends on hover.

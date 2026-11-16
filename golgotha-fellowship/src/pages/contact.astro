@@ -21,7 +21,7 @@ const row = 'flex gap-4 py-5';
         <h2 class="!text-[length:var(--text-h3)]">Contact details</h2>
         <ul class="mt-4 divide-y divide-line border-y border-line">
           <li class={row}>
-            <MapPin class="mt-1 shrink-0 text-sage" size={24} aria-hidden="true" />
+            <MapPin class="mt-1 shrink-0 text-blue" size={24} aria-hidden="true" />
             <div>
               <p class="font-semibold">Address</p>
               <address class="not-italic text-body">{church.address.street}<br />{church.address.city}, {church.address.regionName} {church.address.postalCode}</address>
@@ -29,15 +29,15 @@ const row = 'flex gap-4 py-5';
             </div>
           </li>
           <li class={row}>
-            <Phone class="mt-1 shrink-0 text-sage" size={24} aria-hidden="true" />
+            <Phone class="mt-1 shrink-0 text-blue" size={24} aria-hidden="true" />
             <div><p class="font-semibold">Phone</p><a class="link inline-flex min-h-11 items-center text-[1.15rem]" href={telHref} data-goal="call">{church.phone.display}</a></div>
           </li>
           <li class={row}>
-            <Mail class="mt-1 shrink-0 text-sage" size={24} aria-hidden="true" />
+            <Mail class="mt-1 shrink-0 text-blue" size={24} aria-hidden="true" />
             <div class="min-w-0"><p class="font-semibold">Email</p><a class="link inline-flex min-h-11 items-center break-all" href={mailHref} data-goal="email">{church.email.general}</a></div>
           </li>
           <li class={row}>
-            <Clock class="mt-1 shrink-0 text-sage" size={24} aria-hidden="true" />
+            <Clock class="mt-1 shrink-0 text-blue" size={24} aria-hidden="true" />
             <div>
               <p class="font-semibold">Service times</p>
               {primaryGatherings.map((g) => <p class="text-body">{g.day}s — {joinTimes(g.times)}</p>)}

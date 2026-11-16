@@ -12,7 +12,7 @@ const list = allGatherings
 <ul class="divide-y divide-line overflow-hidden rounded-[var(--radius-card)] border border-line bg-white">
   {list.map((g) => (
     <li class="grid gap-1 px-5 py-4 sm:grid-cols-[9rem_1fr_auto] sm:items-baseline sm:gap-6">
-      <span class="font-semibold text-sage">{g.day}</span>
+      <span class="font-semibold text-blue">{g.day}</span>
       <span>
         {g.href ? <a class="link" href={g.href}>{g.name}</a> : <span class="font-semibold">{g.name}</span>}
         {g.note && <span class="block text-[0.95rem] text-body">{g.note}</span>}

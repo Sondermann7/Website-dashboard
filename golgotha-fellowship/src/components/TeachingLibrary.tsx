@@ -105,7 +105,7 @@ export default function TeachingLibrary({ items }: { items: TeachingItem[] }) {
                       </a>
                     ) : t.title}
                   </h3>
-                  {(t.passage || t.series) && <p className="mt-1.5 text-[0.95rem] text-sage font-semibold">{[t.passage, t.series && `Series: ${t.series}`].filter(Boolean).join(' · ')}</p>}
+                  {(t.passage || t.series) && <p className="mt-1.5 text-[0.95rem] text-blue font-semibold">{[t.passage, t.series && `Series: ${t.series}`].filter(Boolean).join(' · ')}</p>}
                   {t.summary && <p className="mt-2 text-[0.95rem] text-body">{t.summary}</p>}
                   <ul className="mt-auto flex flex-wrap gap-x-5 pt-4 text-[0.95rem]">
                     {t.videoUrl && <li><a className="link inline-flex min-h-11 items-center" href={t.videoUrl} target="_blank" rel="noopener" data-goal="watch">Watch<span className="sr-only"> {t.title} (opens in a new tab)</span></a></li>}

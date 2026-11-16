@@ -20,7 +20,7 @@ const widths = [390, 768, 1024, 1440];
   const browser = await chromium.launch();
   const report = { overflow: [], smallTargets: [], axe: [], errors: [] };
   for (const w of widths) {
-    const ctx = await browser.newContext({ viewport: { width: w, height: w < 768 ? 844 : 900 }, deviceScaleFactor: 1 });
+    const ctx = await browser.newContext({ viewport: { width: w, height: w < 768 ? 844 : 900 }, deviceScaleFactor: 1, reducedMotion: 'reduce' }); // reduce motion so scroll-reveal content is visible to the scan
     // Third-party map tiles are irrelevant to layout QA and may be blocked in CI.
     await ctx.route(/google\.com|youtube\.com|ytimg\.com/, (r) => r.abort());
     for (const p of pages) {

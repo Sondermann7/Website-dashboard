@@ -1,6 +1,6 @@
 ---
 interface Props {
-  tone?: 'cream' | 'white' | 'sand' | 'sage' | 'ink';
+  tone?: 'paper' | 'white' | 'stone' | 'sky' | 'navy';
   eyebrow?: string;
   title?: string;
   intro?: string;
@@ -9,13 +9,13 @@ interface Props {
   tight?: boolean;
   class?: string;
 }
-const { tone = 'cream', eyebrow, title, intro, id, center = false, tight = false, class: cls = '' } = Astro.props;
+const { tone = 'paper', eyebrow, title, intro, id, center = false, tight = false, class: cls = '' } = Astro.props;
 const tones = {
-  cream: 'bg-cream',
+  paper: 'bg-paper',
   white: 'bg-white',
-  sand: 'bg-sand',
-  sage: 'bg-sage-muted',
-  ink: 'bg-ink text-cream on-dark',
+  stone: 'bg-stone',
+  sky: 'bg-sky',
+  navy: 'bg-navy text-paper on-dark',
 };
 const headingId = id ? `${id}-heading` : undefined;
 ---
@@ -25,7 +25,7 @@ const headingId = id ? `${id}-heading` : undefined;
       <header class:list={['mb-10 max-w-3xl md:mb-14', center && 'mx-auto text-center']}>
         {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
         {title && <h2 id={headingId}>{title}</h2>}
-        {intro && <p class:list={['mt-4 text-[length:var(--text-lede)] leading-relaxed', tone === 'ink' ? 'text-mist' : 'text-body']}>{intro}</p>}
+        {intro && <p class:list={['mt-4 text-[length:var(--text-lede)] leading-relaxed', tone === 'navy' ? 'text-mist' : 'text-body']}>{intro}</p>}
       </header>
     )}
     <slot />

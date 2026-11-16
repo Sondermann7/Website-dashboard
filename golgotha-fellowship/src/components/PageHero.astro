@@ -1,14 +1,25 @@
 ---
-interface Props { eyebrow?: string; title: string; lede?: string; tone?: 'sand' | 'ink' }
-const { eyebrow, title, lede, tone = 'sand' } = Astro.props;
+/** Inner-page header: navy band, with the page's photo behind it when one is supplied. */
+import Photo from './Photo.astro';
+import { getPhoto } from '../lib/photos';
+interface Props { eyebrow?: string; title: string; lede?: string; photo?: string; tone?: 'stone' | 'navy' }
+const { eyebrow, title, lede, photo } = Astro.props;
+const has = !!getPhoto(photo);
 ---
-<section class:list={[tone === 'ink' ? 'bg-ink text-cream on-dark' : 'bg-sand', 'border-b border-line/60']}>
-  <div class="container-site py-14 md:py-20">
+<section class="hero on-dark relative isolate overflow-hidden bg-navy text-white">
+  {has && (
+    <>
+      <Photo name={photo} alt="" eager sizes="100vw" widths={[640, 1024, 1600, 2200]} class="hero-photo absolute inset-0 -z-20 h-full w-full object-cover" />
+      <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep/95 via-navy/80 to-navy/45"></div>
+    </>
+  )}
+  {!has && <div class="absolute inset-y-0 right-0 -z-10 hidden w-1/3 bg-navy-soft lg:block [clip-path:polygon(18%_0,100%_0,100%_100%,0_100%)]" aria-hidden="true"></div>}
+  <div class="container-site py-16 md:py-24">
     <div class="max-w-3xl">
-      {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
-      <h1>{title}</h1>
-      {lede && <p class:list={['mt-5 text-[length:var(--text-lede)] leading-relaxed', tone === 'ink' ? 'text-mist' : 'text-body']}>{lede}</p>}
-      {Astro.slots.has('default') && <div class="mt-8 flex flex-wrap gap-3"><slot /></div>}
+      {eyebrow && <p class="eyebrow hero-rise mb-5">{eyebrow}</p>}
+      <h1 class="hero-rise" style="--mo-d:50ms">{title}</h1>
+      {lede && <p class="hero-rise mt-5 text-[length:var(--text-lede)] leading-relaxed text-mist" style="--mo-d:120ms">{lede}</p>}
+      {Astro.slots.has('default') && <div class="hero-rise mt-8 flex flex-wrap gap-3" style="--mo-d:180ms"><slot /></div>}
     </div>
   </div>
 </section>

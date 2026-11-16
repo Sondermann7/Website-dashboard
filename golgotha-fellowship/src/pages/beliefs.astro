@@ -36,9 +36,9 @@ const nav = migrated ? toc.map((h) => ({ id: h.slug, title: h.text })) : topics;
     <div class="grid gap-10 lg:grid-cols-[16rem_1fr] lg:gap-16">
       {nav.length > 0 && (
         <nav aria-label="On this page" class="lg:sticky lg:top-28 lg:self-start">
-          <h2 class="eyebrow !font-sans">On this page</h2>
+          <h2 class="eyebrow plain !font-sans">On this page</h2>
           <ul class="mt-3 border-l-2 border-line">
-            {nav.map((n) => <li><a class="-ml-0.5 flex min-h-11 items-center border-l-2 border-transparent pl-4 font-semibold text-ink underline-offset-4 hover:border-clay hover:underline" href={`#${n.id}`}>{n.title}</a></li>)}
+            {nav.map((n) => <li><a class="-ml-0.5 flex min-h-11 items-center border-l-2 border-transparent pl-4 font-semibold text-navy underline-offset-4 hover:border-gold hover:underline" href={`#${n.id}`}>{n.title}</a></li>)}
           </ul>
         </nav>
       )}
@@ -51,7 +51,7 @@ const nav = migrated ? toc.map((h) => ({ id: h.slug, title: h.text })) : topics;
         ) : (
           <>
             <p class="max-w-[var(--container-prose)] rounded-lg border border-line bg-white p-5 text-body">
-              <strong class="text-ink">This page is a summary.</strong> It outlines the main points of our Statement of Faith. For the full statement with Scripture references, please <a class="link" href={mailHref}>email</a> or <a class="link" href={telHref}>call</a> the church office.
+              <strong class="text-navy">This page is a summary.</strong> It outlines the main points of our Statement of Faith. For the full statement with Scripture references, please <a class="link" href={mailHref}>email</a> or <a class="link" href={telHref}>call</a> the church office.
             </p>
             <ReviewFlag class="mt-4 max-w-[var(--container-prose)]">
               LAUNCH BLOCKER. The official Statement of Faith could not be read during the build (the old site was unreachable from the build environment), so it has NOT been migrated. Paste the full text, word for word, into src/content/beliefs/statement.md from {church.legacyUrls.beliefs}. This summary then disappears automatically. Until then it must be read and approved by the pastor like any other religious copy.
@@ -66,7 +66,7 @@ const nav = migrated ? toc.map((h) => ({ id: h.slug, title: h.text })) : topics;
             </div>
           </>
         )}
-        <div class="mt-12 max-w-[var(--container-prose)] rounded-[var(--radius-card)] bg-sand p-6 md:p-8">
+        <div class="mt-12 max-w-[var(--container-prose)] rounded-[var(--radius-card)] bg-stone p-6 md:p-8">
           <h2 class="!text-[length:var(--text-h3)]">Questions about what we believe?</h2>
           <p class="mt-2 text-body">We are always glad to open the Bible with you. Come on a Sunday, or get in touch.</p>
           <div class="mt-5 flex flex-wrap gap-3">

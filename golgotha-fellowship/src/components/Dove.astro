@@ -1,0 +1,20 @@
+---
+/**
+ * Calvary Chapel dove (affiliation mark). Shown only when the church supplies the
+ * official file: src/assets/brand/calvary-dove.(svg|png), plus calvary-dove-light for
+ * navy backgrounds. It is a trademark, so it is never redrawn here.
+ */
+import { Image } from 'astro:assets';
+import { getLogo } from '../lib/photos';
+import { REVIEW } from '../lib/review';
+interface Props { tone?: 'dark' | 'light'; class?: string }
+const { tone = 'dark', class: cls = 'h-16 w-auto' } = Astro.props;
+const mark = tone === 'light' ? (getLogo('calvary-dove-light') ?? getLogo('calvary-dove')) : getLogo('calvary-dove');
+---
+{mark ? (
+  <Image src={mark} alt="Calvary Chapel" class={cls} />
+) : REVIEW && (
+  <div class="ph !inline-flex h-20 w-28 rounded-[var(--radius-card)] !p-2 !text-[0.7rem]" data-review-flag>
+    <strong>Dove needed</strong><code>brand/calvary-dove.svg</code>
+  </div>
+)}

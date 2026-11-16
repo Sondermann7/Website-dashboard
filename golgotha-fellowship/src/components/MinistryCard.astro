@@ -1,8 +1,8 @@
 ---
+/** Ministry as a photo tile: the picture carries it, the caption sits on a navy fade. */
 import type { CollectionEntry } from 'astro:content';
 import ArrowRight from '@lucide/astro/icons/arrow-right';
 import Photo from './Photo.astro';
-import MinistryIcon from './MinistryIcon.astro';
 import { allGatherings } from '../config/church';
 import { joinTimes } from '../lib/format';
 interface Props { ministry: CollectionEntry<'ministries'> }
@@ -12,16 +12,15 @@ const meets = m.data.gatheringIds
   .filter((g) => g && g.status !== 'todo')
   .map((g) => `${g!.day}s ${joinTimes(g!.times)}`);
 ---
-<article class="card relative flex h-full flex-col overflow-hidden">
-  <Photo name={m.data.photo} alt={m.data.photoAlt ?? ''} class="aspect-[16/10] w-full object-cover" sizes="(min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw" />
-  <div class="flex flex-1 flex-col p-6 md:p-7">
-    <MinistryIcon name={m.data.icon} />
-    <h3 class="mt-4">
-      <a class="card-link no-underline after:absolute after:inset-0 after:content-['']" href={`/ministries/${m.id}`}>{m.data.title}</a>
+<article class="tile on-dark h-full">
+  <Photo name={m.data.photo} alt="" want={`${m.data.title}: a real photo of this ministry`} sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw" />
+  <div class="p-6">
+    {m.data.audience && <p class="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-gold-light">{m.data.audience}</p>}
+    <h3 class="mt-1 !text-[1.6rem] !font-bold">
+      <a class="card-link text-white no-underline after:absolute after:inset-0 after:content-['']" href={`/ministries/${m.id}`}>{m.data.title}</a>
     </h3>
-    {m.data.audience && <p class="mt-1 text-[0.9rem] font-semibold text-sage">{m.data.audience}</p>}
-    <p class="mt-3 text-body">{m.data.summary}</p>
-    {meets.length > 0 && <p class="mt-3 text-[0.95rem] font-semibold">{meets.join(' · ')}</p>}
-    <p class="mt-auto flex items-center gap-1.5 pt-5 font-semibold text-sage" aria-hidden="true">Learn more <ArrowRight size={18} /></p>
+    <p class="mt-2 text-[0.98rem] leading-snug text-mist">{m.data.summary}</p>
+    {meets.length > 0 && <p class="mt-3 text-[0.92rem] font-semibold text-white">{meets.join(' · ')}</p>}
+    <p class="mt-4 flex items-center gap-1.5 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-gold-light" aria-hidden="true">Learn more <ArrowRight size={16} /></p>
   </div>
 </article>

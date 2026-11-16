@@ -16,7 +16,7 @@ const ministries = (await getCollection('ministries')).filter((m) => m.data.stat
       {ministries.map((m) => <li><MinistryCard ministry={m} /></li>)}
     </ul>
   </Section>
-  <Section tone="sage" id="serve" eyebrow="Serve" title="Looking for a place to help?" intro="From greeting at the door to audio and video, there are many ways to be part of what God is doing here.">
+  <Section tone="sky" id="serve" eyebrow="Serve" title="Looking for a place to help?" intro="From greeting at the door to audio and video, there are many ways to be part of what God is doing here.">
     <Button href="/get-involved">Get involved</Button>
   </Section>
   <ConnectCta />

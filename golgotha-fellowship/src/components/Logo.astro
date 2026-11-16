@@ -9,11 +9,11 @@ const logo = tone === 'light' ? (getLogo('logo-light') ?? null) : getLogo('logo'
 ---
 <a href="/" class="inline-flex min-h-11 items-center gap-3 no-underline">
   {logo ? (
-    <Image src={logo} alt={`${church.name} — home`} height={48} class="h-10 w-auto md:h-12" loading="eager" />
+    <Image src={logo} alt={`${church.name} — home`} height={48} class="h-11 w-auto md:h-14" loading="eager" />
   ) : (
     <span class="flex flex-col leading-none">
-      <span class="font-display text-[1.6rem] tracking-tight md:text-[1.75rem]">Golgotha</span>
-      <span class:list={['mt-1 text-[0.62rem] font-semibold uppercase tracking-[0.34em]', tone === 'light' ? 'text-clay-light' : 'text-sage']}>Fellowship</span>
+      <span class="font-display text-[1.6rem] font-bold tracking-tight md:text-[1.75rem]">Golgotha</span>
+      <span class:list={['mt-1 text-[0.62rem] font-semibold uppercase tracking-[0.34em]', tone === 'light' ? 'text-gold-light' : 'text-gold-deep']}>Fellowship</span>
       <span class="sr-only"> — home</span>
     </span>
   )}

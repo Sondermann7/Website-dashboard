@@ -11,4 +11,4 @@ const { name, size = 26 } = Astro.props;
 const map: Record<string, any> = { baby: Baby, users: Users, 'book-open': BookOpen, heart: Heart, globe: Globe, 'hand-heart': HandHeart, flame: Flame };
 const Icon = map[name] ?? Users;
 ---
-<span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-sage-muted text-sage"><Icon size={size} aria-hidden="true" /></span>
+<span class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-sky text-blue"><Icon size={size} aria-hidden="true" /></span>
