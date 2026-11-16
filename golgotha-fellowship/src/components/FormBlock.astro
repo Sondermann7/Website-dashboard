@@ -1,0 +1,143 @@
+---
+/**
+ * Contact / prayer / get-involved form.
+ *
+ * The form is only rendered when PUBLIC_FORMS_ENABLED=true, i.e. after the church has
+ * confirmed where submissions are delivered (see functions/api/forms.ts). Until then
+ * visitors get direct phone and email options - never a form that silently discards
+ * what they typed.
+ */
+import Phone from '@lucide/astro/icons/phone';
+import Mail from '@lucide/astro/icons/mail';
+import { church, telHref } from '../config/church';
+import { FORMS_ENABLED } from '../lib/review';
+import ReviewFlag from './ReviewFlag.astro';
+
+interface Props { type: 'contact' | 'prayer' | 'involved'; emailSubject: string }
+const { type, emailSubject } = Astro.props;
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const mailto = `mailto:${church.email.general}?subject=${encodeURIComponent(emailSubject)}`;
+const copy = {
+  contact: { message: 'Your question or message', submit: 'Send message', privacy: 'Your message is sent privately to the Golgotha Fellowship office. We use your details only to reply to you.' },
+  prayer: { message: 'How can we pray for you?', submit: 'Send prayer request', privacy: 'Your request is sent privately to Golgotha Fellowship. It is never published on this website and is not recorded by analytics tools.' },
+  involved: { message: 'Anything you would like us to know? (optional)', submit: 'Send', privacy: 'Your details are sent privately to the Golgotha Fellowship office so the right ministry leader can contact you.' },
+}[type];
+---
+{FORMS_ENABLED ? (
+  <>
+  <form class="js-form grid gap-6" method="post" action="/api/forms" novalidate data-form-type={type}>
+    <input type="hidden" name="form" value={type} />
+    <div class="js-form-status hidden rounded-lg border-2 p-4 text-[1.05rem] font-semibold" role="alert" tabindex="-1"></div>
+
+    <div class="grid gap-6 sm:grid-cols-2">
+      <div class="field">
+        <label for={`${type}-name`}>Your name</label>
+        <input class="input" id={`${type}-name`} name="name" type="text" autocomplete="name" required maxlength="120" data-error="Please enter your name." />
+        <p class="js-error mt-1.5 hidden font-semibold text-error" id={`${type}-name-error`}></p>
+      </div>
+      <div class="field">
+        <label for={`${type}-email`}>Email address</label>
+        <input class="input" id={`${type}-email`} name="email" type="email" autocomplete="email" required maxlength="200" data-error="Please enter a valid email address so we can reply." />
+        <p class="js-error mt-1.5 hidden font-semibold text-error" id={`${type}-email-error`}></p>
+      </div>
+    </div>
+    <div class="field">
+      <label for={`${type}-phone`}>Phone number <span class="font-normal text-body">(optional)</span></label>
+      <input class="input sm:max-w-xs" id={`${type}-phone`} name="phone" type="tel" autocomplete="tel" maxlength="40" />
+    </div>
+
+    {type === 'involved' && (
+      <fieldset class="field">
+        <legend>Where would you like to serve or get connected?</legend>
+        <span class="hint">Choose as many as you like.</span>
+        <div class="grid gap-x-6 sm:grid-cols-2">
+          {church.serveAreas.map((area, i) => (
+            <label class="!mb-0 flex min-h-11 cursor-pointer items-center gap-3 !font-normal" for={`area-${i}`}>
+              <input class="h-5 w-5 shrink-0 accent-[var(--color-sage)]" type="checkbox" id={`area-${i}`} name="areas" value={area} />
+              {area}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    )}
+
+    <div class="field">
+      <label for={`${type}-message`}>{copy.message}</label>
+      <textarea class="input" id={`${type}-message`} name="message" maxlength="5000" required={type !== 'involved'} data-error="Please write a short message."></textarea>
+      <p class="js-error mt-1.5 hidden font-semibold text-error" id={`${type}-message-error`}></p>
+    </div>
+
+    <!-- Honeypot: hidden from people, tempting to bots. -->
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <label for={`${type}-website`}>Leave this field empty</label>
+      <input id={`${type}-website`} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    {turnstileKey && <div class="cf-turnstile" data-sitekey={turnstileKey} data-theme="light"></div>}
+
+    <p class="text-[0.95rem] text-body">{copy.privacy}</p>
+    <div><button class="btn btn-primary" type="submit">{copy.submit}</button></div>
+  </form>
+  <script>
+    const forms = document.querySelectorAll<HTMLFormElement>('form.js-form');
+    forms.forEach((form) => {
+      const status = form.querySelector<HTMLElement>('.js-form-status')!;
+      const show = (ok: boolean, text: string) => {
+        status.textContent = text;
+        status.className = `js-form-status rounded-lg border-2 p-4 text-[1.05rem] font-semibold ${ok ? 'border-success bg-success-bg text-success' : 'border-error bg-error-bg text-error'}`;
+        status.focus();
+      };
+      const setError = (el: HTMLInputElement | HTMLTextAreaElement, msg: string) => {
+        const p = document.getElementById(`${el.id}-error`);
+        el.setAttribute('aria-invalid', msg ? 'true' : 'false');
+        if (!p) return;
+        p.textContent = msg;
+        p.classList.toggle('hidden', !msg);
+        if (msg) el.setAttribute('aria-describedby', p.id);
+        else el.removeAttribute('aria-describedby');
+      };
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[data-error]'));
+        let first: HTMLElement | null = null;
+        for (const el of fields) {
+          const bad = !el.checkValidity();
+          setError(el, bad ? el.dataset.error! : '');
+          if (bad && !first) first = el;
+        }
+        if (first) { first.focus(); return; }
+        const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+        const label = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Sending…';
+        try {
+          const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) {
+            form.reset();
+            show(true, 'Thank you. Your message has been sent to the church.');
+          } else {
+            show(false, data.error || 'Sorry, your message could not be sent. Please call or email us instead.');
+          }
+        } catch {
+          show(false, 'Sorry, your message could not be sent. Please check your connection, or call or email us instead.');
+        } finally {
+          button.disabled = false;
+          button.textContent = label;
+        }
+      });
+    });
+  </script>
+  {turnstileKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+  </>
+) : (
+  <div class="card p-6 md:p-8">
+    <p class="text-[1.1rem]">The quickest way to reach us is by phone or email. We would be glad to hear from you.</p>
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a class="btn btn-primary" href={telHref} data-goal="call"><Phone size={18} aria-hidden="true" /> Call {church.phone.display}</a>
+      <a class="btn btn-secondary" href={mailto} data-goal="email"><Mail size={18} aria-hidden="true" /> Email us</a>
+    </div>
+    <p class="mt-4 break-words text-[0.95rem] text-body">{church.email.general}</p>
+    <ReviewFlag class="mt-5">The on-site form for this page is built but switched off until the church confirms who should receive submissions. See docs/LAUNCH_REPORT.md, “Forms”.</ReviewFlag>
+  </div>
+)}

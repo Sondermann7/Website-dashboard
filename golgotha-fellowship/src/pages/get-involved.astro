@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import FormBlock from '../components/FormBlock.astro';
+import { church } from '../config/church';
+---
+<Base title="Get Involved" description={`Serve and get connected at ${church.name} in Nampa, Idaho: greeters, kids and youth ministry, worship, audio/video, outreach, home groups and more.`}>
+  <PageHero eyebrow="Get involved" title="Find a place to serve and belong" lede="The church is not a building or a program — it is people. Here are some of the ways to be part of this fellowship." />
+  <Section id="areas" eyebrow="Ways to serve" title="Where you can help">
+    <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {church.serveAreas.map((a) => <li class="card flex min-h-14 items-center px-5 py-3 font-semibold">{a}</li>)}
+    </ul>
+  </Section>
+  <Section id="connect" tone="white" eyebrow="Next step" title="Tell us you are interested" intro="Let us know where you would like to serve or connect, and the right person will be in touch.">
+    <div class="max-w-3xl"><FormBlock type="involved" emailSubject="I would like to get involved" /></div>
+  </Section>
+</Base>

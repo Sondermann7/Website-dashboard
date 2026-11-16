@@ -1,0 +1,14 @@
+---
+import { addressOneLine, mapEmbedUrl, directionsUrl } from '../config/church';
+---
+<div class="overflow-hidden rounded-[var(--radius-card)] border border-line bg-sage-muted">
+  <iframe
+    src={mapEmbedUrl}
+    title={`Map showing Golgotha Fellowship at ${addressOneLine}`}
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    class="block aspect-[4/3] w-full border-0 md:aspect-[16/10]"></iframe>
+  <p class="bg-white px-5 py-3 text-[0.95rem]">
+    {addressOneLine} · <a class="link" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions">Open in Google Maps<span class="sr-only"> (opens in a new tab)</span></a>
+  </p>
+</div>

@@ -1,0 +1,25 @@
+# Cloudflare Pages redirects. 301s from every known URL on the old (Wix) site.
+# Source: reference pack SOURCE_LINKS.md. Test with `curl -I` on the staged site before DNS cutover.
+/what-we-believe        /beliefs               301
+/feed-my-lambs          /ministries/kids       301
+/called-for-a-purpose   /ministries/youth      301
+/team-3                 /leadership            301
+/about-6                /teachings             301
+/contact-8              /get-involved          301
+/missions               /ministries/missions   301
+
+# DECISION NEEDED before launch: /about-1 is the old "Real Impact" page. Its content was
+# not migrated (leadership has not asked for it). Either migrate it to /real-impact and
+# point the redirect there, or keep the line below.
+/about-1                /about                 302
+
+# Common guesses / convenience
+/visit                  /new-here              301
+/plan-your-visit        /new-here              301
+/im-new                 /new-here              301
+/sermons                /teachings             301
+/sermons/*              /teachings             301
+/donate                 /give                  301
+/staff                  /leadership            301
+/kids                   /ministries/kids       301
+/youth                  /ministries/youth      301

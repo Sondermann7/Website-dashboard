@@ -1,0 +1,27 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Photo from './Photo.astro';
+import MinistryIcon from './MinistryIcon.astro';
+import { allGatherings } from '../config/church';
+import { joinTimes } from '../lib/format';
+interface Props { ministry: CollectionEntry<'ministries'> }
+const { ministry: m } = Astro.props;
+const meets = m.data.gatheringIds
+  .map((id) => allGatherings.find((g) => g.id === id))
+  .filter((g) => g && g.status !== 'todo')
+  .map((g) => `${g!.day}s ${joinTimes(g!.times)}`);
+---
+<article class="card relative flex h-full flex-col overflow-hidden">
+  <Photo name={m.data.photo} alt={m.data.photoAlt ?? ''} class="aspect-[16/10] w-full object-cover" sizes="(min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw" />
+  <div class="flex flex-1 flex-col p-6 md:p-7">
+    <MinistryIcon name={m.data.icon} />
+    <h3 class="mt-4">
+      <a class="card-link no-underline after:absolute after:inset-0 after:content-['']" href={`/ministries/${m.id}`}>{m.data.title}</a>
+    </h3>
+    {m.data.audience && <p class="mt-1 text-[0.9rem] font-semibold text-sage">{m.data.audience}</p>}
+    <p class="mt-3 text-body">{m.data.summary}</p>
+    {meets.length > 0 && <p class="mt-3 text-[0.95rem] font-semibold">{meets.join(' · ')}</p>}
+    <p class="mt-auto flex items-center gap-1.5 pt-5 font-semibold text-sage" aria-hidden="true">Learn more <ArrowRight size={18} /></p>
+  </div>
+</article>

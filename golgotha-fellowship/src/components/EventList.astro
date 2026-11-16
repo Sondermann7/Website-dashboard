@@ -1,0 +1,46 @@
+---
+/** Upcoming events from src/content/events. Past events hide themselves in the browser too. */
+import { getCollection } from 'astro:content';
+import { formatDate, formatTime } from '../lib/format';
+interface Props { limit?: number }
+const { limit } = Astro.props;
+const now = Date.now();
+let events = (await getCollection('events'))
+  .filter((e) => e.data.published && (e.data.end ?? e.data.start).getTime() >= now - 6 * 3600e3)
+  .sort((a, b) => a.data.start.getTime() - b.data.start.getTime());
+if (limit) events = events.slice(0, limit);
+---
+<div data-event-list>
+  {events.length > 0 && (
+    <ul class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {events.map((e) => (
+        <li class="card flex flex-col p-6" data-event-end={(e.data.end ?? e.data.start).toISOString()}>
+          <p class="eyebrow">{formatDate(e.data.start, { year: undefined })}</p>
+          <h3 class="mt-2">{e.data.title}</h3>
+          <p class="mt-1 text-[0.95rem] font-semibold text-body">
+            {e.data.allDay ? 'All day' : formatTime(e.data.start)}{e.data.end && !e.data.allDay ? ` – ${formatTime(e.data.end)}` : ''}
+            {e.data.location && <span> · {e.data.location}</span>}
+          </p>
+          <p class="mt-3 text-body">{e.data.summary}</p>
+          {e.data.link && <p class="mt-auto pt-4"><a class="link inline-flex min-h-11 items-center" href={e.data.link.href}>{e.data.link.label}<span class="sr-only">: {e.data.title}</span></a></p>}
+        </li>
+      ))}
+    </ul>
+  )}
+  <div class:list={['card p-6 md:p-8', events.length > 0 && 'hidden']} data-event-empty>
+    <slot name="empty">
+      <p class="text-[1.1rem]">There are no special events on the calendar right now.</p>
+      <p class="mt-2 text-body">Our weekly services and Bible studies continue as usual — you are welcome any week.</p>
+    </slot>
+  </div>
+</div>
+<script is:inline>
+  document.querySelectorAll('[data-event-list]').forEach(function (root) {
+    var items = root.querySelectorAll('[data-event-end]');
+    var left = 0;
+    items.forEach(function (li) {
+      if (new Date(li.getAttribute('data-event-end')).getTime() < Date.now() - 6 * 3600e3) li.remove(); else left++;
+    });
+    if (!left) { var e = root.querySelector('[data-event-empty]'); if (e) e.classList.remove('hidden'); var ul = root.querySelector('ul'); if (ul) ul.remove(); }
+  });
+</script>

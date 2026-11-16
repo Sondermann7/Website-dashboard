@@ -1,0 +1,51 @@
+---
+import Play from '@lucide/astro/icons/play';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Section from '../../components/Section.astro';
+import Button from '../../components/Button.astro';
+import RadioCard from '../../components/RadioCard.astro';
+import ReviewFlag from '../../components/ReviewFlag.astro';
+import TeachingLibrary from '../../components/TeachingLibrary.tsx';
+import { church } from '../../config/church';
+import { getTeachings } from '../../lib/teachings';
+
+const items = await getTeachings();
+---
+<Base title="Bible Teachings" description={`Watch and listen to verse-by-verse Bible teaching from ${church.name} in Nampa, Idaho. Free on YouTube and on Hold Fast radio.`}>
+  <PageHero eyebrow="Teachings" title="Bible teaching, line by line" lede="We teach through Scripture simply and systematically. Every teaching is free — no account or sign-in needed.">
+    <Button href={church.youtube.channelUrl} external goal="watch"><Play size={18} aria-hidden="true" /> Watch on YouTube</Button>
+  </PageHero>
+
+  <Section id="library" title={items.length > 0 ? 'Teaching library' : 'Where to watch and listen'}>
+    {items.length > 0 ? (
+      <>
+        <TeachingLibrary client:load items={items} />
+        <noscript><p class="mt-6 text-body">Search needs JavaScript. You can browse every teaching on <a class="link" href={church.youtube.channelUrl}>our YouTube channel</a>.</p></noscript>
+        <div class="mt-12 grid gap-6 lg:grid-cols-2">
+          <div class="card p-6 md:p-7">
+            <h3>Looking for an older teaching?</h3>
+            <p class="mt-2 text-body">Our full archive is on YouTube.</p>
+            <p class="mt-4"><Button href={church.youtube.channelUrl} variant="secondary" external goal="watch">Open the YouTube archive</Button></p>
+          </div>
+          <RadioCard />
+        </div>
+      </>
+    ) : (
+      <div class="grid gap-6 lg:grid-cols-2">
+        <div class="on-dark flex flex-col justify-between rounded-[var(--radius-card)] bg-ink p-7 text-cream md:p-10">
+          <div>
+            <h3 class="!text-[1.9rem]">Watch on YouTube</h3>
+            <p class="mt-3 text-mist">Current and past teachings from {church.name} are on our YouTube channel, including our studies through books of the Bible.</p>
+          </div>
+          <p class="mt-8"><Button href={church.youtube.channelUrl} variant="light" external goal="watch"><Play size={18} aria-hidden="true" /> Go to our YouTube channel</Button></p>
+        </div>
+        <RadioCard />
+      </div>
+    )}
+    <ReviewFlag class="mt-8 max-w-3xl">
+      {items.length === 0 ? 'The searchable teaching library (search by book, passage, title, speaker, date, series, video/audio) is built and appears here as soon as teachings exist. Two ways to fill it: (1) set the YouTube channel ID in src/config/church.ts to pull the latest uploads automatically; (2) add files to src/content/teachings/ for full details (passage, series, notes, transcripts). ' : ''}
+      The old teaching archive page (/about-6) — including notes/commentary and the Revelation material — could not be read during the build. Its links must be migrated into src/content/teachings/.
+    </ReviewFlag>
+  </Section>
+</Base>

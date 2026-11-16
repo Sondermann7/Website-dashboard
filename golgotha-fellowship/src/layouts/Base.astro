@@ -1,0 +1,89 @@
+---
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource/dm-serif-display/latin-400.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import Schema from '../components/Schema.astro';
+import Announcements from '../components/Announcements.astro';
+import { church } from '../config/church';
+import { REVIEW } from '../lib/review';
+import { cleanPath } from '../lib/format';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Set true for utility pages that should not be indexed. */
+  noindex?: boolean;
+  ogImage?: string;
+}
+const { title, description, noindex = false, ogImage = '/og-default.png' } = Astro.props;
+const canonical = new URL(cleanPath(Astro.url.pathname), Astro.site).href;
+const fullTitle = title.includes(church.name) ? title : `${title} | ${church.name}`;
+const og = new URL(ogImage, Astro.site).href;
+const ga4 = import.meta.env.PUBLIC_GA4_ID;
+const cfBeacon = import.meta.env.PUBLIC_CF_BEACON_TOKEN;
+const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {(noindex || REVIEW) && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#182A2B" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={church.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="geo.region" content="US-ID" />
+    <meta name="geo.placename" content="Nampa" />
+    {gsc && <meta name="google-site-verification" content={gsc} />}
+    <Schema />
+    <slot name="head" />
+  </head>
+  <body class="min-h-dvh">
+    <a href="#main" class="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50">Skip to main content</a>
+    {REVIEW && (
+      <aside aria-label="Review build notice" class="review-flag !rounded-none !border-x-0 !border-t-0 text-center">
+        <strong>REVIEW BUILD</strong> — dashed orange boxes mark items the church must verify. They never appear on the public site.
+      </aside>
+    )}
+    <Announcements />
+    <Header />
+    <main id="main" tabindex="-1" class="outline-none">
+      <slot />
+    </main>
+    <Footer />
+    <MobileBar />
+
+    {ga4 && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`}></script>
+        <script is:inline define:vars={{ ga4 }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', ga4, { anonymize_ip: true });
+          // Visitor goals only (directions, call, watch, plan-visit, give). Never form contents.
+          document.addEventListener('click', function (e) {
+            var el = e.target && e.target.closest ? e.target.closest('[data-goal]') : null;
+            if (el) gtag('event', 'goal_click', { goal: el.getAttribute('data-goal'), page: location.pathname });
+          });
+        </script>
+      </>
+    )}
+    {cfBeacon && <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: cfBeacon })}></script>}
+  </body>
+</html>

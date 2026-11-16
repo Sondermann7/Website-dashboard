@@ -1,0 +1,14 @@
+---
+interface Props { eyebrow?: string; title: string; lede?: string; tone?: 'sand' | 'ink' }
+const { eyebrow, title, lede, tone = 'sand' } = Astro.props;
+---
+<section class:list={[tone === 'ink' ? 'bg-ink text-cream on-dark' : 'bg-sand', 'border-b border-line/60']}>
+  <div class="container-site py-14 md:py-20">
+    <div class="max-w-3xl">
+      {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
+      <h1>{title}</h1>
+      {lede && <p class:list={['mt-5 text-[length:var(--text-lede)] leading-relaxed', tone === 'ink' ? 'text-mist' : 'text-body']}>{lede}</p>}
+      {Astro.slots.has('default') && <div class="mt-8 flex flex-wrap gap-3"><slot /></div>}
+    </div>
+  </div>
+</section>

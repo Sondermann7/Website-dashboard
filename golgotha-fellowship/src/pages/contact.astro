@@ -1,0 +1,57 @@
+---
+import MapPin from '@lucide/astro/icons/map-pin';
+import Phone from '@lucide/astro/icons/phone';
+import Mail from '@lucide/astro/icons/mail';
+import Clock from '@lucide/astro/icons/clock';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import FormBlock from '../components/FormBlock.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import { church, primaryGatherings, directionsUrl, telHref, mailHref } from '../config/church';
+import { joinTimes } from '../lib/format';
+import { FORMS_ENABLED } from '../lib/review';
+const row = 'flex gap-4 py-5';
+---
+<Base title="Contact & Directions" description={`Contact ${church.name}: ${church.phone.display}, ${church.email.general}. We meet at ${church.address.street}, ${church.address.city}, ${church.address.regionName} ${church.address.postalCode}.`}>
+  <PageHero eyebrow="Contact" title="Get in touch" lede="Questions about visiting, a ministry, or anything else? We would be glad to hear from you." />
+  <Section>
+    <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <h2 class="!text-[length:var(--text-h3)]">Contact details</h2>
+        <ul class="mt-4 divide-y divide-line border-y border-line">
+          <li class={row}>
+            <MapPin class="mt-1 shrink-0 text-sage" size={24} aria-hidden="true" />
+            <div>
+              <p class="font-semibold">Address</p>
+              <address class="not-italic text-body">{church.address.street}<br />{church.address.city}, {church.address.regionName} {church.address.postalCode}</address>
+              <a class="link inline-flex min-h-11 items-center" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions">Get directions<span class="sr-only"> (opens in a new tab)</span></a>
+            </div>
+          </li>
+          <li class={row}>
+            <Phone class="mt-1 shrink-0 text-sage" size={24} aria-hidden="true" />
+            <div><p class="font-semibold">Phone</p><a class="link inline-flex min-h-11 items-center text-[1.15rem]" href={telHref} data-goal="call">{church.phone.display}</a></div>
+          </li>
+          <li class={row}>
+            <Mail class="mt-1 shrink-0 text-sage" size={24} aria-hidden="true" />
+            <div class="min-w-0"><p class="font-semibold">Email</p><a class="link inline-flex min-h-11 items-center break-all" href={mailHref} data-goal="email">{church.email.general}</a></div>
+          </li>
+          <li class={row}>
+            <Clock class="mt-1 shrink-0 text-sage" size={24} aria-hidden="true" />
+            <div>
+              <p class="font-semibold">Service times</p>
+              {primaryGatherings.map((g) => <p class="text-body">{g.day}s — {joinTimes(g.times)}</p>)}
+              <a class="link inline-flex min-h-11 items-center" href="/events">Full weekly schedule</a>
+            </div>
+          </li>
+        </ul>
+        <div class="mt-8"><MapEmbed /></div>
+      </div>
+      <div>
+        <h2 class="!text-[length:var(--text-h3)]">{FORMS_ENABLED ? 'Send us a message' : 'Reach us directly'}</h2>
+        <div class="mt-4"><FormBlock type="contact" emailSubject="Question from the website" /></div>
+        <p class="mt-6 text-body">Need prayer? <a class="link" href="/prayer">Send a prayer request</a>.</p>
+      </div>
+    </div>
+  </Section>
+</Base>

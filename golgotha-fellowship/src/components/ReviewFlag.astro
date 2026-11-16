@@ -1,0 +1,11 @@
+---
+/** Reviewer-only note. Renders nothing on the production build. */
+import { REVIEW } from '../lib/review';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+{REVIEW && (
+  <aside class:list={['review-flag', cls]} data-review-flag>
+    <strong>TODO_VERIFY</strong> <slot />
+  </aside>
+)}

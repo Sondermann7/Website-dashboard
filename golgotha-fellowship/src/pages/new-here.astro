@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import Button from '../components/Button.astro';
+import ServiceBand from '../components/ServiceBand.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import Photo from '../components/Photo.astro';
+import ConnectCta from '../components/ConnectCta.astro';
+import ReviewFlag from '../components/ReviewFlag.astro';
+import { church, directionsUrl } from '../config/church';
+import { fillTokens } from '../lib/format';
+import { REVIEW } from '../lib/review';
+
+const faqs = (await getCollection('visitor'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((f) => ({ ...f.data, id: f.id, text: f.data.status === 'todo' ? f.data.fallback : f.data.answer }))
+  .filter((f) => f.text);
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.filter((f) => f.status !== 'todo').map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: fillTokens(f.text!) },
+  })),
+};
+---
+<Base title="I’m New: Plan Your Visit" description={`Plan your first visit to ${church.name} in downtown Nampa, Idaho. Service times, directions, what to wear, kids ministry and what to expect.`}>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
+  <PageHero eyebrow="I’m new" title="Plan your visit" lede="You are welcome here. Here is everything you need to know before your first Sunday — no sign-up and no surprises.">
+    <Button href={directionsUrl} external goal="directions">Get directions</Button>
+    <Button href={church.youtube.channelUrl} variant="secondary" external goal="watch">Watch a teaching first</Button>
+  </PageHero>
+
+  <ServiceBand />
+
+  <Section id="questions" eyebrow="Good to know" title="Your questions, answered">
+    <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+      <dl class="divide-y divide-line border-y border-line">
+        {faqs.map((f) => (
+          <div class="py-6" id={f.id}>
+            <dt><h3 class="!font-sans !text-[1.2rem] !font-bold !leading-snug">{f.question}</h3></dt>
+            <dd class="mt-2 text-[1.05rem] text-body">
+              <p>{fillTokens(f.text!)}</p>
+              {f.link && (
+                <p class="mt-2">
+                  <a class="link inline-flex min-h-11 items-center" href={fillTokens(f.link.href)} {...(fillTokens(f.link.href).startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{f.link.label}{fillTokens(f.link.href).startsWith('http') && <span class="sr-only"> (opens in a new tab)</span>}</a>
+                </p>
+              )}
+              {REVIEW && f.status !== 'verified' && <ReviewFlag class="mt-3">{f.status === 'todo' ? 'Answer not known — showing a stand-in. ' : ''}{f.reviewNote ?? 'Confirm before launch.'}</ReviewFlag>}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start">
+        <Photo name="exterior" alt={`The ${church.name} building at ${church.address.street}, Nampa`} class="aspect-[16/10] w-full rounded-[var(--radius-card)] object-cover" />
+        <MapEmbed />
+        <ReviewFlag>Add an approved photo of the building entrance as src/assets/photos/exterior.jpg so first-time visitors recognize it.</ReviewFlag>
+      </aside>
+    </div>
+  </Section>
+
+  <ConnectCta />
+</Base>

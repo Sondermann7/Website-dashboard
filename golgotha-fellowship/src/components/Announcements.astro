@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+const now = Date.now();
+const active = (await getCollection('announcements')).filter(
+  (a) => a.data.published && a.data.starts.getTime() <= now + 864e5 && a.data.ends.getTime() >= now,
+);
+---
+{active.map((a) => (
+  <div class="bg-sage text-white on-dark" role="region" aria-label="Announcement" data-starts={a.data.starts.toISOString()} data-ends={a.data.ends.toISOString()}>
+    <p class="container-site py-2.5 text-center text-[0.95rem]">
+      {a.data.message}{' '}
+      {a.data.link && <a class="link" href={a.data.link.href}>{a.data.link.label}</a>}
+    </p>
+  </div>
+))}

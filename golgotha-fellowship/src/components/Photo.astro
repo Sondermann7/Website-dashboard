@@ -1,0 +1,13 @@
+---
+/** Renders an approved photo if the file exists; otherwise renders the fallback slot (or nothing). */
+import { Image } from 'astro:assets';
+import { getPhoto } from '../lib/photos';
+interface Props { name?: string; alt: string; class?: string; widths?: number[]; sizes?: string; eager?: boolean }
+const { name, alt, class: cls = '', widths = [480, 800, 1200, 1600], sizes = '(min-width: 64rem) 50vw, 100vw', eager = false } = Astro.props;
+const photo = getPhoto(name);
+---
+{photo ? (
+  <Image src={photo} alt={alt} widths={widths} sizes={sizes} class={cls} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : undefined} />
+) : (
+  <slot />
+)}

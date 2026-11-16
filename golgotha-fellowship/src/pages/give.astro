@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import Button from '../components/Button.astro';
+import ReviewFlag from '../components/ReviewFlag.astro';
+import { church, addressOneLine, telHref, mailHref } from '../config/church';
+const g = church.giving;
+---
+<Base title="Give" description={`Support the ministry of ${church.name} in Nampa, Idaho.`}>
+  <PageHero eyebrow="Give" title="Giving" lede="Thank you for supporting the teaching of God’s Word and the ministry of this fellowship." />
+  <Section>
+    <div class="grid max-w-5xl gap-6 md:grid-cols-2">
+      {g.url && (
+        <div class="card p-6 md:p-8">
+          <h2 class="!text-[length:var(--text-h3)]">Give online</h2>
+          <p class="mt-2 text-body">Online giving is handled securely by {g.providerName ?? 'our giving provider'}. You will leave this website to complete your gift.</p>
+          <p class="mt-5"><Button href={g.url} external goal="give">Give online</Button></p>
+        </div>
+      )}
+      <div class="card p-6 md:p-8">
+        <h2 class="!text-[length:var(--text-h3)]">Give in person</h2>
+        <p class="mt-2 text-body">You are welcome to give at any of our services at {addressOneLine}.</p>
+      </div>
+      <div class="card p-6 md:p-8">
+        <h2 class="!text-[length:var(--text-h3)]">Questions about giving?</h2>
+        <p class="mt-2 text-body">Contact the church office and we will be glad to help.</p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <Button href={telHref} variant="secondary" goal="call">Call {church.phone.display}</Button>
+          <Button href={mailHref} variant="secondary">Email us</Button>
+        </div>
+      </div>
+    </div>
+    {!g.url && <ReviewFlag class="mt-8 max-w-3xl">LAUNCH BLOCKER. The church’s existing online-giving link was not verified, so no “Give online” button is shown. Set giving.url and giving.providerName in src/config/church.ts. Also confirm how in-person giving works (offering box, etc.) and whether mailed gifts are accepted. This site never processes payments itself.</ReviewFlag>}
+  </Section>
+</Base>

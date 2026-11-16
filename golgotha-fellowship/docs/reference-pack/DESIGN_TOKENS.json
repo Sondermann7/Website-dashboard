@@ -1,0 +1,38 @@
+{
+  "status": "PROPOSED_NEW_DESIGN_NOT_LEGACY_BRAND_PALETTE",
+  "identity": "Golgotha Fellowship",
+  "style": ["welcoming", "scripture-centered", "warm", "contemporary", "calm", "trustworthy", "intergenerational"],
+  "colors": {
+    "ink": "#182A2B",
+    "cream": "#FAF8F3",
+    "white": "#FFFFFF",
+    "sage": "#456458",
+    "mutedSage": "#E5ECE7",
+    "clay": "#A96F51",
+    "warmSand": "#F0E8DA",
+    "secondaryText": "#465454",
+    "border": "#D7DEDA",
+    "focus": "#1A587C"
+  },
+  "typography": {
+    "display": "Source Serif 4",
+    "body": "Atkinson Hyperlegible Next",
+    "fallback": "Arial, sans-serif",
+    "bodyDesktopMinimumPx": 18,
+    "bodyMobileMinimumPx": 17,
+    "headingScale": "fluid clamp with sensible maximum sizes",
+    "fontWeightBody": 400
+  },
+  "accessibility": {
+    "target": "WCAG 2.2 AA",
+    "minimumTapTargetPx": 44,
+    "keyboardAccessible": true,
+    "visibleFocus": true,
+    "reducedMotion": true,
+    "allowTextResizeAtLeastPercent": 200,
+    "persistentVisitInformation": true,
+    "avoidAutoPlayingAudio": true,
+    "responsiveWidths": [390, 768, 1024, 1440],
+    "doNotConveyMeaningByColorAlone": true
+  }
+}

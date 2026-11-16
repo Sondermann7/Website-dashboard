@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import Schedule from '../components/Schedule.astro';
+import EventList from '../components/EventList.astro';
+import ConnectCta from '../components/ConnectCta.astro';
+import { church, addressOneLine } from '../config/church';
+---
+<Base title="Events & Weekly Schedule" description={`Weekly services, Bible studies and upcoming events at ${church.name}, ${addressOneLine}.`}>
+  <PageHero eyebrow="Events" title="Gather with us" lede="Here is what happens every week, and anything special coming up." />
+  <Section id="weekly" eyebrow="Every week" title="Weekly schedule">
+    <div class="max-w-4xl"><Schedule /></div>
+    <p class="mt-5 text-body">All gatherings are at {addressOneLine} unless noted.</p>
+  </Section>
+  <Section id="upcoming" tone="white" eyebrow="Coming up" title="Upcoming events">
+    <EventList />
+  </Section>
+  <ConnectCta />
+</Base>

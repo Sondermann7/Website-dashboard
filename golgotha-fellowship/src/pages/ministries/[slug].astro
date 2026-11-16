@@ -1,0 +1,63 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Section from '../../components/Section.astro';
+import Button from '../../components/Button.astro';
+import Photo from '../../components/Photo.astro';
+import Schedule from '../../components/Schedule.astro';
+import ReviewFlag from '../../components/ReviewFlag.astro';
+import ConnectCta from '../../components/ConnectCta.astro';
+import { church } from '../../config/church';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('ministries')).filter((m) => m.data.status !== 'todo');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const m = entry.data;
+const { Content } = await render(entry);
+const hasSchedule = m.gatheringIds.length > 0;
+---
+<Base title={m.alsoKnownAs ? `${m.title} (${m.alsoKnownAs})` : m.title} description={`${m.title} at ${church.name}, Nampa, Idaho. ${m.summary}`}>
+  <PageHero eyebrow={m.alsoKnownAs ?? 'Ministries'} title={m.title} lede={m.summary}>
+    {m.nextStep && <Button href={m.nextStep.href} goal={m.nextStep.href === '/new-here' ? 'plan-visit' : undefined}>{m.nextStep.label}</Button>}
+    <Button href="/ministries" variant="secondary">All ministries</Button>
+  </PageHero>
+  <Section>
+    <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+      <div>
+        <Photo name={m.photo} alt={m.photoAlt ?? ''} eager class="mb-10 aspect-[16/9] w-full rounded-[var(--radius-card)] object-cover" />
+        <article class="prose"><Content /></article>
+        {(m.status === 'confirm' || m.reviewNotes.length > 0) && (
+          <ReviewFlag class="mt-8">
+            {m.status === 'confirm' && 'This page needs ministry-leader confirmation before launch. '}
+            {m.reviewNotes.join(' ')}
+          </ReviewFlag>
+        )}
+      </div>
+      <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start">
+        {(hasSchedule || m.meets) && (
+          <div>
+            <h2 class="eyebrow mb-3 !font-sans">When we meet</h2>
+            {hasSchedule && <Schedule ids={m.gatheringIds} />}
+            {m.meets && <p class="card mt-3 p-5">{m.meets}</p>}
+          </div>
+        )}
+        <div class="card p-6">
+          <h2 class="eyebrow !font-sans">Details</h2>
+          <dl class="mt-3 space-y-3">
+            {m.audience && <div><dt class="font-semibold">For</dt><dd class="text-body">{m.audience}</dd></div>}
+            {m.scripture && <div><dt class="font-semibold">Scripture</dt><dd class="text-body">{m.scripture}</dd></div>}
+            {m.leaders.length > 0 && <div><dt class="font-semibold">Leadership</dt><dd class="text-body">{m.leaders.join(', ')}</dd></div>}
+            <div>
+              <dt class="font-semibold">Contact</dt>
+              <dd class="break-words"><a class="link" href={`mailto:${m.contactEmail ?? church.email.general}`}>{m.contactEmail ?? church.email.general}</a></dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+    </div>
+  </Section>
+  <ConnectCta />
+</Base>

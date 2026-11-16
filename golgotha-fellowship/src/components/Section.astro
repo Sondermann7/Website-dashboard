@@ -1,0 +1,33 @@
+---
+interface Props {
+  tone?: 'cream' | 'white' | 'sand' | 'sage' | 'ink';
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  id?: string;
+  center?: boolean;
+  tight?: boolean;
+  class?: string;
+}
+const { tone = 'cream', eyebrow, title, intro, id, center = false, tight = false, class: cls = '' } = Astro.props;
+const tones = {
+  cream: 'bg-cream',
+  white: 'bg-white',
+  sand: 'bg-sand',
+  sage: 'bg-sage-muted',
+  ink: 'bg-ink text-cream on-dark',
+};
+const headingId = id ? `${id}-heading` : undefined;
+---
+<section id={id} aria-labelledby={title ? headingId : undefined} class:list={[tones[tone], tight ? 'py-12 md:py-16' : 'py-16 md:py-24', cls]}>
+  <div class="container-site">
+    {(eyebrow || title || intro) && (
+      <header class:list={['mb-10 max-w-3xl md:mb-14', center && 'mx-auto text-center']}>
+        {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+        {title && <h2 id={headingId}>{title}</h2>}
+        {intro && <p class:list={['mt-4 text-[length:var(--text-lede)] leading-relaxed', tone === 'ink' ? 'text-mist' : 'text-body']}>{intro}</p>}
+      </header>
+    )}
+    <slot />
+  </div>
+</section>

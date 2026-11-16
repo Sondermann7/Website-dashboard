@@ -1,0 +1,63 @@
+# "I'm New" questions and answers.
+# status: verified/confirm -> `answer` is shown. status: todo -> the answer is NOT known,
+# so `fallback` (a truthful stand-in) is shown publicly and reviewers see a flag.
+# Never guess parking, entrances, service length or accessibility details.
+- id: where
+  order: 1
+  question: Where is the church?
+  answer: "We meet at {address}, in downtown Nampa."
+  link: { label: Get directions, href: "{directions}" }
+  status: verified
+- id: when
+  order: 2
+  question: When are services?
+  answer: "Sundays at {sunday}, and Wednesday evenings at {wednesday}."
+  status: verified
+- id: wear
+  order: 3
+  question: What should I wear?
+  answer: Our services are casual. Come as you are.
+  status: verified
+- id: service
+  order: 4
+  question: What happens during a service?
+  answer: The heart of every service is the teaching of God’s Word. We teach through the Bible line by line, and our gatherings follow the pattern of Acts 2:42 — doctrine, fellowship, communion and prayer.
+  status: confirm
+  reviewNote: Confirm this description of a typical service (worship music, order of service) with Pastor Marty.
+- id: length
+  order: 5
+  question: How long is a service?
+  fallback: Service length can vary. If you are planning around a schedule, call or email us and we will gladly let you know what to expect.
+  status: todo
+  reviewNote: Typical service length not on the current site. Provide a duration.
+- id: kids
+  order: 6
+  question: Is there something for my children?
+  answer: Yes. On Sundays we offer a nursery and children’s ministry through sixth grade, and there is children’s ministry on Wednesday evenings as well. When you arrive, a greeter will help you check your children in.
+  link: { label: About kids ministry, href: /ministries/kids }
+  status: verified
+- id: youth
+  order: 7
+  question: Is there a youth group?
+  answer: "Yes. Our youth ministry meets {youth}."
+  link: { label: About youth ministry, href: /ministries/youth }
+  status: confirm
+  reviewNote: Friday 6:00 PM is on the current youth page. Church asked to re-confirm before launch.
+- id: parking
+  order: 8
+  question: Where should I park, and which entrance do I use?
+  fallback: We are in downtown Nampa. If you have a question about parking, entrances or accessibility before your first visit, call or email us and we will help you plan.
+  status: todo
+  reviewNote: Parking, entrance and accessibility (ramps, accessible seating/restrooms) details are not on the current site. Provide exact wording.
+- id: watch
+  order: 9
+  question: Can I watch a teaching first?
+  answer: Of course. Our teachings are free to watch on YouTube. No account or sign-in is needed.
+  link: { label: Watch on YouTube, href: "{youtube}" }
+  status: verified
+- id: connect
+  order: 10
+  question: How do I get connected?
+  answer: Say hello to a greeter on Sunday, or reach out to us any time. There are Bible studies, ministries and many places to serve.
+  link: { label: Get involved, href: /get-involved }
+  status: verified

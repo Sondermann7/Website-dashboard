@@ -1,0 +1,24 @@
+---
+/** Full weekly schedule from the church config, grouped by day. */
+import { allGatherings, DAY_ORDER } from '../config/church';
+import { joinTimes } from '../lib/format';
+import ReviewFlag from './ReviewFlag.astro';
+interface Props { ids?: string[] }
+const { ids } = Astro.props;
+const list = allGatherings
+  .filter((g) => g.status !== 'todo' && (!ids || ids.includes(g.id)))
+  .sort((a, b) => DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day));
+---
+<ul class="divide-y divide-line overflow-hidden rounded-[var(--radius-card)] border border-line bg-white">
+  {list.map((g) => (
+    <li class="grid gap-1 px-5 py-4 sm:grid-cols-[9rem_1fr_auto] sm:items-baseline sm:gap-6">
+      <span class="font-semibold text-sage">{g.day}</span>
+      <span>
+        {g.href ? <a class="link" href={g.href}>{g.name}</a> : <span class="font-semibold">{g.name}</span>}
+        {g.note && <span class="block text-[0.95rem] text-body">{g.note}</span>}
+        {g.status === 'confirm' && <ReviewFlag class="mt-2">Re-confirm this day and time before launch.</ReviewFlag>}
+      </span>
+      <span class="font-display text-[1.3rem]">{joinTimes(g.times)}</span>
+    </li>
+  ))}
+</ul>

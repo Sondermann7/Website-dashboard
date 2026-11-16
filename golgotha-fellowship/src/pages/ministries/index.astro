@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Section from '../../components/Section.astro';
+import Button from '../../components/Button.astro';
+import MinistryCard from '../../components/MinistryCard.astro';
+import ConnectCta from '../../components/ConnectCta.astro';
+import { church } from '../../config/church';
+const ministries = (await getCollection('ministries')).filter((m) => m.data.status !== 'todo').sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Ministries" description={`Kids, youth, men’s and women’s ministries, outreach and missions at ${church.name} in Nampa, Idaho.`}>
+  <PageHero eyebrow="Ministries" title="A place for every age and stage" lede="Grow in God’s Word alongside others, and find a place to serve." />
+  <Section id="all" title="Our ministries">
+    <ul class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {ministries.map((m) => <li><MinistryCard ministry={m} /></li>)}
+    </ul>
+  </Section>
+  <Section tone="sage" id="serve" eyebrow="Serve" title="Looking for a place to help?" intro="From greeting at the door to audio and video, there are many ways to be part of what God is doing here.">
+    <Button href="/get-involved">Get involved</Button>
+  </Section>
+  <ConnectCta />
+</Base>

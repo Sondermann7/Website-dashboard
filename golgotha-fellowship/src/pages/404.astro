@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import ServiceBand from '../components/ServiceBand.astro';
+---
+<Base title="Page Not Found" description="That page could not be found. Here are the most useful places to go next." noindex>
+  <PageHero eyebrow="Page not found" title="We could not find that page" lede="It may have moved when we rebuilt our website. These links will get you where you need to go.">
+    <Button href="/">Home</Button>
+    <Button href="/new-here" variant="secondary">I’m New</Button>
+    <Button href="/teachings" variant="secondary">Teachings</Button>
+    <Button href="/contact" variant="secondary">Contact</Button>
+  </PageHero>
+  <ServiceBand />
+</Base>

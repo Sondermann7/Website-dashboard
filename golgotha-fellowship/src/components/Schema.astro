@@ -1,0 +1,28 @@
+---
+/** Church / PlaceOfWorship structured data. Mirrors visible, verified facts only. */
+import { church, primaryGatherings } from '../config/church';
+const a = church.address;
+const data = {
+  '@context': 'https://schema.org',
+  '@type': 'Church',
+  '@id': `${church.siteUrl}/#church`,
+  name: church.name,
+  url: church.siteUrl,
+  description: church.shortDescription,
+  telephone: church.phone.tel,
+  email: church.email.general,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: a.street,
+    addressLocality: a.city,
+    addressRegion: a.region,
+    postalCode: a.postalCode,
+    addressCountry: a.country,
+  },
+  openingHoursSpecification: primaryGatherings.flatMap((g) =>
+    g.times24.map((t) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${g.day}`, opens: t, description: g.name })),
+  ),
+  sameAs: Object.values(church.social),
+};
+---
+<script type="application/ld+json" is:inline set:html={JSON.stringify(data)} />

@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import Button from '../components/Button.astro';
+import Photo from '../components/Photo.astro';
+import ConnectCta from '../components/ConnectCta.astro';
+import ReviewFlag from '../components/ReviewFlag.astro';
+import { church } from '../config/church';
+
+const pillars = [
+  { ref: 'Doctrine', text: 'Simple, systematic teaching through the Bible, line by line.' },
+  { ref: 'Fellowship', text: 'Real relationships with one another, built around Christ.' },
+  { ref: 'Communion', text: 'Remembering the Lord’s death and resurrection together.' },
+  { ref: 'Prayer', text: 'Bringing every need to God, together.' },
+];
+---
+<Base title="About Our Church" description={`${church.name} is a non-denominational, Bible-teaching church in Nampa, Idaho, affirming Calvary Chapel distinctives. Learn about our mission and how we do ministry.`}>
+  <PageHero eyebrow="About" title="A fellowship built on God’s Word" lede={church.shortDescription} />
+
+  <Section id="mission" eyebrow="Our mission" title="Hold fast, and gather together">
+    <div class="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+      <div class="prose">
+        <p>Hebrews 10:23–25 calls believers to hold fast the confession of our hope, to stir one another up to love and good works, and not to give up meeting together — all the more as the Day approaches. That passage shapes who we are.</p>
+        <p>We gather to hear the Bible taught, to encourage one another, and to follow Jesus Christ together while we look for His return.</p>
+        <p>We understand the Christian life as a relationship with God grounded in His love and grace — not something earned by keeping rules.</p>
+      </div>
+      <Photo name="community" alt={`People gathered at ${church.name}`} class="aspect-[16/11] w-full rounded-[var(--radius-card)] object-cover" />
+    </div>
+    <ReviewFlag class="mt-8">Mission wording is drawn from themes on the current site (Hebrews 10:23–25, grace, Christ’s return). Needs pastoral approval. Add a real community photo as src/assets/photos/community.jpg.</ReviewFlag>
+  </Section>
+
+  <Section id="philosophy" tone="white" eyebrow="How we do ministry" title="The pattern of Acts 2:42" intro="The early church continued steadfastly in four things. We keep it that simple.">
+    <ol class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {pillars.map((p, i) => (
+        <li class="card p-6">
+          <span class="font-display text-[2.25rem] leading-none text-clay-deep" aria-hidden="true">{i + 1}</span>
+          <h3 class="mt-3">{p.ref}</h3>
+          <p class="mt-2 text-body">{p.text}</p>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <Section id="identity" tone="sage" eyebrow="Who we are" title="Non-denominational, with Calvary Chapel roots">
+    <div class="prose">
+      <p>{church.affiliation.summary}</p>
+      <p>That means the teaching of Scripture stays at the center of everything we do, and that we keep things simple, relaxed and focused on Jesus.</p>
+    </div>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <Button href="/beliefs">What we believe</Button>
+      <Button href="/leadership" variant="secondary">Meet our leadership</Button>
+    </div>
+  </Section>
+
+  <ReviewFlag class="container-site my-8 !w-auto">Church history / “Our Story” section is not shown: no founding date or history was found on the current site. Provide an approved history and it will be added here.</ReviewFlag>
+
+  <ConnectCta />
+</Base>

@@ -1,0 +1,333 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. PROPOSED redesign palette (not the legacy brand palette) - to be
+ * checked against the church's logo once the original artwork is supplied.
+ * Measured contrast (WCAG 2.2): ink/cream 14.1, body/cream 7.4, body/sand 6.5,
+ * sage/cream 6.2, sage/sand 5.4, white/sage 6.5, mist/ink 9.7, clay-light/ink 7.3,
+ * clay-deep/white 6.2. Clay (#A96F51) is 3.9 on cream: decoration only, never body text.
+ */
+@theme {
+  --color-ink: #182a2b;
+  --color-ink-soft: #223a3b;
+  --color-cream: #faf8f3;
+  --color-white: #ffffff;
+  --color-sage: #456458;
+  --color-sage-muted: #e5ece7;
+  --color-clay: #a96f51;
+  --color-clay-deep: #8a5338;
+  --color-clay-light: #dcab90;
+  --color-sand: #f0e8da;
+  --color-body: #465454;
+  --color-mist: #c8d3ce;
+  --color-line: #d7deda;
+  --color-focus: #1a587c;
+  --color-error: #9b2c2c;
+  --color-error-bg: #fbeceb;
+  --color-success: #2a6048;
+  --color-success-bg: #e6f1ea;
+
+  --font-display: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', Inter, system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+
+  --text-display: clamp(2.5rem, 1.6rem + 4.2vw, 4.75rem);
+  --text-h1: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
+  --text-h2: clamp(1.875rem, 1.5rem + 1.7vw, 2.75rem);
+  --text-h3: clamp(1.375rem, 1.25rem + 0.5vw, 1.625rem);
+  --text-lede: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
+
+  --radius-card: 0.875rem;
+  --container-site: 76rem;
+  --container-prose: 44rem;
+}
+
+@layer base {
+  html {
+    font-size: 106.25%; /* 17px mobile */
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (min-width: 64rem) {
+    html {
+      font-size: 112.5%; /* 18px desktop */
+    }
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-cream);
+    color: var(--color-ink);
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  h1 {
+    font-size: var(--text-h1);
+  }
+  h2 {
+    font-size: var(--text-h2);
+  }
+  h3 {
+    font-size: var(--text-h3);
+    line-height: 1.25;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  a {
+    text-underline-offset: 0.2em;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .on-dark :focus-visible,
+  .on-dark:focus-visible {
+    outline-color: #ffffff;
+  }
+  ::selection {
+    background: var(--color-sage);
+    color: #fff;
+  }
+  dialog::backdrop {
+    background: rgb(24 42 43 / 0.6);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-site {
+    width: 100%;
+    max-width: var(--container-site);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 48rem) {
+    .container-site {
+      padding-inline: 2rem;
+    }
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-sage);
+  }
+  .on-dark .eyebrow {
+    color: var(--color-clay-light);
+  }
+
+  /* Text links inside copy: always underlined so they never rely on colour alone. */
+  .link {
+    color: var(--color-sage);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+  }
+  .link:hover {
+    color: var(--color-ink);
+  }
+  .on-dark .link {
+    color: #fff;
+  }
+  .on-dark .link:hover {
+    color: var(--color-clay-light);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.15s ease;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn-primary {
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+  .btn-primary:hover {
+    background: var(--color-sage);
+  }
+  .btn-secondary {
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+    background: transparent;
+  }
+  .btn-secondary:hover {
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+  .btn-light {
+    background: var(--color-cream);
+    color: var(--color-ink);
+  }
+  .btn-light:hover {
+    background: #fff;
+  }
+  .btn-outline-light {
+    border-color: var(--color-cream);
+    color: var(--color-cream);
+    background: transparent;
+  }
+  .btn-outline-light:hover {
+    background: var(--color-cream);
+    color: var(--color-ink);
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+  }
+  a.card,
+  .card-link {
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      transform 0.15s ease;
+  }
+  a.card:hover,
+  .card:has(.card-link:hover) {
+    border-color: var(--color-sage);
+    box-shadow: 0 10px 30px -18px rgb(24 42 43 / 0.45);
+  }
+
+  /* Long-form text (beliefs, ministry pages, teaching notes). */
+  .prose {
+    max-width: var(--container-prose);
+    color: var(--color-ink);
+  }
+  .prose > * + * {
+    margin-top: 1.1em;
+  }
+  .prose h2 {
+    font-size: var(--text-h3);
+    margin-top: 2.2em;
+    padding-top: 0.2em;
+  }
+  .prose h2:first-child {
+    margin-top: 0;
+  }
+  .prose h3 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-top: 1.8em;
+  }
+  .prose ul,
+  .prose ol {
+    padding-left: 1.4em;
+  }
+  .prose ul {
+    list-style: disc;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-top: 0.35em;
+  }
+  .prose li::marker {
+    color: var(--color-clay-deep);
+  }
+  .prose a {
+    color: var(--color-sage);
+    font-weight: 600;
+    text-decoration: underline;
+    overflow-wrap: anywhere;
+  }
+  .prose blockquote {
+    border-left: 3px solid var(--color-clay);
+    padding-left: 1.1em;
+    color: var(--color-body);
+  }
+
+  .field label,
+  .field legend {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  .field .hint {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-body);
+    margin-bottom: 0.4rem;
+  }
+  .input {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 0.85rem;
+    background: #fff;
+    border: 1.5px solid #7b8986; /* 3.7:1 on white - visible control boundary */
+    border-radius: 0.5rem;
+    font: inherit;
+    color: var(--color-ink);
+  }
+  .input:hover {
+    border-color: var(--color-ink);
+  }
+  .input[aria-invalid='true'] {
+    border-color: var(--color-error);
+    border-width: 2px;
+  }
+  textarea.input {
+    min-height: 9rem;
+    resize: vertical;
+  }
+
+  .review-flag {
+    border: 2px dashed #b45309;
+    background: #fff7ed;
+    color: #7c2d12;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    font-family: var(--font-sans);
+    text-align: left;
+  }
+  .review-flag strong {
+    letter-spacing: 0.04em;
+  }
+}

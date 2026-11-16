@@ -1,0 +1,18 @@
+---
+import { church, telHref } from '../config/church';
+import Button from './Button.astro';
+---
+<section aria-labelledby="connect-heading" class="bg-sand py-16 md:py-24">
+  <div class="container-site grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+    <div>
+      <p class="eyebrow mb-3">We are here for you</p>
+      <h2 id="connect-heading">Have a question, or need prayer?</h2>
+      <p class="mt-4 max-w-xl text-[length:var(--text-lede)] text-body">Whether you are planning a first visit or carrying something heavy, you do not have to do it alone. Reach out — we would be glad to hear from you.</p>
+    </div>
+    <div class="flex flex-wrap gap-3 lg:justify-end">
+      <Button href="/prayer">Request prayer</Button>
+      <Button href="/contact" variant="secondary">Contact us</Button>
+      <Button href={telHref} variant="secondary" goal="call">Call {church.phone.display}</Button>
+    </div>
+  </div>
+</section>

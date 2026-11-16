@@ -1,0 +1,62 @@
+# Leadership roster. Source: official leadership page (/team-3), audited 2026-11-16.
+# The audit found role wording differs across revisions of that page, so every entry is
+# "confirm" until the church signs off. Do NOT add a bio, headshot or years of service
+# without current approval. To add a photo: put a released image in
+# src/assets/photos/leadership/ and set `photo:` to its filename without the extension.
+- id: martin-sondermann
+  name: Dr. Martin Sondermann
+  known: Pastor Marty
+  role: Senior Pastor
+  group: pastors
+  order: 1
+  status: confirm
+  reviewNote: Approved short biography and portrait needed.
+- id: doug-turner
+  name: Doug Turner
+  role: Prison and Jail Outreach Pastor
+  group: pastors
+  order: 2
+  status: confirm
+- id: chris-bent
+  name: Chris Bent
+  role: New Believer and Discipleship Pastor, Elder
+  group: pastors
+  order: 3
+  status: confirm
+- id: jeremy-gayou
+  name: Jeremy Gayou
+  role: Men’s and Children’s Ministry Pastor
+  group: pastors
+  order: 4
+  status: confirm
+- id: jon-poston
+  name: Jon Poston
+  role: Elder
+  group: elders
+  order: 5
+  status: confirm
+- id: nathan-cooney
+  name: Nathan Cooney
+  role: Elder
+  group: elders
+  order: 6
+  status: confirm
+- id: christina-bent
+  name: Christina Bent
+  role: Women’s Ministry Leader
+  group: ministry-leaders
+  order: 7
+  status: confirm
+- id: jenifer-gayou
+  name: Jenifer Gayou
+  role: Children’s Ministry
+  group: ministry-leaders
+  order: 8
+  status: confirm
+- id: hugh-theriault
+  name: Hugh Theriault
+  role: Missions
+  group: ministry-leaders
+  order: 9
+  status: confirm
+  reviewNote: Audit describes him as associated with missions and a church plant in Canada. Confirm exact title.
