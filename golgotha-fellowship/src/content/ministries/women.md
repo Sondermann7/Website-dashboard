@@ -7,6 +7,7 @@ audience: Women
 leaders: [Christina Bent]
 nextStep: { label: Ask about women’s ministry, href: /contact }
 photo: women
+photoAlt: Two women smiling together at a Golgotha Fellowship gathering
 showOnHome: false
 status: confirm
 reviewNotes:

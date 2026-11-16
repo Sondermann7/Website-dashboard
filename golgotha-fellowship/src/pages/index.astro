@@ -29,6 +29,13 @@ const sunday = [
   { photo: 'sunday-fellowship', want: 'People greeting each other / talking in the lobby', title: 'You come as you are', text: 'Services are casual. No dress code, no pressure. Following Jesus is a relationship grounded in His love and grace.', href: '/new-here', link: 'Plan your visit' },
   { photo: 'kids', want: 'Kids ministry classroom (released photos only)', title: 'Your kids are cared for', text: 'Nursery and children’s ministry through sixth grade on Sundays, and children’s ministry on Wednesdays. A greeter helps you check in.', href: '/ministries/kids', link: 'About kids ministry' },
 ];
+const gallery = [
+  { name: 'gallery-1', alt: 'Two worship leaders singing, one playing acoustic guitar' },
+  { name: 'gallery-2', alt: 'A worship leader singing and playing guitar' },
+  { name: 'gallery-3', alt: 'A man at an outdoor church gathering, with families in the background' },
+  { name: 'gallery-4', alt: 'A speaker teaching from a podium' },
+  { name: 'gallery-5', alt: 'Two people sharing announcements at a podium' },
+];
 const holdFast = 'Hold fast.'.split('');
 ---
 <Base title={`${church.name} | Bible-Teaching Church in Nampa, Idaho`} description={`${church.shortDescription} Sundays at 8:30 and 10:30 AM, Wednesdays at 6:00 PM.`}>
@@ -77,9 +84,9 @@ const holdFast = 'Hold fast.'.split('');
   <section aria-labelledby="welcome-heading" class="bg-paper py-16 md:py-28">
     <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
       <div class="relative" data-reveal>
-        <Photo name="welcome" alt={`People gathered at ${church.name}`} want="Congregation / fellowship: people together, candid" class="aspect-[4/3] w-full rounded-[var(--radius-card)] object-cover" />
+        <Photo name="welcome" alt={`People standing in worship at an outdoor ${church.name} service`} want="Congregation / fellowship: people together, candid" class="aspect-[4/3] w-full rounded-[var(--radius-card)] object-cover" />
         <div class="absolute -bottom-8 -right-3 hidden w-[44%] overflow-hidden rounded-[var(--radius-card)] border-[6px] border-paper shadow-xl sm:block md:-right-8">
-          <Photo name="pastor-marty" alt={`${church.seniorPastor.name}, senior pastor`} want="Pastor Marty portrait" class="aspect-[4/5] w-full object-cover" sizes="25vw" />
+          <Photo name="welcome-inset" alt="A man worships with his hands raised, surrounded by the congregation" want="Second people photo (square)" class="aspect-square w-full object-cover" sizes="25vw" />
         </div>
       </div>
       <div>
@@ -165,6 +172,23 @@ const holdFast = 'Hold fast.'.split('');
       </div>
       <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {ministries.map((m) => <li><MinistryCard ministry={m} /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5b. Life at Golgotha: photo row -->
+  <section aria-labelledby="life-heading" class="bg-paper pb-16 md:pb-28">
+    <div class="container-site">
+      <div class="mb-10 max-w-2xl">
+        <p class="eyebrow mb-4">Life at Golgotha</p>
+        <h2 id="life-heading">Worship, the Word, and <em>one another.</em></h2>
+      </div>
+      <ul class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        {gallery.map((g, i) => (
+          <li class:list={['overflow-hidden rounded-[var(--radius-card)]', i === 0 && 'col-span-2 md:row-span-2']} data-reveal>
+            <Photo name={g.name} alt={g.alt} want="Candid photo of church life" class={`h-full w-full object-cover ${i === 0 ? 'aspect-[4/3] md:aspect-auto' : 'aspect-[4/3]'}`} sizes={i === 0 ? '(min-width: 48rem) 50vw, 100vw' : '(min-width: 48rem) 25vw, 50vw'} />
+          </li>
+        ))}
       </ul>
     </div>
   </section>

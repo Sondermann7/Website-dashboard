@@ -28,6 +28,12 @@ const widths = [390, 768, 1024, 1440];
       page.on('pageerror', (e) => report.errors.push({ p, w, error: String(e) }));
       await page.goto(base + p, { waitUntil: 'load' });
       await page.evaluate(() => document.fonts.ready);
+      // Scroll the whole page so lazy-loaded photos are fetched before the screenshot.
+      await page.evaluate(async () => {
+        for (let y = 0; y < document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); }
+        window.scrollTo(0, 0);
+        await Promise.race([Promise.all([...document.images].map((i) => (i.complete ? null : new Promise((r) => { i.onload = i.onerror = r; })))), new Promise((r) => setTimeout(r, 4000))]);
+      });
       const name = (p === '/' ? 'home' : p.slice(1).replace(/\//g, '_')) + `_${w}.png`;
       await page.screenshot({ path: path.join(out, name), fullPage: true });
       const m = await page.evaluate(() => {
