@@ -12,8 +12,14 @@ Put the church's own original files here (SVG, or PNG with a transparent backgro
 Until a file is present the site shows the church name in type, and no dove. Neither
 mark is redrawn or recreated: both are the owners' artwork.
 
+## Current files are stand-ins
+
+`logo`, `logo-light`, `calvary-dove` and `calvary-dove-light` were lifted from phone
+screenshots of the church's own graphics (white artwork separated from its background;
+the dark versions are the same artwork tinted navy). They are low resolution. Replace
+them with the original vector files under the same names.
+
 ## Navy
 
-The navy on the site is a stand-in. Sample the exact navy from the official logo and
-set `--color-navy` at the top of `src/styles/global.css` (then nudge `--color-navy-soft`
-lighter and `--color-navy-deep` darker to match).
+`#313D65`, sampled from the church's "Join us" graphic. Set in `--color-navy` at the top
+of `src/styles/global.css`.

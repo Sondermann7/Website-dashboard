@@ -26,27 +26,25 @@
 /*
  * Design tokens.
  *
- * NAVY IS PROVISIONAL. The church's exact navy could not be sampled (the logo file and
- * the old site were unreachable from the build environment). Replace --color-navy with
- * the hex from the official logo; navy-soft and navy-deep are the only shades that
- * need to follow it. Gold is an accent proposal - confirm against the logo too.
- * Gold (#C19A4B) is decoration and on-navy accent only, never text on white.
+ * Navy #313D65 is sampled from the church's own "Join us" graphic (the flat navy
+ * behind the white logo). navy-soft and navy-deep are a lighter and darker step of it.
+ * Gold is an accent proposal, used for decoration and on-navy accents only.
  */
 @theme {
-  --color-navy: #13294b;
-  --color-navy-soft: #1c3a66;
-  --color-navy-deep: #0b1a31;
+  --color-navy: #313d65;
+  --color-navy-soft: #404e80;
+  --color-navy-deep: #222b4a;
   --color-paper: #fbfaf7;
   --color-white: #ffffff;
   --color-stone: #f2efe8;
-  --color-sky: #e9eef5;
-  --color-blue: #264a80;
+  --color-sky: #eceef6;
+  --color-blue: #3a4a85;
   --color-gold: #c19a4b;
   --color-gold-deep: #7d5c14;
   --color-gold-light: #e3c57f;
-  --color-body: #47536a;
-  --color-mist: #c3cde0;
-  --color-line: #d8dde6;
+  --color-body: #4a5068;
+  --color-mist: #d0d5e6;
+  --color-line: #d9dce7;
   --color-focus: #1b5fc1;
   --color-error: #9b2c2c;
   --color-error-bg: #fbeceb;
@@ -139,7 +137,7 @@
     color: #fff;
   }
   dialog::backdrop {
-    background: rgb(11 26 49 / 0.65);
+    background: rgb(34 43 74 / 0.65);
   }
 }
 
@@ -284,7 +282,7 @@
   a.card:hover,
   .card:has(.card-link:hover),
   .card:has(.card-link:focus-visible) {
-    box-shadow: 0 18px 40px rgb(11 26 49 / 0.14);
+    box-shadow: 0 18px 40px rgb(34 43 74 / 0.14);
   }
 
   /* Photo with a caption laid over a navy fade (ministry tiles). */
@@ -315,11 +313,11 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(180deg, rgb(11 26 49 / 0) 25%, rgb(11 26 49 / 0.55) 55%, rgb(11 26 49 / 0.94) 100%);
+    background: linear-gradient(180deg, rgb(34 43 74 / 0) 25%, rgb(34 43 74 / 0.55) 55%, rgb(34 43 74 / 0.94) 100%);
   }
   .tile:hover,
   .tile:focus-within {
-    box-shadow: 0 18px 40px rgb(11 26 49 / 0.28);
+    box-shadow: 0 18px 40px rgb(34 43 74 / 0.28);
   }
 
   /* Reviewer-only stand-in for a photo that has not been supplied yet. */
@@ -487,7 +485,7 @@ html.mo .site-header {
   transition: box-shadow 0.3s ease;
 }
 html.mo.scrolled .site-header {
-  box-shadow: 0 8px 24px rgb(11 26 49 / 0.14);
+  box-shadow: 0 8px 24px rgb(34 43 74 / 0.14);
 }
 html.mo .hero-photo {
   animation: mo-settle 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;

@@ -30,11 +30,11 @@ const sunday = [
   { photo: 'kids', want: 'Kids ministry classroom (released photos only)', title: 'Your kids are cared for', text: 'Nursery and children’s ministry through sixth grade on Sundays, and children’s ministry on Wednesdays. A greeter helps you check in.', href: '/ministries/kids', link: 'About kids ministry' },
 ];
 const gallery = [
-  { name: 'gallery-1', alt: 'Two worship leaders singing, one playing acoustic guitar' },
-  { name: 'gallery-2', alt: 'A worship leader singing and playing guitar' },
-  { name: 'gallery-3', alt: 'A man at an outdoor church gathering, with families in the background' },
-  { name: 'gallery-4', alt: 'A speaker teaching from a podium' },
-  { name: 'gallery-5', alt: 'Two people sharing announcements at a podium' },
+  { name: 'gallery-1', alt: 'Worship leaders seen from behind, facing a large outdoor congregation under white tents' },
+  { name: 'gallery-2', alt: 'Two worship leaders singing, one playing acoustic guitar' },
+  { name: 'gallery-3', alt: 'People standing in worship at an outdoor service' },
+  { name: 'gallery-4', alt: 'A speaker at the Golgotha Fellowship podium with the worship team, seen from the congregation' },
+  { name: 'gallery-5', alt: 'A speaker teaching at an outdoor service, seen over the heads of the congregation' },
 ];
 const holdFast = 'Hold fast.'.split('');
 ---
@@ -84,7 +84,7 @@ const holdFast = 'Hold fast.'.split('');
   <section aria-labelledby="welcome-heading" class="bg-paper py-16 md:py-28">
     <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
       <div class="relative" data-reveal>
-        <Photo name="welcome" alt={`People standing in worship at an outdoor ${church.name} service`} want="Congregation / fellowship: people together, candid" class="aspect-[4/3] w-full rounded-[var(--radius-card)] object-cover" />
+        <Photo name="welcome" alt={`People worshipping with raised hands at a ${church.name} service`} want="Congregation / fellowship: people together, candid" class="aspect-[4/3] w-full rounded-[var(--radius-card)] object-cover" />
         <div class="absolute -bottom-8 -right-3 hidden w-[44%] overflow-hidden rounded-[var(--radius-card)] border-[6px] border-paper shadow-xl sm:block md:-right-8">
           <Photo name="welcome-inset" alt="A man worships with his hands raised, surrounded by the congregation" want="Second people photo (square)" class="aspect-square w-full object-cover" sizes="25vw" />
         </div>

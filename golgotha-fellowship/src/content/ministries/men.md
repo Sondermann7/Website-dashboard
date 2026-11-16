@@ -8,7 +8,7 @@ gatheringIds: [men-monday, men-saturday]
 leaders: [Jeremy Gayou]
 nextStep: { label: Ask about men’s Bible study, href: /contact }
 photo: men
-photoAlt: A man at a Golgotha Fellowship gathering
+photoAlt: Two men smiling together at an outdoor event
 showOnHome: false
 status: verified
 reviewNotes:
