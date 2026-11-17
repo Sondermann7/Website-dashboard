@@ -11,35 +11,47 @@ import Phone from '@lucide/astro/icons/phone';
 import Mail from '@lucide/astro/icons/mail';
 import { church, telHref, primaryGatherings } from '../config/church';
 import { joinTimes } from '../lib/format';
-import { FORMS_ENABLED } from '../lib/review';
+import { FORMS_ENABLED, PRAYER_FORM_ENABLED, PREVIEW } from '../lib/review';
 import ReviewFlag from './ReviewFlag.astro';
 
 interface Props { type: 'contact' | 'prayer' | 'involved' | 'visit'; emailSubject: string }
 const { type, emailSubject } = Astro.props;
 const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const isPrayer = type === 'prayer';
+const enabled = FORMS_ENABLED || (isPrayer && PRAYER_FORM_ENABLED);
 const mailto = `mailto:${church.email.general}?subject=${encodeURIComponent(emailSubject)}`;
 const copy = {
   contact: { message: 'Your question or message', submit: 'Send message', privacy: 'Your message is sent privately to the Golgotha Fellowship office. We use your details only to reply to you.' },
-  prayer: { message: 'How can we pray for you?', submit: 'Send prayer request', privacy: 'Your request is sent privately to Golgotha Fellowship. It is never published on this website and is not recorded by analytics tools.' },
+  prayer: { message: 'How can we pray for you?', submit: 'Send prayer request', privacy: 'Your request goes privately to Golgotha Fellowship and is seen only by the people you chose above. It is never published on this website and is not recorded by analytics tools.' },
   visit: { message: 'Anything we should know? (optional)', submit: 'Let us know', privacy: 'Your details go only to the Golgotha Fellowship greeting team, so someone can welcome you and help with check-in. We will not add you to a mailing list.' },
   involved: { message: 'Anything you would like us to know? (optional)', submit: 'Send', privacy: 'Your details are sent privately to the Golgotha Fellowship office so the right ministry leader can contact you.' },
 }[type];
 ---
-{FORMS_ENABLED ? (
+{enabled ? (
   <>
   <form class="js-form grid gap-6" method="post" action="/api/forms" novalidate data-form-type={type}>
     <input type="hidden" name="form" value={type} />
     <div class="js-form-status hidden rounded-lg border-2 p-4 text-[1.05rem] font-semibold" role="alert" tabindex="-1"></div>
 
+    {isPrayer && (
+      <div class="field">
+        <label for="prayer-message">How can we pray for you?</label>
+        <textarea class="input" id="prayer-message" name="message" maxlength="5000" required rows="6" data-error="Please write your prayer request."></textarea>
+        <p class="js-error mt-1.5 hidden font-semibold text-error" id="prayer-message-error"></p>
+      </div>
+    )}
+
     <div class="grid gap-6 sm:grid-cols-2">
       <div class="field">
-        <label for={`${type}-name`}>Your name</label>
-        <input class="input" id={`${type}-name`} name="name" type="text" autocomplete="name" required maxlength="120" data-error="Please enter your name." />
+        <label for={`${type}-name`}>Your name{isPrayer && <span class="font-normal text-body"> (optional)</span>}</label>
+        {isPrayer && <span class="hint" id="prayer-name-hint">Leave blank to stay anonymous.</span>}
+        <input class="input" id={`${type}-name`} name="name" type="text" autocomplete="name" required={!isPrayer} maxlength="120" data-error="Please enter your name." aria-describedby={isPrayer ? 'prayer-name-hint' : undefined} />
         <p class="js-error mt-1.5 hidden font-semibold text-error" id={`${type}-name-error`}></p>
       </div>
       <div class="field">
-        <label for={`${type}-email`}>Email address</label>
-        <input class="input" id={`${type}-email`} name="email" type="email" autocomplete="email" required maxlength="200" data-error="Please enter a valid email address so we can reply." />
+        <label for={`${type}-email`}>Email address{isPrayer && <span class="font-normal text-body"> (optional)</span>}</label>
+        {isPrayer && <span class="hint" id="prayer-email-hint">Only if you would like a reply.</span>}
+        <input class="input" id={`${type}-email`} name="email" type="email" autocomplete="email" required={!isPrayer} maxlength="200" data-error="Please enter a valid email address so we can reply." aria-describedby={isPrayer ? 'prayer-email-hint' : undefined} />
         <p class="js-error mt-1.5 hidden font-semibold text-error" id={`${type}-email-error`}></p>
       </div>
     </div>
@@ -47,6 +59,26 @@ const copy = {
       <label for={`${type}-phone`}>Phone number <span class="font-normal text-body">(optional)</span></label>
       <input class="input sm:max-w-xs" id={`${type}-phone`} name="phone" type="tel" autocomplete="tel" maxlength="40" />
     </div>
+
+    {isPrayer && (
+      <fieldset class="field">
+        <legend>Who may see your request?</legend>
+        <div class="grid gap-1">
+          <label class="!mb-0 flex min-h-11 cursor-pointer items-center gap-3 !font-normal" for="prayer-share-pastors">
+            <input class="h-5 w-5 shrink-0 accent-[var(--color-navy)]" type="radio" id="prayer-share-pastors" name="share" value="Pastors only" checked />
+            Pastors only
+          </label>
+          <label class="!mb-0 flex min-h-11 cursor-pointer items-center gap-3 !font-normal" for="prayer-share-team">
+            <input class="h-5 w-5 shrink-0 accent-[var(--color-navy)]" type="radio" id="prayer-share-team" name="share" value="Pastors and the prayer team" />
+            Pastors and the prayer team
+          </label>
+        </div>
+        <label class="!mt-3 !mb-0 flex min-h-11 cursor-pointer items-center gap-3 !font-normal" for="prayer-contact">
+          <input class="h-5 w-5 shrink-0 accent-[var(--color-navy)]" type="checkbox" id="prayer-contact" name="contact_me" value="yes" />
+          I would like someone to reach out to me
+        </label>
+      </fieldset>
+    )}
 
     {type === 'visit' && (
       <div class="grid gap-6 sm:grid-cols-2">
@@ -84,11 +116,13 @@ const copy = {
       </fieldset>
     )}
 
-    <div class="field">
-      <label for={`${type}-message`}>{copy.message}</label>
-      <textarea class="input" id={`${type}-message`} name="message" maxlength="5000" required={type !== 'involved' && type !== 'visit'} data-error="Please write a short message."></textarea>
-      <p class="js-error mt-1.5 hidden font-semibold text-error" id={`${type}-message-error`}></p>
-    </div>
+    {!isPrayer && (
+      <div class="field">
+        <label for={`${type}-message`}>{copy.message}</label>
+        <textarea class="input" id={`${type}-message`} name="message" maxlength="5000" required={type !== 'involved' && type !== 'visit'} data-error="Please write a short message."></textarea>
+        <p class="js-error mt-1.5 hidden font-semibold text-error" id={`${type}-message-error`}></p>
+      </div>
+    )}
 
     <!-- Honeypot: hidden from people, tempting to bots. -->
     <div class="absolute -left-[9999px]" aria-hidden="true">
@@ -100,6 +134,7 @@ const copy = {
 
     <p class="text-[0.95rem] text-body">{copy.privacy}</p>
     <div><button class="btn btn-primary" type="submit">{copy.submit}</button></div>
+    {PREVIEW && !FORMS_ENABLED && <p class="rounded-md bg-stone px-4 py-3 text-[0.95rem] text-body">Preview: this form is not connected to an inbox yet, so nothing you type here is sent.</p>}
   </form>
   <script>
     const forms = document.querySelectorAll<HTMLFormElement>('form.js-form');

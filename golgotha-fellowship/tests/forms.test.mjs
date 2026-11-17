@@ -32,7 +32,7 @@ test('no-JS submission redirects to /thanks', async () => {
 });
 
 test('validation rejects missing name, bad email, empty message', () => {
-  assert.equal(validate(form({ ...good, name: '' })).ok, false);
+  assert.equal(validate(form({ ...good, form: 'contact', name: '' })).ok, false);
   assert.equal(validate(form({ ...good, email: 'nope' })).ok, false);
   assert.equal(validate(form({ ...good, message: '' })).ok, false);
   assert.equal(validate(form({ ...good, form: 'other' })).ok, false);
@@ -96,4 +96,21 @@ test('plan-a-visit needs a service and goes to the greeter inbox (or contact inb
   const calls2 = [];
   await handle(req({ ...base, service: 'Sunday 8:30 AM' }), { ...env, VISIT_TO: 'greeters@example.org' }, okFetch(calls2));
   assert.deepEqual(JSON.parse(calls2[0].init.body).to, ['greeters@example.org']);
+});
+
+test('prayer requests can be anonymous, and record who may see them', async () => {
+  const calls = [];
+  const res = await handle(req({ form: 'prayer', name: '', email: '', message: 'Please pray for my mother.', share: 'Pastors and the prayer team' }), env, okFetch(calls));
+  assert.equal(res.status, 200);
+  const body = JSON.parse(calls[0].init.body);
+  assert.equal(body.reply_to, undefined);
+  assert.match(body.subject, /Anonymous/);
+  assert.match(body.text, /Who may see this: Pastors and the prayer team/);
+  assert.match(body.text, /reach out: No/);
+});
+test('prayer: asking for contact needs an email or phone; bad email still rejected', () => {
+  assert.equal(validate(form({ form: 'prayer', message: 'Pray for me', contact_me: 'yes' })).ok, false);
+  assert.equal(validate(form({ form: 'prayer', message: 'Pray for me', contact_me: 'yes', phone: '208-555-0100' })).ok, true);
+  assert.equal(validate(form({ form: 'prayer', message: 'Pray for me', email: 'not-an-email' })).ok, false);
+  assert.equal(validate(form({ form: 'prayer', message: '' })).ok, false);
 });

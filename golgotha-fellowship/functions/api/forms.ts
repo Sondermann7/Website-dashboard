@@ -50,6 +50,8 @@ export interface Submission {
   areas: string[];
   service?: string;
   kids?: string;
+  share?: string;
+  contactMe?: boolean;
 }
 
 export function validate(data: FormData): { ok: true; value: Submission } | { ok: false; error: string } {
@@ -60,31 +62,37 @@ export function validate(data: FormData): { ok: true; value: Submission } | { ok
   const phone = line(data.get('phone'), 40);
   const message = clean(data.get('message'), 5000);
   const areas = data.getAll('areas').map((a) => line(a, 60)).filter(Boolean).slice(0, 30);
-  if (name.length < 2) return { ok: false, error: 'Please enter your name.' };
-  if (!EMAIL_RE.test(email)) return { ok: false, error: 'Please enter a valid email address so we can reply.' };
+  const prayer = type === 'prayer';
+  if (!prayer && name.length < 2) return { ok: false, error: 'Please enter your name.' };
+  if ((!prayer || email) && !EMAIL_RE.test(email)) return { ok: false, error: 'Please enter a valid email address so we can reply.' };
   if (FORMS[type].messageRequired && message.length < 3) return { ok: false, error: 'Please write a short message.' };
   const service = line(data.get('service'), 60);
   const kids = line(data.get('kids'), 20);
   if (type === 'visit' && !service) return { ok: false, error: 'Please choose a service.' };
+  const share = line(data.get('share'), 60) === 'Pastors and the prayer team' ? 'Pastors and the prayer team' : 'Pastors only';
+  const contactMe = data.get('contact_me') === 'yes';
+  if (prayer && contactMe && !email && !phone) return { ok: false, error: 'To have someone reach out, please add an email address or phone number.' };
   if (type === 'involved' && areas.length === 0 && message.length < 3)
     return { ok: false, error: 'Please choose at least one area, or write a short message.' };
-  return { ok: true, value: { type, name, email, phone, message, areas, ...(type === 'visit' ? { service, kids: kids || 'None' } : {}) } };
+  return { ok: true, value: { type, name: name || (prayer ? 'Anonymous' : name), email, phone, message, areas, ...(type === 'visit' ? { service, kids: kids || 'None' } : {}), ...(prayer ? { share, contactMe } : {}) } };
 }
 
 export function buildEmail(s: Submission): string {
   return [
     `Form: ${s.type}`,
     `Name: ${s.name}`,
-    `Email: ${s.email}`,
+    s.email ? `Email: ${s.email}` : 'Email: (not given)',
     s.phone && `Phone: ${s.phone}`,
     s.areas.length > 0 && `Areas of interest: ${s.areas.join(', ')}`,
+    s.share && `Who may see this: ${s.share}`,
+    s.type === 'prayer' && `Would like someone to reach out: ${s.contactMe ? 'Yes' : 'No'}`,
     s.service && `Planning to attend: ${s.service}`,
     s.kids && `Children coming: ${s.kids}`,
     '',
     s.message || '(no message)',
     '',
     '--',
-    'Sent from the Golgotha Fellowship website. Reply directly to this email to answer.',
+    s.email ? 'Sent from the Golgotha Fellowship website. Reply directly to this email to answer.' : 'Sent from the Golgotha Fellowship website.',
   ]
     .filter((l): l is string => typeof l === 'string')
     .join('\n');
@@ -144,7 +152,7 @@ export async function handle(request: Request, env: Env, fetchImpl: typeof fetch
     if (!passed) return respond(request, 403, { ok: false, error: `We could not confirm you are not a robot. Please try again. ${FALLBACK}` });
   }
 
-  const to = env[FORMS[s.type].to] ?? (s.type === 'visit' ? env.CONTACT_TO : undefined);
+  const to = env[FORMS[s.type].to] ?? (s.type === 'visit' || s.type === 'prayer' ? env.CONTACT_TO : undefined);
   if (!env.RESEND_API_KEY || !env.FORMS_FROM || !to) {
     console.error(`[forms] Delivery is not configured for "${s.type}".`); // no personal data
     return respond(request, 503, { ok: false, error: `Sorry, this form is not available right now. ${FALLBACK}` });
@@ -158,7 +166,7 @@ export async function handle(request: Request, env: Env, fetchImpl: typeof fetch
       body: JSON.stringify({
         from: `Golgotha Fellowship Website <${env.FORMS_FROM}>`,
         to: to.split(',').map((x) => x.trim()).filter(Boolean),
-        reply_to: s.email,
+        ...(s.email ? { reply_to: s.email } : {}),
         subject: `${FORMS[s.type].subject} — ${s.name}`,
         text: buildEmail(s),
       }),
