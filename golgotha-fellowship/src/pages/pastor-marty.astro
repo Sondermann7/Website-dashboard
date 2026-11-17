@@ -1,5 +1,6 @@
 ---
-import BookOpen from '@lucide/astro/icons/book-open';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import Radio from '@lucide/astro/icons/radio';
 import ArrowRight from '@lucide/astro/icons/arrow-right';
 import Base from '../layouts/Base.astro';
@@ -12,6 +13,8 @@ import { church } from '../config/church';
 import { pastor } from '../config/pastor';
 
 const radio = church.radio.status !== 'todo' ? church.radio : null;
+const coverFiles = import.meta.glob<{ default: ImageMetadata }>('/src/assets/books/*.jpg', { eager: true });
+const cover = (name: string) => coverFiles[`/src/assets/books/${name}.jpg`]?.default;
 const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -108,22 +111,27 @@ const person = {
         <Button href={pastor.authorPage} variant="secondary" external>Author page on Amazon</Button>
       </div>
       <ul class="grid gap-6 md:grid-cols-2">
-        {pastor.books.map((b) => (
-          <li class="card relative flex gap-6 p-6 md:p-8">
-            <span class="hidden h-28 w-20 shrink-0 items-center justify-center rounded-sm bg-navy text-gold-light shadow-[var(--shadow-lift)] sm:flex" aria-hidden="true"><BookOpen size={28} /></span>
-            <div class="flex min-w-0 flex-col">
-              <p class="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-gold-deep">{b.year}</p>
-              <h3 class="mt-1 !text-[1.45rem] !font-bold">
-                <a class="card-link no-underline after:absolute after:inset-0 after:content-['']" href={b.url} target="_blank" rel="noopener">{b.title}<span class="sr-only"> (opens in a new tab)</span></a>
-              </h3>
-              <p class="mt-1 font-display italic text-body">{b.subtitle}</p>
-              {b.about && <p class="mt-3 text-[0.98rem] text-body">{b.about}</p>}
-              <p class="mt-auto flex items-center gap-1.5 pt-4 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-blue" aria-hidden="true">View book <ArrowRight size={16} /></p>
-            </div>
-          </li>
-        ))}
+        {pastor.books.map((b) => {
+          const img = cover(b.cover);
+          return (
+            <li class:list={["card relative flex gap-5 p-5 sm:gap-7 sm:p-7", b.kind === "Novel" && "md:col-span-2"]}>
+              {img && (
+                <Image src={img} alt="" widths={[160, 240, 320]} sizes="(min-width: 40rem) 8.5rem, 6.5rem" class="aspect-[2/3] w-[6.5rem] shrink-0 self-start rounded-[3px] object-cover shadow-[var(--shadow-lift)] ring-1 ring-black/10 sm:w-[8.5rem]" />
+              )}
+              <div class="flex min-w-0 flex-col">
+                <p class="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-gold-deep">{b.kind}{b.year && ` · ${b.year}`}</p>
+                <h3 class="mt-1 !text-[1.35rem] !font-bold">
+                  <a class="card-link no-underline after:absolute after:inset-0 after:content-['']" href={b.url} target="_blank" rel="noopener">{b.title}<span class="sr-only"> (opens in a new tab)</span></a>
+                </h3>
+                <p class="mt-1 font-display italic text-body">{b.subtitle}</p>
+                {b.about && <p class="mt-3 text-[0.96rem] leading-snug text-body">{b.about}</p>}
+                <p class="mt-auto flex items-center gap-1.5 pt-4 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-blue" aria-hidden="true">View book <ArrowRight size={16} /></p>
+              </div>
+            </li>
+          );
+        })}
       </ul>
-      <ReviewFlag class="mt-6">Titles and years are from Amazon and Audible listings. Confirm the list is complete and which editions to link. Send cover images to replace the navy stand-ins.</ReviewFlag>
+      <ReviewFlag class="mt-6">Titles and years are from Amazon and Audible listings; covers supplied by the owner (two were small and were upscaled). Confirm the list is complete and which edition each card should link to. The novel links to the Audible author page until a direct link is chosen.</ReviewFlag>
     </div>
   </section>
 
