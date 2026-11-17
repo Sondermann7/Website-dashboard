@@ -25,7 +25,7 @@ const row = 'flex gap-4 py-5';
             <div>
               <p class="font-semibold">Address</p>
               <address class="not-italic text-body">{church.address.street}<br />{church.address.city}, {church.address.regionName} {church.address.postalCode}</address>
-              <a class="link inline-flex min-h-11 items-center" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions">Get directions<span class="sr-only"> (opens in a new tab)</span></a>
+              <a class="link inline-flex min-h-11 items-center" href="/location">Map and directions</a>
             </div>
           </li>
           <li class={row}>

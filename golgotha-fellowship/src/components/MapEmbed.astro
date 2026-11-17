@@ -1,5 +1,7 @@
 ---
 import { addressOneLine, mapEmbedUrl, directionsUrl } from '../config/church';
+interface Props { tall?: boolean }
+const { tall = false } = Astro.props;
 ---
 <div class="overflow-hidden rounded-[var(--radius-card)] bg-sky shadow-[var(--shadow-card)] ring-1 ring-navy/5">
   <iframe
@@ -7,7 +9,7 @@ import { addressOneLine, mapEmbedUrl, directionsUrl } from '../config/church';
     title={`Map showing Golgotha Fellowship at ${addressOneLine}`}
     loading="lazy"
     referrerpolicy="no-referrer-when-downgrade"
-    class="block aspect-[4/3] w-full border-0 md:aspect-[16/10]"></iframe>
+    class:list={['block w-full border-0', tall ? 'h-[26rem] md:h-[34rem]' : 'aspect-[4/3] md:aspect-[16/10]']}></iframe>
   <p class="bg-white px-5 py-3 text-[0.95rem]">
     {addressOneLine} · <a class="link" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions">Open in Google Maps<span class="sr-only"> (opens in a new tab)</span></a>
   </p>

@@ -181,7 +181,8 @@ export const addressOneLine = `${a.street}, ${a.city}, ${a.region} ${a.postalCod
 export const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
   `${church.name}, ${addressOneLine}`,
 )}`;
-export const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(addressOneLine)}&output=embed`;
+/** Map pinned to the exact street address (not the business listing, which some directories still show at an old location). */
+export const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(addressOneLine)}&z=16&output=embed`;
 export const telHref = `tel:${church.phone.tel}`;
 export const mailHref = `mailto:${church.email.general}`;
 
@@ -200,6 +201,7 @@ export const mainNav = [
 ] as const;
 
 export const utilityNav = [
+  { label: 'Location', href: '/location' },
   { label: 'Prayer', href: '/prayer' },
   { label: 'Contact', href: '/contact' },
 ] as const;
@@ -209,8 +211,9 @@ export const footerNav = [
     heading: 'Visit',
     links: [
       { label: 'I’m New', href: '/new-here' },
+      { label: 'Location & Map', href: '/location' },
       { label: 'Events', href: '/events' },
-      { label: 'Contact & Directions', href: '/contact' },
+      { label: 'Contact', href: '/contact' },
       { label: 'Prayer Request', href: '/prayer' },
     ],
   },

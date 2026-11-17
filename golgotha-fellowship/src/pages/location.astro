@@ -1,0 +1,75 @@
+---
+import MapPin from '@lucide/astro/icons/map-pin';
+import Navigation from '@lucide/astro/icons/navigation';
+import Phone from '@lucide/astro/icons/phone';
+import Clock from '@lucide/astro/icons/clock';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Button from '../components/Button.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import Schedule from '../components/Schedule.astro';
+import Photo from '../components/Photo.astro';
+import Motif from '../components/Motif.astro';
+import Curve from '../components/Curve.astro';
+import ConnectCta from '../components/ConnectCta.astro';
+import ReviewFlag from '../components/ReviewFlag.astro';
+import { church, addressOneLine, directionsUrl, telHref } from '../config/church';
+
+const appleMaps = `https://maps.apple.com/?daddr=${encodeURIComponent(addressOneLine)}`;
+const a = church.address;
+---
+<Base title="Location & Map" description={`Find ${church.name} at ${addressOneLine}, in downtown Nampa, Idaho. Map, directions, and service times.`}>
+  <PageHero eyebrow="Location" title="Find us in downtown Nampa" lede={`${a.street}, ${a.city}, ${a.regionName} ${a.postalCode}`} photo="page-contact">
+    <Button href={directionsUrl} variant="gold" external goal="directions">Get directions</Button>
+    <Button href={telHref} variant="outline-light" goal="call">Call {church.phone.display}</Button>
+  </PageHero>
+
+  <!-- Map with the address card layered over it -->
+  <section aria-labelledby="map-heading" class="relative bg-paper pt-4 pb-24 md:pt-8 md:pb-36">
+    <div class="container-site">
+      <h2 id="map-heading" class="sr-only">Map</h2>
+      <div class="relative">
+        <MapEmbed tall />
+        <aside aria-label="Address and directions" class="on-light relative z-10 mx-4 -mt-16 rounded-[var(--radius-card)] bg-white p-6 shadow-[var(--shadow-float)] ring-1 ring-navy/5 md:absolute md:top-8 md:left-8 md:mx-0 md:mt-0 md:w-[22rem] md:p-7">
+          <p class="eyebrow">Golgotha Fellowship</p>
+          <address class="mt-4 flex gap-3 text-[1.1rem] not-italic leading-snug">
+            <MapPin size={22} class="mt-0.5 shrink-0 text-gold-deep" aria-hidden="true" />
+            <span>{a.street}<br />{a.city}, {a.regionName} {a.postalCode}<span class="mt-1 block text-[0.92rem] text-body">{a.areaNote}</span></span>
+          </address>
+          <div class="mt-6 grid gap-3">
+            <a class="btn btn-primary" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions"><Navigation size={18} aria-hidden="true" /> Google Maps<span class="sr-only"> directions (opens in a new tab)</span></a>
+            <a class="btn btn-secondary" href={appleMaps} target="_blank" rel="noopener" data-goal="directions">Apple Maps<span class="sr-only"> directions (opens in a new tab)</span></a>
+            <a class="btn btn-secondary" href={telHref} data-goal="call"><Phone size={18} aria-hidden="true" /> {church.phone.display}</a>
+          </div>
+        </aside>
+      </div>
+      <ReviewFlag class="mt-6">The pin is placed on the street address, not on the Google business listing, because some directories still show the church’s old Greenhurst Road location. Check that the pin lands on the right building, and update the Google Business Profile address if it is out of date. The original site’s location page could not be viewed from the build environment; send a screenshot if anything from it should be copied.</ReviewFlag>
+    </div>
+    <Curve fill="stone" />
+  </section>
+
+  <!-- When to come, and arriving -->
+  <section aria-labelledby="when-heading" class="relative isolate overflow-hidden bg-stone pt-10 pb-24 md:pt-16 md:pb-32">
+    <Motif kind="fish" stroke={1.1} class="watermark -left-20 bottom-6 hidden w-[26rem] md:block" />
+    <div class="relative container-site grid gap-12 lg:grid-cols-2 lg:gap-20">
+      <div>
+        <p class="eyebrow mb-4">When to come</p>
+        <h2 id="when-heading">Service <em>times</em></h2>
+        <div class="mt-8"><Schedule /></div>
+      </div>
+      <div>
+        <p class="eyebrow mb-4">Arriving</p>
+        <h2>Your first <em>visit</em></h2>
+        <div class="framed mt-8 mr-4 mb-4">
+          <Photo name="exterior" alt={`Gathering outside at ${church.name}`} want="Building entrance photo" class="aspect-[16/10] w-full object-cover" />
+        </div>
+        <p class="lede mt-8 text-body">Services are casual. When you arrive, a greeter will help you find your way and check your children in.</p>
+        <p class="mt-4 text-body">Have a question about parking, entrances or accessibility? <a class="link" href={telHref}>Call us</a> or <a class="link" href="/contact">send a message</a> and we will help you plan.</p>
+        <ReviewFlag class="mt-5">Add parking, the entrance to use, and accessibility details. Replace the photo with one of the building entrance.</ReviewFlag>
+        <p class="mt-7"><Button href="/new-here" goal="plan-visit">Plan your visit</Button></p>
+      </div>
+    </div>
+  </section>
+
+  <ConnectCta />
+</Base>
