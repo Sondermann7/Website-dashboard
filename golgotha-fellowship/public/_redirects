@@ -1,29 +1,62 @@
-# Cloudflare Pages redirects. 301s from every known URL on the old (Wix) site.
-# Source: reference pack SOURCE_LINKS.md. Test with `curl -I` on the staged site before DNS cutover.
-/what-we-believe        /beliefs               301
-/feed-my-lambs          /ministries/kids       301
-/called-for-a-purpose   /ministries/youth      301
-/team-3                 /leadership            301
-/about-6                /teachings             301
-/contact-8              /get-involved          301
-/missions               /ministries/missions   301
+# Cloudflare Pages redirects. Static rules first; splat (*) rules last.
+# Every old (Wix) URL is listed with and without a trailing slash.
+# Source of old URLs: reference pack SOURCE_LINKS.md. Verified by scripts/site-audit.mjs.
 
-# DECISION NEEDED before launch: /about-1 is the old "Real Impact" page. Its content was
-# not migrated (leadership has not asked for it). Either migrate it to /real-impact and
-# point the redirect there, or keep the line below.
-/about-1                /about                 302
+# --- Old site pages --------------------------------------------------------
+/home                     /                      301
+/home/                    /                      301
+/what-we-believe          /beliefs               301
+/what-we-believe/         /beliefs               301
+/feed-my-lambs            /ministries/kids       301
+/feed-my-lambs/           /ministries/kids       301
+/called-for-a-purpose     /ministries/youth      301
+/called-for-a-purpose/    /ministries/youth      301
+/team-3                   /leadership            301
+/team-3/                  /leadership            301
+/about-6                  /teachings             301
+/about-6/                 /teachings             301
+/contact-8                /get-involved          301
+/contact-8/               /get-involved          301
+/missions                 /ministries/missions   301
+/missions/                /ministries/missions   301
 
-# Common guesses / convenience
-/directions             /location              301
-/find-us                /location              301
-/map                    /location              301
-/locations              /location              301
-/visit                  /new-here              301
-/plan-your-visit        /new-here              301
-/im-new                 /new-here              301
-/sermons                /teachings             301
-/sermons/*              /teachings             301
-/donate                 /give                  301
-/staff                  /leadership            301
-/kids                   /ministries/kids       301
-/youth                  /ministries/youth      301
+# DECISION NEEDED before launch: /about-1 is the old "Real Impact" page. Its content
+# was not migrated. Either migrate it and point this at the new page, or keep this.
+/about-1                  /about                 302
+/about-1/                 /about                 302
+
+# --- Common guesses and short links ---------------------------------------
+/visit                    /new-here              301
+/visit/                   /new-here              301
+/plan-your-visit          /new-here              301
+/plan-your-visit/         /new-here              301
+/im-new                   /new-here              301
+/im-new/                  /new-here              301
+/directions               /location              301
+/directions/              /location              301
+/find-us                  /location              301
+/find-us/                 /location              301
+/map                      /location              301
+/map/                     /location              301
+/locations                /location              301
+/locations/               /location              301
+/sermons                  /teachings             301
+/sermons/                 /teachings             301
+/donate                   /give                  301
+/donate/                  /give                  301
+/giving                   /give                  301
+/giving/                  /give                  301
+/staff                    /leadership            301
+/staff/                   /leadership            301
+/pastor                   /pastor-marty          301
+/pastor/                  /pastor-marty          301
+/kids                     /ministries/kids       301
+/kids/                    /ministries/kids       301
+/youth                    /ministries/youth      301
+/youth/                   /ministries/youth      301
+/prayer-request           /prayer                301
+/prayer-request/          /prayer                301
+
+
+# --- Splat rules (must stay last) -----------------------------------------
+/sermons/*                /teachings             301

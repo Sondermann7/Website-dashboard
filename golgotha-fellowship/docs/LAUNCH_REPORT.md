@@ -160,6 +160,37 @@ connected Google Drive or Canva):
   Middle School, 4085 E Greenhurst Rd" (old location) and "Wednesday potluck 6:30,
   Bible study 7:00" (site says Wednesday 6:00 PM). Confirm Wednesday.
 
+## Functional audit (2026-11-17)
+
+`npm run audit` (`scripts/site-audit.mjs`), run against the production build served by
+Cloudflare's own local server (`npx wrangler pages dev dist`), so redirects, headers and
+the form function behave as they will in production. Result: **all checks pass.**
+
+- **Redirects:** 49 rules. Every old site URL (`/what-we-believe`, `/team-3`,
+  `/feed-my-lambs`, `/called-for-a-purpose`, `/about-6`, `/contact-8`, `/missions`,
+  `/about-1`, `/home`) and every short link lands on the right page, with and without a
+  trailing slash. `/sermons/*` catches any old sermon path.
+- **Links:** 30 distinct internal links and `#anchors`, 0 broken. 13 external links,
+  all https on expected hosts (maps, YouTube, Facebook, Instagram, Amazon, Audible,
+  Apple Podcasts, conference sites); not reachable from the build environment, so open
+  each once in a browser before launch.
+- **Facts:** on all 22 pages, every phone link is 208-572-3317, every email is the
+  church or youth address, the address and Sunday times appear, and no old address
+  (Greenhurst, 12th Ave), old service time, or placeholder text is present.
+- **Pages:** one H1 each, unique titles and descriptions, correct canonical URLs,
+  sitemap (21 URLs) and robots.txt correct, unknown URLs return the 404 page.
+- **Forms:** all three validate in the browser; with delivery unconfigured the server
+  refuses and the visitor is told to call or email (never a silent drop). With forms
+  switched off (the default) each page shows call and email buttons.
+- **Navigation:** skip link first, mobile menu opens, closes on Escape and navigates;
+  quick-action bar has Visit, Call, Directions, Watch; the location map is pinned to
+  the street address.
+- **Accessibility sweep** on the same server: 0 violations, 0 overflow, 0 small targets.
+
+**Cannot match the original site yet:** it is still blocked from the build environment,
+so its page text, its giving link and any pages not in the reference pack have not been
+compared. The two launch blockers (Statement of Faith text, giving link) remain.
+
 ## Design decisions to confirm
 
 - Navy `#13294B` and gold `#C19A4B` are stand-ins until the logo is supplied.

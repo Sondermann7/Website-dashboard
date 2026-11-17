@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "node --test tests/*.test.mjs",
-    "launch-check": "node scripts/launch-check.mjs"
+    "launch-check": "node scripts/launch-check.mjs",
+    "audit": "node scripts/site-audit.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.9",
@@ -31,6 +32,7 @@
     "@axe-core/playwright": "^4.14.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.163.0"
   }
 }
