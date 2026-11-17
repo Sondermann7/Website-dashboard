@@ -54,3 +54,19 @@ photos only; children's photos need a signed release.
 Content is already structured (Astro content collections with schemas in
 `src/content.config.ts`). A Git-based CMS such as Decap, Sveltia or Keystatic can be
 pointed at `src/content/` without rebuilding the site.
+
+## Sermon pages (automatic)
+Every sermon gets its own page at `/teachings/<date>-<title>`, and every book of the
+Bible gets a hub at `/teachings/book/<book>` (for example `/teachings/book/revelation`).
+They are built from the YouTube channel and the Hold Fast podcast at every publish:
+- Only "Teaching Only" uploads become pages. Full-service streams titled with a time
+  (8:30AM, 10:30AM) and Shorts are skipped as duplicates.
+- The book and chapter are read from the video title, so title videos the way the
+  channel already does: "Revelation 20 Pt. 2 - Teaching Only".
+- The page text is the video's YouTube description. A good two- or three-paragraph
+  description on YouTube becomes a good page, and helps the sermon show up in Google.
+- Men's, women's and youth studies are not credited to Pastor Marty automatically.
+
+To add notes, key points, a transcript or a fuller write-up for any sermon, create a
+file in `src/content/teachings/` with the same date and title (see `_template.md`).
+The file replaces the automatic page.

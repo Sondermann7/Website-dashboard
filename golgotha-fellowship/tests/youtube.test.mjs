@@ -35,5 +35,16 @@ test('book and chapter read from episode titles', () => {
   assert.deepEqual(bookFromTitle('The Resurrection Part 5'), {});
   assert.deepEqual(bookFromTitle('1 John 4 God is Love'), { book: '1 John', chapter: '4' });
   assert.deepEqual(bookFromTitle('Mark 5 Healing'), { book: 'Mark', chapter: '5' });
+  assert.deepEqual(bookFromTitle("Men's Bible Study Daniel 10, Part 3"), { book: 'Daniel', chapter: '10' });
+  assert.deepEqual(bookFromTitle('1 John 4 God is Love'), { book: '1 John', chapter: '4' });
   assert.deepEqual(bookFromTitle('Feb 25 Hold Fast Revelation 2 Pergamos Part 3'), { book: 'Revelation', chapter: '2' });
+});
+
+import { cleanTitle, isDuplicateUpload } from '../src/lib/sermon-text.ts';
+test('sermon titles cleaned and duplicate uploads skipped', () => {
+  assert.equal(cleanTitle('Revelation 20 Pt. 2 - Teaching Only'), 'Revelation 20, Part 2');
+  assert.equal(cleanTitle('Revelation 19 Part 1 Teaching only'), 'Revelation 19, Part 1');
+  assert.equal(isDuplicateUpload('Revelation 20 Part 2 8:30AM'), true);
+  assert.equal(isDuplicateUpload('Grace in one minute #shorts'), true);
+  assert.equal(isDuplicateUpload('Revelation 19:17-20:3 Teaching Only'), false);
 });

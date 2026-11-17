@@ -27,14 +27,25 @@ export interface TeachingItem {
   transcriptUrl?: string;
   summary?: string;
   thumbnail?: string;
-  /** Internal page for curated entries; YouTube-only items link straight out. */
-  href?: string;
+  /** The sermon's own page on this site. Every teaching has one. */
+  href: string;
+  /** Longer text for the sermon page (YouTube description or podcast notes). */
+  body?: string;
   /** Where the entry came from. Only live feeds ('youtube', 'podcast') can be the homepage's latest teaching. */
   source: 'file' | 'podcast' | 'youtube';
   featured?: boolean;
 }
 
-export async function getTeachings(): Promise<TeachingItem[]> {
+import { cleanTitle, isDuplicateUpload, slugify, bookSlug } from './sermon-text';
+export { cleanTitle, isDuplicateUpload, slugify, bookSlug };
+
+let all: Promise<TeachingItem[]> | undefined;
+export function getTeachings(): Promise<TeachingItem[]> {
+  all ??= loadTeachings();
+  return all;
+}
+
+async function loadTeachings(): Promise<TeachingItem[]> {
   const entries = (await getCollection('teachings')).filter((t) => t.data.published);
   const curated: TeachingItem[] = await Promise.all(entries.map(async (t) => ({
     key: t.id,
@@ -62,9 +73,12 @@ export async function getTeachings(): Promise<TeachingItem[]> {
     .filter((e) => !knownTitles.has(e.title.toLowerCase()) && !(e.pageUrl && known.has(e.pageUrl)))
     .map((e) => {
       const { book, chapter } = bookFromTitle(e.title);
+      const title = cleanTitle(e.title);
       return {
         key: `pod-${e.id}`,
-        title: e.title,
+        href: '',
+        title,
+        body: e.summary,
         date: e.published.toISOString(),
         speaker: church.seniorPastor.known,
         book,
@@ -76,16 +90,38 @@ export async function getTeachings(): Promise<TeachingItem[]> {
       };
     });
   const feed: TeachingItem[] = (await getLatestVideos(church.youtube.channelId))
-    .filter((v) => !known.has(v.url) && !knownIds.has(v.id))
-    .map((v) => ({
+    .filter((v) => !known.has(v.url) && !knownIds.has(v.id) && !isDuplicateUpload(v.title))
+    .map((v) => {
+      const title = cleanTitle(v.title);
+      const { book, chapter } = bookFromTitle(title);
+      // Ministry studies are often led by someone else; only main teachings are credited to the pastor.
+      const ministry = title.match(/^(Men['’]s|Women['’]s|Youth|Kids)\b[^0-9]*?(Bible )?Study/i)?.[0];
+      return {
       key: `yt-${v.id}`,
-      title: v.title,
+      href: '',
+      title,
+      speaker: ministry ? undefined : church.seniorPastor.known,
+      book,
+      passage: book && chapter ? `${book} ${chapter}` : undefined,
+      series: ministry ?? book,
+      body: v.description,
       date: v.published.toISOString(),
       videoUrl: v.url,
       thumbnail: v.thumbnail,
       source: 'youtube' as const,
-    }));
-  return [...curated, ...episodes, ...feed].sort((a, b) => b.date.localeCompare(a.date));
+    };
+    });
+  const items = [...curated, ...episodes, ...feed].sort((a, b) => b.date.localeCompare(a.date));
+  // Every feed item gets a stable page address: /teachings/2026-11-15-revelation-20-part-2
+  const used = new Set(curated.map((c) => c.href));
+  for (const t of items) {
+    if (t.href) continue;
+    let href = `/teachings/${t.date.slice(0, 10)}-${slugify(t.title)}`;
+    for (let n = 2; used.has(href); n++) href = `/teachings/${t.date.slice(0, 10)}-${slugify(t.title)}-${n}`;
+    used.add(href);
+    t.href = href;
+  }
+  return items;
 }
 
 /**

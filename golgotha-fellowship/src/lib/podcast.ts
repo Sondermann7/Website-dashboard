@@ -57,9 +57,17 @@ export function bookFromTitle(title: string): { book?: string; chapter?: string 
   const t = title
     .replace(/^(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec)\.?\s+\d{1,2}\s+/, '') // leading date, e.g. "March 18 "
     .replace(/^Hold Fast\s+/i, '');
-  const book = BOOKS.find((b) => t.startsWith(b + ' ') || t === b);
+  let book = BOOKS.find((b) => t.startsWith(b + ' ') || t === b);
+  let rest = book ? t.slice(book.length) : '';
+  if (!book) {
+    // Book named later in the title ("Men's Bible Study Daniel 10 Part 3"): only when a chapter number follows.
+    for (const b of [...BOOKS].sort((x, y) => y.length - x.length)) {
+      const m = t.match(new RegExp(`(?:^|\\s)${b.replace(/ /g, '\\s')}\\s+(\\d{1,3})\\b`));
+      if (m) { book = b; rest = ' ' + m[1]; break; }
+    }
+  }
   if (!book) return {};
-  const chapter = t.slice(book.length).match(/^\s+(\d{1,3})\b/)?.[1];
+  const chapter = rest.match(/^\s+(\d{1,3})\b/)?.[1];
   return { book: book === 'Psalm' ? 'Psalms' : book, chapter };
 }
 

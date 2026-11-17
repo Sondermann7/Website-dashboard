@@ -8,9 +8,10 @@ import RadioCard from '../../components/RadioCard.astro';
 import ReviewFlag from '../../components/ReviewFlag.astro';
 import TeachingLibrary from '../../components/TeachingLibrary.tsx';
 import { church } from '../../config/church';
-import { getTeachings } from '../../lib/teachings';
+import { getTeachings, bookSlug } from '../../lib/teachings';
 
 const items = await getTeachings();
+const books = [...new Map(items.filter((t) => t.book).map((t) => [t.book!, items.filter((x) => x.book === t.book).length])).entries()].sort((a, b) => b[1] - a[1]);
 ---
 <Base title="Bible Teachings" description={`Watch and listen to verse-by-verse Bible teaching from ${church.name} in Nampa, Idaho. Free on YouTube and on Hold Fast radio.`}>
   <PageHero photo="page-teachings" eyebrow="Teachings" title="Bible teaching, line by line" lede="We teach through Scripture simply and systematically. Every teaching is free — no account or sign-in needed.">
@@ -22,6 +23,12 @@ const items = await getTeachings();
   <Section id="library" title={items.length > 0 ? 'Teaching library' : 'Where to watch and listen'}>
     {items.length > 0 ? (
       <>
+        {books.length > 0 && (
+          <nav aria-label="Browse by book" class="mb-8 flex flex-wrap items-center gap-3">
+            <span class="font-semibold">Browse by book:</span>
+            {books.map(([b, n]) => <a class="inline-flex min-h-11 items-center rounded-full bg-white px-4 font-semibold text-navy no-underline shadow-[var(--shadow-card)] ring-1 ring-navy/10 hover:ring-navy/40" href={`/teachings/book/${bookSlug(b)}`}>{b} <span class="ml-2 text-body">{n}</span></a>)}
+          </nav>
+        )}
         <TeachingLibrary client:load items={items} />
         <noscript><p class="mt-6 text-body">Search needs JavaScript. You can browse every teaching on <a class="link" href={church.youtube.channelUrl}>our YouTube channel</a>.</p></noscript>
         <div class="mt-12 grid gap-6 lg:grid-cols-2">

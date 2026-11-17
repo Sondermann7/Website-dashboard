@@ -1,38 +1,112 @@
 ---
+/**
+ * One page per sermon: every teaching file and every YouTube / Hold Fast feed item.
+ * Gives each sermon its own address, title and description for search, with the video
+ * embedded, the passage, the church's own description, and related sermons.
+ */
 import { getCollection, render } from 'astro:content';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
 import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Section from '../../components/Section.astro';
 import Button from '../../components/Button.astro';
+import VideoPlayer from '../../components/VideoPlayer.astro';
+import ConnectCta from '../../components/ConnectCta.astro';
 import { church } from '../../config/church';
 import { formatDate } from '../../lib/format';
-import VideoPlayer from '../../components/VideoPlayer.astro';
-import { getTeachings } from '../../lib/teachings';
+import { getTeachings, bookSlug, type TeachingItem } from '../../lib/teachings';
 
 export async function getStaticPaths() {
-  const entries = (await getCollection('teachings')).filter((t) => t.data.published);
-  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const items = await getTeachings();
+  const entries = new Map((await getCollection('teachings')).map((e) => [e.id, e]));
+  return items.map((t) => ({
+    params: { slug: t.href.replace('/teachings/', '') },
+    props: { t, entry: t.source === 'file' ? entries.get(t.key) : undefined, all: items },
+  }));
 }
-const { entry } = Astro.props;
-const t = entry.data;
-const { Content } = await render(entry);
-const thumb = (await getTeachings()).find((x) => x.key === entry.id)?.thumbnail;
-const shown = t.date.getUTCHours() === 0 ? new Date(t.date.getTime() + 12 * 3600e3) : t.date;
-const meta = [formatDate(shown), t.speaker, t.passage, t.series && `Series: ${t.series}`].filter(Boolean).join(' · ');
+interface Props { t: TeachingItem; entry?: any; all: TeachingItem[] }
+const { t, entry, all } = Astro.props;
+const Content = entry ? (await render(entry)).Content : undefined;
+const date = new Date(t.date);
+const meta = [formatDate(date), t.speaker, t.series && t.series !== t.book ? t.series : undefined].filter(Boolean).join(' · ');
+const related = all.filter((x) => x.key !== t.key && t.book && x.book === t.book).slice(0, 3);
+const description = (t.summary ?? t.body ?? '').replace(/\s+/g, ' ').slice(0, 155) ||
+  `${t.title}${t.passage && !t.title.startsWith(t.passage) ? ` (${t.passage})` : ''}: verse-by-verse Bible teaching${t.speaker ? ` from ${t.speaker}` : ''} at ${church.name} in Nampa, Idaho. Watch or listen free.`;
+const site = Astro.site!.href.replace(/\/$/, '');
+const pageUrl = site + t.href;
+const thumbAbs = t.thumbnail ? new URL(t.thumbnail, site).href : undefined;
+const ytId = t.videoUrl?.match(/(?:[?&]v=|youtu\.be\/|\/live\/)([\w-]{11})/)?.[1];
+const schema: any[] = [
+  {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Teachings', item: `${site}/teachings` },
+      ...(t.book ? [{ '@type': 'ListItem', position: 2, name: t.book, item: `${site}/teachings/book/${bookSlug(t.book)}` }] : []),
+      { '@type': 'ListItem', position: t.book ? 3 : 2, name: t.title, item: pageUrl },
+    ],
+  },
+];
+if (ytId && thumbAbs) schema.push({
+  '@context': 'https://schema.org', '@type': 'VideoObject', name: t.title, description,
+  thumbnailUrl: [thumbAbs], uploadDate: t.date, embedUrl: `https://www.youtube.com/embed/${ytId}`, contentUrl: t.videoUrl,
+  publisher: { '@id': `${church.siteUrl}/#church` },
+});
+else if (t.audioUrl) schema.push({
+  '@context': 'https://schema.org', '@type': 'PodcastEpisode', name: t.title, description, datePublished: t.date, url: pageUrl,
+  partOfSeries: { '@type': 'PodcastSeries', name: church.podcast.name, url: church.podcast.showUrl },
+  associatedMedia: { '@type': 'MediaObject', contentUrl: t.audioUrl },
+});
 ---
-<Base title={t.title} description={t.summary ?? `${t.title}${t.passage ? ` (${t.passage})` : ''} — a Bible teaching from ${church.name}, Nampa, Idaho.`}>
-  <PageHero eyebrow="Teaching" title={t.title} lede={meta}>
-    {t.videoUrl && <Button href={t.videoUrl} external goal="watch">Watch</Button>}
-    {t.audioUrl && <Button href={t.audioUrl} variant="secondary" external>Listen</Button>}
-    {t.notesUrl && <Button href={t.notesUrl} variant="secondary" external>Notes</Button>}
-    {t.transcriptUrl && <Button href={t.transcriptUrl} variant="secondary" external>Transcript</Button>}
+<Base title={`${t.title}${t.book && !t.title.startsWith(t.book) ? ` (${t.book})` : ''} · Bible Teaching`} description={description}>
+  {schema.map((s) => <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(s)} />)}
+  <PageHero eyebrow={t.book ? `${t.book} · Verse by verse` : 'Teaching'} title={t.title} lede={meta}>
+    {!t.videoUrl && t.audioUrl && <Button href={t.audioUrl} variant="gold" external goal="watch">Listen</Button>}
+    {t.notesUrl && <Button href={t.notesUrl} variant="outline-light" external>Notes</Button>}
+    {t.transcriptUrl && <Button href={t.transcriptUrl} variant="outline-light" external>Transcript</Button>}
   </PageHero>
+
   <Section>
-    {t.videoUrl && <div class="mb-12 max-w-4xl"><VideoPlayer url={t.videoUrl} title={t.title} thumbnail={thumb} /></div>}
-    <article class="prose">
-      {t.summary && <p class="text-[length:var(--text-lede)]">{t.summary}</p>}
-      <Content />
-    </article>
-    <p class="mt-10"><Button href="/teachings" variant="secondary">← All teachings</Button></p>
+    <div class="grid gap-12 lg:grid-cols-[1.6fr_1fr] lg:gap-16">
+      <div>
+        {t.videoUrl && <div class="mb-10"><VideoPlayer url={t.videoUrl} title={t.title} thumbnail={t.thumbnail} /></div>}
+        <article class="prose">
+          {t.summary && <p class="text-[length:var(--text-lede)]">{t.summary}</p>}
+          {Content ? <Content /> : t.body && t.body !== t.summary && t.body.split(/\n{2,}/).map((para) => <p>{para}</p>)}
+        </article>
+      </div>
+      <aside class="flex flex-col gap-6 lg:sticky lg:top-28 lg:self-start">
+        <div class="card p-6">
+          <h2 class="eyebrow plain !font-sans">About this teaching</h2>
+          <dl class="mt-4 space-y-3">
+            <div><dt class="font-semibold">Date</dt><dd class="text-body">{formatDate(date)}</dd></div>
+            {t.speaker && <div><dt class="font-semibold">Teacher</dt><dd class="text-body">{t.speaker === church.seniorPastor.known ? <a class="link" href="/pastor-marty">{t.speaker}</a> : t.speaker}</dd></div>}
+            {t.passage && <div><dt class="font-semibold">Passage</dt><dd class="text-body">{t.passage}</dd></div>}
+            {t.book && <div><dt class="font-semibold">Book</dt><dd><a class="link" href={`/teachings/book/${bookSlug(t.book)}`}>All teachings in {t.book}</a></dd></div>}
+          </dl>
+        </div>
+        <div class="on-dark rounded-[var(--radius-card)] bg-navy p-6 text-white shadow-[var(--shadow-lift)]">
+          <p class="font-display text-[1.35rem] font-bold leading-tight">Hear it in person</p>
+          <p class="mt-2 text-mist">Sundays at 8:30 and 10:30 AM, Wednesdays at 6:00 PM, in downtown Nampa.</p>
+          <p class="mt-5"><Button href="/new-here" variant="gold" goal="plan-visit">Plan your visit</Button></p>
+        </div>
+      </aside>
+    </div>
+
+    {related.length > 0 && (
+      <div class="mt-16 border-t border-line pt-12">
+        <h2 class="!text-[length:var(--text-h3)]">More from {t.book}</h2>
+        <ul class="mt-6 grid gap-5 md:grid-cols-3">
+          {related.map((r) => (
+            <li class="card relative flex flex-col p-5">
+              <p class="text-[0.85rem] text-body">{formatDate(r.date, { weekday: undefined })}</p>
+              <a class="card-link mt-1 flex min-h-11 items-center font-display text-[1.2rem] font-bold leading-snug no-underline after:absolute after:inset-0 after:content-['']" href={r.href}>{r.title}</a>
+              <p class="mt-auto flex items-center gap-1.5 pt-4 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-blue" aria-hidden="true">View <ArrowRight size={15} /></p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+    <p class="mt-12"><Button href="/teachings" variant="secondary">← All teachings</Button></p>
   </Section>
+  <ConnectCta />
 </Base>

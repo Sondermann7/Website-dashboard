@@ -9,6 +9,7 @@ export interface FeedVideo {
   published: Date;
   url: string;
   thumbnail: string;
+  description?: string;
 }
 
 const decode = (s: string) =>
@@ -26,6 +27,7 @@ export function parseFeed(xml: string): FeedVideo[] {
     const id = e.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
     const title = e.match(/<title>([^<]*)<\/title>/)?.[1];
     const published = e.match(/<published>([^<]+)<\/published>/)?.[1];
+    const description = e.match(/<media:description>([\s\S]*?)<\/media:description>/)?.[1];
     if (!id || !title || !published) continue;
     const date = new Date(published);
     if (Number.isNaN(date.getTime())) continue;
@@ -35,6 +37,7 @@ export function parseFeed(xml: string): FeedVideo[] {
       published: date,
       url: `https://www.youtube.com/watch?v=${id}`,
       thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      description: description ? decode(description).trim() || undefined : undefined,
     });
   }
   return out.sort((a, b) => b.published.getTime() - a.published.getTime());

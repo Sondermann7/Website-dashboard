@@ -89,8 +89,8 @@ export default function TeachingLibrary({ items }: { items: TeachingItem[] }) {
       ) : (
         <ul className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {results.map((t) => {
-            const primary = t.href ?? t.videoUrl ?? t.audioUrl;
-            const external = !t.href;
+            const primary = t.href;
+            const external = false;
             return (
               <li key={t.key} className="card flex flex-col overflow-hidden">
                 {t.thumbnail && <img src={t.thumbnail} alt="" loading="lazy" decoding="async" width={480} height={360} className="aspect-video w-full object-cover" />}

@@ -1,0 +1,47 @@
+---
+/** Hub page per book of the Bible: every teaching from that book, oldest chapter first. */
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Section from '../../../components/Section.astro';
+import Button from '../../../components/Button.astro';
+import ConnectCta from '../../../components/ConnectCta.astro';
+import { church } from '../../../config/church';
+import { formatDate } from '../../../lib/format';
+import { getTeachings, bookSlug, type TeachingItem } from '../../../lib/teachings';
+
+export async function getStaticPaths() {
+  const items = await getTeachings();
+  const books = [...new Set(items.map((t) => t.book).filter(Boolean))] as string[];
+  return books.map((book) => ({ params: { book: bookSlug(book) }, props: { book, items: items.filter((t) => t.book === book) } }));
+}
+interface Props { book: string; items: TeachingItem[] }
+const { book, items } = Astro.props;
+const chap = (t: TeachingItem) => Number(t.passage?.match(/(\d+)/)?.[1] ?? 0);
+const ordered = [...items].sort((a, b) => chap(a) - chap(b) || a.date.localeCompare(b.date));
+const schema = {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: `${book} Bible teaching`,
+  itemListElement: ordered.map((t, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(t.href, Astro.site).href, name: t.title })),
+};
+---
+<Base title={`${book} Bible Study, Verse by Verse`} description={`Every teaching from ${church.seniorPastor.known}’s verse-by-verse study through the book of ${book} at ${church.name} in Nampa, Idaho. Watch or listen free.`}>
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+  <PageHero photo="page-teachings" eyebrow="Book of the Bible" title={`The book of ${book}`} lede={`${church.seniorPastor.known} teaching through ${book} verse by verse. ${items.length} ${items.length === 1 ? 'teaching' : 'teachings'}, free to watch or listen.`}>
+    <Button href="/teachings" variant="outline-light">All teachings</Button>
+  </PageHero>
+  <Section>
+    <ol class="divide-y divide-line overflow-hidden rounded-[var(--radius-card)] bg-white shadow-[var(--shadow-card)] ring-1 ring-navy/5">
+      {ordered.map((t) => (
+        <li class="relative grid gap-1 px-5 py-5 sm:grid-cols-[9rem_1fr_auto] sm:items-center sm:gap-6 sm:px-7">
+          <span class="text-[0.8rem] font-bold uppercase tracking-[0.12em] text-blue">{t.passage ?? book}</span>
+          <span>
+            <a class="card-link font-display text-[1.25rem] font-bold leading-snug no-underline after:absolute after:inset-0 after:content-[''] hover:underline" href={t.href}>{t.title}</a>
+            <span class="block text-[0.92rem] text-body">{formatDate(t.date, { weekday: undefined })}{t.speaker && ` · ${t.speaker}`}</span>
+          </span>
+          <span class="hidden items-center gap-1.5 text-[0.8rem] font-bold uppercase tracking-[0.1em] text-blue sm:flex" aria-hidden="true">{t.videoUrl ? 'Watch' : 'Listen'} <ArrowRight size={15} /></span>
+        </li>
+      ))}
+    </ol>
+  </Section>
+  <ConnectCta />
+</Base>
