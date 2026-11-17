@@ -14,10 +14,10 @@ import EventList from '../components/EventList.astro';
 import ConnectCta from '../components/ConnectCta.astro';
 import ReviewFlag from '../components/ReviewFlag.astro';
 import { church, primaryGatherings, directionsUrl, telHref } from '../config/church';
-import { getTeachings } from '../lib/teachings';
+import { getLatestTeaching } from '../lib/teachings';
 import { formatDate, joinTimes } from '../lib/format';
 
-const [latest] = await getTeachings();
+const latest = await getLatestTeaching();
 const ministries = (await getCollection('ministries'))
   .filter((m) => m.data.status !== 'todo')
   .sort((a, b) => a.data.order - b.data.order)
@@ -138,7 +138,9 @@ const holdFast = 'Hold fast.'.split('');
       <div class="on-dark relative isolate overflow-hidden rounded-[var(--radius-panel)] bg-navy text-white shadow-[var(--shadow-float)]" data-reveal data-no-mo>
         <Motif kind="cross" stroke={0.8} class="watermark left-[38%] -top-10 hidden h-[26rem] md:block" />
         <div class="absolute inset-y-0 right-0 -z-20 hidden w-[58%] md:block">
-          <Photo name="teaching" alt="" want="Teaching in progress: pastor at the pulpit, or the room during a study" class="h-full w-full object-cover" sizes="60vw" />
+          {latest?.thumbnail
+            ? <img src={latest.thumbnail.replace('hqdefault', 'maxresdefault')} alt="" width="1280" height="720" loading="lazy" decoding="async" class="h-full w-full object-cover" onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')" />
+            : <Photo name="teaching" alt="" want="Teaching in progress: pastor at the pulpit, or the room during a study" class="h-full w-full object-cover" sizes="60vw" />}
         </div>
         <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-navy from-[44%] via-navy/85 via-[58%] to-navy/10 md:block"></div>
         <div class="max-w-2xl p-7 md:p-14 lg:p-16">

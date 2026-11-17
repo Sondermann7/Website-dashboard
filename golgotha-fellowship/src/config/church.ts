@@ -137,12 +137,8 @@ export const church = {
 
   youtube: {
     channelUrl: 'https://www.youtube.com/@Golgothafellowship',
-    /**
-     * TODO_VERIFY: the channel ID (starts with "UC..."). When set, the build pulls the
-     * latest uploads from YouTube's public feed automatically. Leave null to simply
-     * link to the channel. Find it at YouTube Studio > Settings > Channel > Advanced.
-     */
-    channelId: null as string | null,
+    /** "Golgotha Fellowship Nampa" channel (found via search, 2026-11-17). New uploads are read at every build. */
+    channelId: 'UC7ZJXJ3B2GQQLjolHM0Zo-Q' as string | null,
   },
 
   giving: {

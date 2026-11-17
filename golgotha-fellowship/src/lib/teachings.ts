@@ -20,6 +20,8 @@ export interface TeachingItem {
   thumbnail?: string;
   /** Internal page for curated entries; YouTube-only items link straight out. */
   href?: string;
+  /** Where the entry came from. Only live feeds ('youtube', 'podcast') can be the homepage's latest teaching. */
+  source: 'file' | 'podcast' | 'youtube';
 }
 
 export async function getTeachings(): Promise<TeachingItem[]> {
@@ -39,6 +41,7 @@ export async function getTeachings(): Promise<TeachingItem[]> {
     transcriptUrl: t.data.transcriptUrl,
     summary: t.data.summary,
     href: `/teachings/${t.id}`,
+    source: 'file' as const,
   }));
   const known = new Set(curated.flatMap((c) => [c.videoUrl, c.audioUrl]).filter(Boolean));
   const knownTitles = new Set(curated.map((c) => c.title.toLowerCase()));
@@ -56,6 +59,7 @@ export async function getTeachings(): Promise<TeachingItem[]> {
         series: church.podcast.name,
         audioUrl: e.pageUrl ?? e.audioUrl,
         summary: e.summary,
+        source: 'podcast' as const,
       };
     });
   const feed: TeachingItem[] = (await getLatestVideos(church.youtube.channelId))
@@ -66,6 +70,17 @@ export async function getTeachings(): Promise<TeachingItem[]> {
       date: v.published.toISOString(),
       videoUrl: v.url,
       thumbnail: v.thumbnail,
+      source: 'youtube' as const,
     }));
   return [...curated, ...episodes, ...feed].sort((a, b) => b.date.localeCompare(a.date));
+}
+
+/**
+ * The newest teaching from a live feed: YouTube first (the Sunday and Wednesday
+ * services), then the Hold Fast podcast. Hand-entered files never headline the
+ * homepage, so it cannot go stale. Returns undefined when no feed was reachable.
+ */
+export async function getLatestTeaching(): Promise<TeachingItem | undefined> {
+  const all = await getTeachings();
+  return all.find((t) => t.source === 'youtube') ?? all.find((t) => t.source === 'podcast');
 }
