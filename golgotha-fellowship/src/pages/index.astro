@@ -136,13 +136,12 @@ const holdFast = 'Hold fast.'.split('');
   <section aria-labelledby="teaching-heading" class="bg-paper pt-10 pb-16 md:pt-14 md:pb-28">
     <div class="container-site">
       <div class="on-dark relative isolate overflow-hidden rounded-[var(--radius-panel)] bg-navy text-white shadow-[var(--shadow-float)]" data-reveal data-no-mo>
-        <Motif kind="cross" stroke={0.8} class="watermark left-[38%] -top-10 hidden h-[26rem] md:block" />
-        <div class="absolute inset-y-0 right-0 -z-20 hidden w-[58%] md:block">
+        <div class:list={['absolute inset-y-0 right-0 -z-20 hidden md:block', latest?.thumbnail ? 'w-[58%] bg-black' : 'w-[58%]']}>
           {latest?.thumbnail
-            ? <img src={latest.thumbnail.replace('hqdefault', 'maxresdefault')} alt="" width="1280" height="720" loading="lazy" decoding="async" class="h-full w-full object-cover" onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')" />
+            ? <img src={latest.thumbnail.replace('hqdefault', 'maxresdefault')} alt="" width="1280" height="720" loading="lazy" decoding="async" class="h-full w-full object-contain object-right" onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')" />
             : <Photo name="teaching" alt="" want="Teaching in progress: pastor at the pulpit, or the room during a study" class="h-full w-full object-cover" sizes="60vw" />}
         </div>
-        <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-navy from-[44%] via-navy/85 via-[58%] to-navy/10 md:block"></div>
+        <div class:list={['absolute inset-0 -z-10 hidden bg-gradient-to-r md:block', latest?.thumbnail ? 'from-navy from-[42%] via-black/60 via-[48%] to-transparent to-[56%]' : 'from-navy from-[44%] via-navy/85 via-[58%] to-navy/10']}></div>
         <div class="max-w-2xl p-7 md:p-14 lg:p-16">
           <p class="eyebrow mb-4">Bible teaching</p>
           <h2 id="teaching-heading">{latest ? 'Latest teaching' : <>Watch and listen, <em>any time.</em></>}</h2>
@@ -160,7 +159,7 @@ const holdFast = 'Hold fast.'.split('');
             </ul>
           )}
           <div class="mt-9 flex flex-wrap gap-3">
-            <Button href={latest ? (latest.href ?? latest.videoUrl ?? latest.audioUrl ?? '/teachings') : church.youtube.channelUrl} variant="gold" external={!!latest && !latest.href} goal="watch"><Play size={18} aria-hidden="true" /> {latest ? (latest.videoUrl ? 'Watch now' : 'Listen now') : 'Watch on YouTube'}</Button>
+            <Button href={latest ? (latest.videoUrl ?? latest.audioUrl ?? latest.href ?? '/teachings') : church.youtube.channelUrl} variant="gold" external={!!latest && !!(latest.videoUrl ?? latest.audioUrl)} goal="watch"><Play size={18} aria-hidden="true" /> {latest ? (latest.videoUrl ? 'Watch now' : 'Listen now') : 'Watch on YouTube'}</Button>
             <Button href="/teachings" variant="outline-light">All teachings</Button>
           </div>
         </div>

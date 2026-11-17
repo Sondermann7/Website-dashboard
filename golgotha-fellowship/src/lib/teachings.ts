@@ -2,6 +2,15 @@ import { getCollection } from 'astro:content';
 import { church } from '../config/church';
 import { getLatestVideos } from './youtube';
 import { getPodcastEpisodes, bookFromTitle } from './podcast';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+const thumbFiles = import.meta.glob<{ default: ImageMetadata }>('/src/assets/teachings/*.{jpg,jpeg,png,webp}', { eager: true });
+async function thumbUrl(name?: string) {
+  const hit = name && Object.keys(thumbFiles).find((p) => p.replace(/\.[^.]+$/, '') === `/src/assets/teachings/${name}`);
+  if (!hit) return undefined;
+  return (await getImage({ src: thumbFiles[hit].default, width: 1280, format: 'webp' })).src;
+}
 
 /** One shape for the teaching library, whether it came from a content file or YouTube. */
 export interface TeachingItem {
@@ -22,11 +31,12 @@ export interface TeachingItem {
   href?: string;
   /** Where the entry came from. Only live feeds ('youtube', 'podcast') can be the homepage's latest teaching. */
   source: 'file' | 'podcast' | 'youtube';
+  featured?: boolean;
 }
 
 export async function getTeachings(): Promise<TeachingItem[]> {
   const entries = (await getCollection('teachings')).filter((t) => t.data.published);
-  const curated: TeachingItem[] = entries.map((t) => ({
+  const curated: TeachingItem[] = await Promise.all(entries.map(async (t) => ({
     key: t.id,
     title: t.data.title,
     // Date-only entries (2026-02-25) parse as UTC midnight, which is the evening before in Idaho. Pin them to midday.
@@ -41,9 +51,12 @@ export async function getTeachings(): Promise<TeachingItem[]> {
     transcriptUrl: t.data.transcriptUrl,
     summary: t.data.summary,
     href: `/teachings/${t.id}`,
+    thumbnail: await thumbUrl(t.data.thumbnail),
+    featured: t.data.featured,
     source: 'file' as const,
-  }));
+  })));
   const known = new Set(curated.flatMap((c) => [c.videoUrl, c.audioUrl]).filter(Boolean));
+  const knownIds = new Set(curated.map((c) => c.videoUrl?.match(/[?&]v=([\w-]{11})/)?.[1]).filter(Boolean));
   const knownTitles = new Set(curated.map((c) => c.title.toLowerCase()));
   const episodes: TeachingItem[] = (await getPodcastEpisodes(church.podcast.feedUrl))
     .filter((e) => !knownTitles.has(e.title.toLowerCase()) && !(e.pageUrl && known.has(e.pageUrl)))
@@ -63,7 +76,7 @@ export async function getTeachings(): Promise<TeachingItem[]> {
       };
     });
   const feed: TeachingItem[] = (await getLatestVideos(church.youtube.channelId))
-    .filter((v) => !known.has(v.url))
+    .filter((v) => !known.has(v.url) && !knownIds.has(v.id))
     .map((v) => ({
       key: `yt-${v.id}`,
       title: v.title,
@@ -81,6 +94,7 @@ export async function getTeachings(): Promise<TeachingItem[]> {
  * homepage, so it cannot go stale. Returns undefined when no feed was reachable.
  */
 export async function getLatestTeaching(): Promise<TeachingItem | undefined> {
-  const all = await getTeachings();
-  return all.find((t) => t.source === 'youtube') ?? all.find((t) => t.source === 'podcast');
+  const all = await getTeachings(); // newest first
+  // A featured file counts as live until a newer upload appears in a feed.
+  return all.find((t) => t.source === 'youtube' || t.featured) ?? all.find((t) => t.source === 'podcast');
 }

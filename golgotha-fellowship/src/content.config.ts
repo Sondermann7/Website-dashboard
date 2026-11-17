@@ -89,6 +89,10 @@ const teachings = defineCollection({
     audioUrl: z.url().optional(),
     notesUrl: z.url().optional(),
     transcriptUrl: z.url().optional(),
+    /** Image filename (no extension) in src/assets/teachings/. */
+    thumbnail: z.string().optional(),
+    /** Pin as the homepage's latest teaching until a newer live upload exists. */
+    featured: z.boolean().default(false),
     summary: z.string().optional(),
     published: z.boolean().default(true),
   }),

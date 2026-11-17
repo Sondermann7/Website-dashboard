@@ -45,6 +45,9 @@ const widths = [390, 768, 1024, 1440];
             if (!r.width || !r.height || s.visibility === 'hidden' || el.closest('.sr-only, [aria-hidden=true], dialog:not([open])')) return false;
             // Inline links inside sentences are exempt under WCAG 2.5.8.
             if (el.tagName === 'A' && s.display === 'inline') return false;
+            // A checkbox or radio inside its label: the whole label is the tap target.
+            const lab = el.closest('label');
+            if (lab && /^(checkbox|radio)$/.test(el.type)) { const lr = lab.getBoundingClientRect(); return lr.height < 43.5; }
             return r.height < 43.5 || r.width < 43.5;
           })
           .map((el) => `${el.tagName.toLowerCase()} "${(el.textContent || el.getAttribute('aria-label') || '').trim().slice(0, 40)}" ${Math.round(el.getBoundingClientRect().width)}x${Math.round(el.getBoundingClientRect().height)}`);
