@@ -9,6 +9,8 @@ import Photo from '../components/Photo.astro';
 import Dove from '../components/Dove.astro';
 import Motif from '../components/Motif.astro';
 import Curve from '../components/Curve.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { PREVIEW } from '../lib/review';
 import MinistryCard from '../components/MinistryCard.astro';
 import EventList from '../components/EventList.astro';
 import ConnectCta from '../components/ConnectCta.astro';
@@ -18,6 +20,7 @@ import { getLatestTeaching } from '../lib/teachings';
 import { formatDate, joinTimes } from '../lib/format';
 
 const latest = await getLatestTeaching();
+const video = latest?.videoUrl;
 const ministries = (await getCollection('ministries'))
   .filter((m) => m.data.status !== 'todo')
   .sort((a, b) => a.data.order - b.data.order)
@@ -135,21 +138,17 @@ const holdFast = 'Hold fast.'.split('');
   <!-- 4. Teaching panel: navy, photo fading into colour -->
   <section aria-labelledby="teaching-heading" class="bg-paper pt-10 pb-16 md:pt-14 md:pb-28">
     <div class="container-site">
-      <div class="on-dark relative isolate overflow-hidden rounded-[var(--radius-panel)] bg-navy text-white shadow-[var(--shadow-float)]" data-reveal data-no-mo>
-        <div class:list={['absolute inset-y-0 right-0 -z-20 hidden md:block', latest?.thumbnail ? 'w-[58%] bg-black' : 'w-[58%]']}>
-          {latest?.thumbnail
-            ? <img src={latest.thumbnail.replace('hqdefault', 'maxresdefault')} alt="" width="1280" height="720" loading="lazy" decoding="async" class="h-full w-full object-contain object-right" onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')" />
-            : <Photo name="teaching" alt="" want="Teaching in progress: pastor at the pulpit, or the room during a study" class="h-full w-full object-cover" sizes="60vw" />}
-        </div>
-        <div class:list={['absolute inset-0 -z-10 hidden bg-gradient-to-r md:block', latest?.thumbnail ? 'from-navy from-[42%] via-black/60 via-[48%] to-transparent to-[56%]' : 'from-navy from-[44%] via-navy/85 via-[58%] to-navy/10']}></div>
-        {latest?.thumbnail && (
-          <a href={latest.videoUrl ?? latest.href ?? '/teachings'} {...(latest.videoUrl ? { target: '_blank', rel: 'noopener' } : {})} data-goal="watch" class="group relative block aspect-video md:hidden" aria-label={`Watch ${latest.title}${latest.videoUrl ? ' (opens in a new tab)' : ''}`}>
-            <img src={latest.thumbnail.replace('hqdefault', 'maxresdefault')} alt="" width="1280" height="720" loading="lazy" decoding="async" class="h-full w-full object-cover" onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')" />
-            <span class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-b from-transparent to-navy" aria-hidden="true"></span>
-            <span class="absolute right-4 bottom-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-navy shadow-[var(--shadow-lift)] transition-transform group-hover:scale-105" aria-hidden="true"><Play size={18} class="ml-0.5" /></span>
-          </a>
+      <div class:list={['on-dark relative isolate overflow-hidden rounded-[var(--radius-panel)] bg-navy text-white shadow-[var(--shadow-float)]', video && 'cross-texture grid items-center gap-8 p-5 sm:p-7 md:p-12 lg:grid-cols-[1fr_1.25fr] lg:gap-12 lg:p-14']} data-reveal data-no-mo>
+        {!video && (
+          <>
+            <div class="absolute inset-y-0 right-0 -z-20 hidden w-[58%] md:block">
+              <Photo name="teaching" alt="" want="Teaching in progress: pastor at the pulpit, or the room during a study" class="h-full w-full object-cover" sizes="60vw" />
+            </div>
+            <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-navy from-[44%] via-navy/85 via-[58%] to-navy/10 md:block"></div>
+          </>
         )}
-        <div class:list={['max-w-2xl p-7 md:p-14 lg:p-16', latest?.thumbnail && 'pt-3 md:pt-14 lg:pt-16']}>
+        {video && <div class="lg:order-2"><VideoPlayer url={video} title={latest!.title} thumbnail={latest!.thumbnail} /></div>}
+        <div class:list={['max-w-2xl', video ? 'px-2 pb-2 sm:px-0 sm:pb-0 lg:order-1' : 'p-7 md:p-14 lg:p-16']}>
           <p class="eyebrow mb-4">Bible teaching</p>
           <h2 id="teaching-heading">{latest ? 'Latest teaching' : <>Watch and listen, <em>any time.</em></>}</h2>
           {latest ? (
@@ -166,12 +165,23 @@ const holdFast = 'Hold fast.'.split('');
             </ul>
           )}
           <div class="mt-9 flex flex-wrap gap-3">
-            <Button href={latest ? (latest.videoUrl ?? latest.audioUrl ?? latest.href ?? '/teachings') : church.youtube.channelUrl} variant="gold" external={!!latest && !!(latest.videoUrl ?? latest.audioUrl)} goal="watch"><Play size={18} aria-hidden="true" /> {latest ? (latest.videoUrl ? 'Watch now' : 'Listen now') : 'Watch on YouTube'}</Button>
+            {video && !PREVIEW
+              ? <button type="button" class="btn btn-gold" data-watch-inline><Play size={18} aria-hidden="true" /> Watch now</button>
+              : <Button href={latest ? (latest.videoUrl ?? latest.audioUrl ?? latest.href ?? '/teachings') : church.youtube.channelUrl} variant="gold" external={!!latest && !!(latest.videoUrl ?? latest.audioUrl)} goal="watch"><Play size={18} aria-hidden="true" /> {latest ? (latest.videoUrl ? 'Watch now' : 'Listen now') : 'Watch on YouTube'}</Button>}
             <Button href="/teachings" variant="outline-light">All teachings</Button>
           </div>
         </div>
       </div>
-      {radio?.status === 'confirm' && <ReviewFlag class="mt-5">Confirm Hold Fast stations and air times. Add the YouTube channel ID in src/config/church.ts and the newest teaching shows here automatically.</ReviewFlag>}
+      {radio?.status === 'confirm' && <ReviewFlag class="mt-5">Confirm Hold Fast stations and air times.</ReviewFlag>}
+      <script is:inline>
+        // "Watch now" starts the player in place.
+        document.querySelectorAll('[data-watch-inline]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var play = document.querySelector('#teaching-heading')?.closest('section')?.querySelector('[data-play]');
+            if (play) { play.scrollIntoView({ block: 'center', behavior: 'smooth' }); play.click(); }
+          });
+        });
+      </script>
     </div>
   </section>
 

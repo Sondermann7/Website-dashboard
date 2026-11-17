@@ -6,6 +6,8 @@ import Section from '../../components/Section.astro';
 import Button from '../../components/Button.astro';
 import { church } from '../../config/church';
 import { formatDate } from '../../lib/format';
+import VideoPlayer from '../../components/VideoPlayer.astro';
+import { getTeachings } from '../../lib/teachings';
 
 export async function getStaticPaths() {
   const entries = (await getCollection('teachings')).filter((t) => t.data.published);
@@ -14,6 +16,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const t = entry.data;
 const { Content } = await render(entry);
+const thumb = (await getTeachings()).find((x) => x.key === entry.id)?.thumbnail;
 const shown = t.date.getUTCHours() === 0 ? new Date(t.date.getTime() + 12 * 3600e3) : t.date;
 const meta = [formatDate(shown), t.speaker, t.passage, t.series && `Series: ${t.series}`].filter(Boolean).join(' · ');
 ---
@@ -25,6 +28,7 @@ const meta = [formatDate(shown), t.speaker, t.passage, t.series && `Series: ${t.
     {t.transcriptUrl && <Button href={t.transcriptUrl} variant="secondary" external>Transcript</Button>}
   </PageHero>
   <Section>
+    {t.videoUrl && <div class="mb-12 max-w-4xl"><VideoPlayer url={t.videoUrl} title={t.title} thumbnail={thumb} /></div>}
     <article class="prose">
       {t.summary && <p class="text-[length:var(--text-lede)]">{t.summary}</p>}
       <Content />

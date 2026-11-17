@@ -1,0 +1,49 @@
+---
+/**
+ * Click-to-play YouTube player. Shows the thumbnail and a play button; pressing it
+ * swaps in YouTube's privacy-enhanced player (youtube-nocookie.com) and starts the
+ * video in place. Nothing from YouTube loads until the visitor presses play.
+ * In the shareable preview (which cannot embed other sites) it links to YouTube.
+ */
+import Play from '@lucide/astro/icons/play';
+import { PREVIEW } from '../lib/review';
+interface Props { url: string; title: string; thumbnail?: string; class?: string }
+const { url, title, thumbnail, class: cls = '' } = Astro.props;
+const id = url.match(/(?:[?&]v=|youtu\.be\/|\/live\/|\/embed\/|\/shorts\/)([\w-]{11})/)?.[1];
+const thumb = thumbnail ?? (id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : undefined);
+const embed = id ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1` : undefined;
+const inline = !!embed && !PREVIEW;
+---
+<div class:list={['video-player group relative block aspect-video overflow-hidden rounded-[var(--radius-card)] bg-black shadow-[var(--shadow-lift)] ring-1 ring-white/10', cls]} data-embed={inline ? embed : undefined} data-title={title}>
+  {thumb && <img src={thumb.replace('hqdefault', 'maxresdefault')} alt="" width="1280" height="720" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" onerror="this.onerror=null;this.src=this.src.replace('maxresdefault','hqdefault')" />}
+  <span class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" aria-hidden="true"></span>
+  {inline ? (
+    <button type="button" class="absolute inset-0 flex items-center justify-center" data-play aria-label={`Play ${title}`}>
+      <span class="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 text-navy shadow-[var(--shadow-float)] transition-transform group-hover:scale-105 md:h-20 md:w-20"><Play size={30} class="ml-1" aria-hidden="true" /></span>
+    </button>
+  ) : (
+    <a href={url} target="_blank" rel="noopener" data-goal="watch" class="absolute inset-0 flex items-center justify-center" aria-label={`Watch ${title} on YouTube (opens in a new tab)`}>
+      <span class="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 text-navy shadow-[var(--shadow-float)] transition-transform group-hover:scale-105 md:h-20 md:w-20"><Play size={30} class="ml-1" aria-hidden="true" /></span>
+    </a>
+  )}
+</div>
+<script is:inline>
+  document.querySelectorAll('.video-player[data-embed]').forEach(function (box) {
+    var btn = box.querySelector('[data-play]');
+    if (!btn || btn.dataset.wired) return;
+    btn.dataset.wired = '1';
+    btn.addEventListener('click', function () {
+      var f = document.createElement('iframe');
+      f.src = box.getAttribute('data-embed');
+      f.title = box.getAttribute('data-title') || 'Video';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.allowFullscreen = true;
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      f.className = 'absolute inset-0 h-full w-full border-0';
+      box.innerHTML = '';
+      box.appendChild(f);
+      f.focus();
+      if (window.gtag) gtag('event', 'goal_click', { goal: 'watch-inline', page: location.pathname });
+    });
+  });
+</script>
