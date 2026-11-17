@@ -2,7 +2,7 @@
 /**
  * Decorative line motifs, drawn here (not any organisation's artwork):
  *   cross    - a simple Latin cross in one stroke weight
- *   fish     - the ichthys, two crossing arcs
+ *   fish     - the ichthys: two arcs meeting in a point at the nose, crossing to form the tail
  *   ornament - a short rule, a small cross, and a rule (section accent)
  * Always aria-hidden: they are decoration, never content.
  */
@@ -16,7 +16,7 @@ const { kind, class: cls = '', stroke = 1.5 } = Astro.props;
 )}
 {kind === 'fish' && (
   <svg class={cls} viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width={stroke} stroke-linecap="round" aria-hidden="true" focusable="false">
-    <path d="M6 44C30 8 72 4 112 44M6 16c24 36 66 40 106 0" />
+    <path d="M108 50C82 6 38 4 8 30c30 26 74 24 100-20" stroke-linejoin="round" />
   </svg>
 )}
 {kind === 'ornament' && (
