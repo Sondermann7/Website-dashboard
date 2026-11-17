@@ -8,7 +8,7 @@ import MobileBar from '../components/MobileBar.astro';
 import Schema from '../components/Schema.astro';
 import Announcements from '../components/Announcements.astro';
 import { church } from '../config/church';
-import { REVIEW } from '../lib/review';
+import { REVIEW, PREVIEW } from '../lib/review';
 import { cleanPath } from '../lib/format';
 
 interface Props {
@@ -55,6 +55,21 @@ const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
     {gsc && <meta name="google-site-verification" content={gsc} />}
     <Schema />
     <slot name="head" />
+    {PREVIEW && (
+      <script is:inline>
+        // Preview only: the artifact viewer carries the previous page's scroll position over to the
+        // next page. Open each newly visited page at the top; Back and Forward keep their position.
+        (function () {
+          var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+          if (nav.type === 'back_forward' || location.hash) return;
+          try { history.scrollRestoration = 'manual'; } catch (e) {}
+          var top = function () { window.scrollTo(0, 0); };
+          top();
+          document.addEventListener('DOMContentLoaded', top);
+          window.addEventListener('load', function () { top(); setTimeout(top, 60); setTimeout(top, 250); });
+        })();
+      </script>
+    )}
   </head>
   <body class="min-h-dvh">
     <a href="#main" class="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50">Skip to main content</a>
