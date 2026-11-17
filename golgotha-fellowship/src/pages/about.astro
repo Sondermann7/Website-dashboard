@@ -7,6 +7,9 @@ import Photo from '../components/Photo.astro';
 import ConnectCta from '../components/ConnectCta.astro';
 import ReviewFlag from '../components/ReviewFlag.astro';
 import { church } from '../config/church';
+import Track from '../components/Track.astro';
+import TrackDot from '../components/TrackDot.astro';
+
 
 const pillars = [
   { ref: 'Doctrine', text: 'Simple, systematic teaching through the Bible, line by line.' },
@@ -31,15 +34,19 @@ const pillars = [
   </Section>
 
   <Section id="philosophy" tone="white" eyebrow="How we do ministry" title="The pattern of Acts 2:42" intro="The early church continued steadfastly in four things. We keep it that simple.">
-    <ol class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      {pillars.map((p, i) => (
-        <li class="card p-6">
-          <span class="font-display text-[2.25rem] leading-none text-gold-deep" aria-hidden="true">{i + 1}</span>
-          <h3 class="mt-3">{p.ref}</h3>
-          <p class="mt-2 text-body">{p.text}</p>
-        </li>
-      ))}
-    </ol>
+    <Track class="max-w-3xl">
+      <ol class="grid gap-6">
+        {pillars.map((p, i) => (
+          <li data-step>
+            <TrackDot n={i + 1} />
+            <div class="card p-6 md:p-7">
+              <h3>{p.ref}</h3>
+              <p class="mt-2 text-body">{p.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </Track>
   </Section>
 
   <Section id="identity" tone="sky" eyebrow="Who we are" title="Non-denominational, with Calvary Chapel roots">

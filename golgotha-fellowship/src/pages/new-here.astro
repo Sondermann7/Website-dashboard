@@ -9,6 +9,9 @@ import MapEmbed from '../components/MapEmbed.astro';
 import Photo from '../components/Photo.astro';
 import ConnectCta from '../components/ConnectCta.astro';
 import FormBlock from '../components/FormBlock.astro';
+import Track from '../components/Track.astro';
+import TrackDot from '../components/TrackDot.astro';
+
 import ReviewFlag from '../components/ReviewFlag.astro';
 import { church, directionsUrl } from '../config/church';
 import { fillTokens } from '../lib/format';
@@ -41,10 +44,11 @@ const faqSchema = {
 
   <Section id="questions" eyebrow="Good to know" title="Your questions, answered">
     <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
-      <dl class="divide-y divide-line border-y border-line">
-        {faqs.map((f) => (
-          <div class="py-6" id={f.id}>
-            <dt><h3 class="!font-sans !text-[1.2rem] !font-bold !leading-snug">{f.question}</h3></dt>
+      <Track>
+      <dl class="grid gap-9">
+        {faqs.map((f, i) => (
+          <div data-step id={f.id}>
+            <dt><TrackDot n={i + 1} /><h3 class="!font-sans !text-[1.2rem] !font-bold !leading-snug">{f.question}</h3></dt>
             <dd class="mt-2 text-[1.05rem] text-body">
               <p>{fillTokens(f.text!)}</p>
               {f.link && (
@@ -57,6 +61,7 @@ const faqSchema = {
           </div>
         ))}
       </dl>
+      </Track>
       <aside class="space-y-6 lg:sticky lg:top-28 lg:self-start">
         <Photo name="exterior" alt={`The ${church.name} building at ${church.address.street}, Nampa`} class="aspect-[16/10] w-full rounded-[var(--radius-card)] object-cover" />
         <MapEmbed />

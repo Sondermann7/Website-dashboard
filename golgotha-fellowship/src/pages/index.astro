@@ -10,7 +10,11 @@ import Dove from '../components/Dove.astro';
 import Motif from '../components/Motif.astro';
 import Curve from '../components/Curve.astro';
 import VideoPlayer from '../components/VideoPlayer.astro';
+import Track from '../components/Track.astro';
+import TrackDot from '../components/TrackDot.astro';
+
 import { PREVIEW } from '../lib/review';
+import { getPhoto } from '../lib/photos';
 import MinistryCard from '../components/MinistryCard.astro';
 import EventList from '../components/EventList.astro';
 import ConnectCta from '../components/ConnectCta.astro';
@@ -118,19 +122,23 @@ const holdFast = 'Hold fast.'.split('');
         <p class="eyebrow mb-4">Your first visit</p>
         <h2 id="sunday-heading">What a Sunday at Golgotha <em>looks like</em></h2>
       </div>
-      <ol class="grid gap-6 md:grid-cols-3">
-        {sunday.map((c, i) => (
-          <li class="card relative flex flex-col overflow-hidden">
-            <Photo name={c.photo} alt="" want={c.want} class="aspect-[4/3] w-full object-cover" sizes="(min-width: 48rem) 33vw, 100vw" />
-            <div class="flex flex-1 flex-col p-6 md:p-7">
-              <span class="font-display text-[1.05rem] font-bold italic text-gold-deep" aria-hidden="true">0{i + 1}</span>
-              <h3 class="mt-1 !text-[1.5rem] !font-bold">{c.title}</h3>
-              <p class="mt-3 text-body">{c.text}</p>
-              <p class="mt-auto pt-5"><a class="card-link link inline-flex min-h-11 items-center gap-1.5 after:absolute after:inset-0 after:content-['']" href={c.href}>{c.link} <ArrowRight size={18} aria-hidden="true" /></a></p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <Track>
+        <ol class="grid gap-8 md:gap-10">
+          {sunday.map((c, i) => (
+            <li data-step>
+              <TrackDot n={i + 1} />
+              <div class:list={['card relative grid overflow-hidden', getPhoto(c.photo) && 'md:grid-cols-[0.95fr_1.05fr]']}>
+              <Photo name={c.photo} alt="" want={c.want} class="aspect-[16/10] h-full w-full object-cover md:aspect-auto md:min-h-[17rem]" sizes="(min-width: 48rem) 40vw, 100vw" />
+              <div class="flex flex-col justify-center p-6 md:p-10">
+                <h3 class="!text-[1.6rem] !font-bold">{c.title}</h3>
+                <p class="mt-3 text-body md:text-[1.06rem]">{c.text}</p>
+                <p class="mt-5"><a class="card-link link inline-flex min-h-11 items-center gap-1.5 after:absolute after:inset-0 after:content-['']" href={c.href}>{c.link} <ArrowRight size={18} aria-hidden="true" /></a></p>
+              </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Track>
     </div>
   <Curve fill="paper" flip />
   </section>

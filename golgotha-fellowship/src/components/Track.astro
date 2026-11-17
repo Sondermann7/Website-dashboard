@@ -1,0 +1,19 @@
+---
+/**
+ * Scroll track for numbered lists. A thin line runs down the left of the list; a gold
+ * ichthys swims down it as the page scrolls, the line fills in gold behind it, and each
+ * item's number lights up as the fish reaches it.
+ *
+ * Usage: wrap an <ol>/<dl>; give each item `data-step` and put a <TrackDot n={i + 1} />
+ * inside it. Purely decorative: numbers and content are fully readable without it.
+ */
+interface Props { size?: 'sm' | 'md'; tone?: 'light' | 'dark'; class?: string }
+const { size = 'md', tone = 'light', class: cls = '' } = Astro.props;
+---
+<div class:list={['track', `track-${size}`, tone === 'dark' && 'track-dark on-dark', cls]} data-track>
+  <span class="track-rail" aria-hidden="true"><span class="track-fill"></span></span>
+  <span class="track-fish" aria-hidden="true">
+    <svg viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M108 50C82 6 38 4 8 30c30 26 74 24 100-20" /></svg>
+  </span>
+  <slot />
+</div>

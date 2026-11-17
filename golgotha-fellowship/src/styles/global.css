@@ -639,3 +639,120 @@ html.mo .hero-rise {
   background: #fff;
   color: var(--color-navy);
 }
+
+/*
+ * Scroll track (components/Track.astro): line + numbered dots + swimming fish.
+ * --rail is the line's distance from the track's left edge; --pad is the content inset.
+ */
+.track {
+  --rail: 1rem;
+  --pad: 3rem;
+  --dot: 2.25rem;
+  --fish: 2.9rem;
+  --t: 0;
+  position: relative;
+  padding-left: var(--pad);
+}
+@media (min-width: 48rem) {
+  .track-md {
+    --rail: 1.5rem;
+    --pad: 4.75rem;
+    --dot: 2.6rem;
+    --fish: 3.4rem;
+  }
+}
+.track-sm {
+  --rail: 0.25rem;
+  --pad: 2rem;
+  --dot: 1.6rem;
+  --fish: 2.2rem;
+}
+.track-rail {
+  position: absolute;
+  left: var(--rail);
+  top: calc(var(--dot) / 2);
+  bottom: calc(var(--dot) / 2);
+  width: 2px;
+  transform: translateX(-50%);
+  background: var(--color-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.track-dark .track-rail {
+  background: rgb(255 255 255 / 0.18);
+}
+.track-fill {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(var(--t) * 100%);
+  background: var(--color-gold);
+}
+.track-fish {
+  position: absolute;
+  left: var(--rail);
+  top: calc(var(--dot) / 2 + var(--t) * (100% - var(--dot)));
+  z-index: 3;
+  width: var(--fish);
+  height: var(--fish);
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--color-navy);
+  color: var(--color-gold-light);
+  box-shadow: 0 0 0 4px var(--color-paper), var(--shadow-lift);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.track-dark .track-fish {
+  background: var(--color-gold-light);
+  color: var(--color-navy-deep);
+  box-shadow: 0 0 0 4px var(--color-navy), var(--shadow-lift);
+}
+.track-fish svg {
+  width: 80%;
+  transform: rotate(-90deg); /* nose points down the line */
+}
+[data-step] {
+  position: relative;
+}
+.track-dot {
+  position: absolute;
+  left: calc(var(--rail) - var(--pad));
+  top: 0;
+  z-index: 2;
+  width: var(--dot);
+  height: var(--dot);
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: var(--color-paper);
+  border: 2px solid var(--color-line);
+  color: var(--color-body);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: calc(var(--dot) * 0.42);
+  line-height: 1;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.track-sm .track-dot {
+  font-size: 0.7rem;
+}
+.track-dark .track-dot {
+  background: var(--color-navy);
+  border-color: rgb(255 255 255 / 0.25);
+  color: var(--color-mist);
+}
+[data-step].is-reached .track-dot {
+  background: var(--color-gold-light);
+  border-color: var(--color-gold);
+  color: var(--color-navy-deep);
+}
+/* Sections with a stone or white background: the halo matches. */
+.bg-stone .track-fish { box-shadow: 0 0 0 4px var(--color-stone), var(--shadow-lift); }
+.bg-white .track-fish { box-shadow: 0 0 0 4px #fff, var(--shadow-lift); }
+.bg-stone .track-dot { background: var(--color-stone); }
+.bg-white .track-dot { background: #fff; }
+@media print {
+  .track-fish, .track-rail { display: none; }
+}

@@ -1,0 +1,6 @@
+---
+/** Numbered dot that sits on a Track's line, level with the top of its item. */
+interface Props { n: number | string }
+const { n } = Astro.props;
+---
+<span class="track-dot" aria-hidden="true">{n}</span>
