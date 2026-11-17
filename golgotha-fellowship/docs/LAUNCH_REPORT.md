@@ -156,9 +156,7 @@ connected Google Drive or Canva):
   The Statement of Faith, the old homepage copy, leadership bios, missions and the
   teaching archive are NOT migrated. Fix: allow the host in the environment's network
   settings, or paste/export the page text.
-- Conflicts seen in the church's own graphics, not applied: "Sunday 10 AM, East Valley
-  Middle School, 4085 E Greenhurst Rd" (old location) and "Wednesday potluck 6:30,
-  Bible study 7:00" (site says Wednesday 6:00 PM). Confirm Wednesday.
+- Old details in the church's own graphics were not applied: "Sunday 10 AM, East Valley Middle School, 4085 E Greenhurst Rd" (old location). Wednesday confirmed by the owner (2026-11-17): 6:00 PM service; the potluck no longer happens.
 
 ## Functional audit (2026-11-17)
 
