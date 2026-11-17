@@ -1,6 +1,7 @@
 ---
 title: Missions
 summary: Supporting church planting and missions work beyond the Treasure Valley.
+lede: "Standing with church planters, including a French-language ministry, through prayer and support."
 order: 6
 icon: globe
 leaders: [Hugh Theriault]

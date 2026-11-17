@@ -1,6 +1,7 @@
 ---
 title: Men’s Ministry
 summary: Men gathering each week to study the Bible together.
+lede: "Two Bible studies a week, Monday evenings and Saturday mornings, for men who want to know God’s Word and live by it."
 order: 3
 icon: book-open
 audience: Men

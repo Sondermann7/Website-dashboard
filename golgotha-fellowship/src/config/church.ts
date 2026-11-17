@@ -127,6 +127,14 @@ export const church = {
     instagram: 'https://www.instagram.com/golgotha_fellowship',
   },
 
+  /** Hold Fast radio program as a podcast. The feed is read at every build. */
+  podcast: {
+    name: 'Hold Fast',
+    feedUrl: 'https://feeds.buzzsprout.com/2180061.rss',
+    showUrl: 'https://golgothafellowship.buzzsprout.com/2180061',
+    appleUrl: 'https://podcasts.apple.com/us/podcast/hold-fast/id1685016484',
+  },
+
   youtube: {
     channelUrl: 'https://www.youtube.com/@Golgothafellowship',
     /**

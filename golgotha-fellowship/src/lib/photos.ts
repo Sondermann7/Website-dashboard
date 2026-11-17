@@ -14,9 +14,6 @@ const photos = import.meta.glob<{ default: ImageMetadata }>(
 const standins = import.meta.env.PUBLIC_STANDINS === 'true'
   ? import.meta.glob<{ default: ImageMetadata }>('/src/assets/standins/*.{jpg,jpeg,png,webp}', { eager: true })
   : {};
-const brand = import.meta.glob<{ default: ImageMetadata }>('/src/assets/brand/*.{png,webp,svg,PNG}', {
-  eager: true,
-});
 
 function find(files: Record<string, { default: ImageMetadata }>, prefix: string, name?: string) {
   if (!name) return undefined;
@@ -25,5 +22,3 @@ function find(files: Record<string, { default: ImageMetadata }>, prefix: string,
 }
 
 export const getPhoto = (name?: string) => find(photos, '/src/assets/photos/', name) ?? find(standins, '/src/assets/standins/', name);
-/** "logo" for light backgrounds, "logo-light" for dark; "calvary-dove(-light)" is the affiliation mark. */
-export const getLogo = (variant: 'logo' | 'logo-light' | 'calvary-dove' | 'calvary-dove-light') => find(brand, '/src/assets/brand/', variant);

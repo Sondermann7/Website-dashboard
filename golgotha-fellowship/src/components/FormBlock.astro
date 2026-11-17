@@ -9,17 +9,19 @@
  */
 import Phone from '@lucide/astro/icons/phone';
 import Mail from '@lucide/astro/icons/mail';
-import { church, telHref } from '../config/church';
+import { church, telHref, primaryGatherings } from '../config/church';
+import { joinTimes } from '../lib/format';
 import { FORMS_ENABLED } from '../lib/review';
 import ReviewFlag from './ReviewFlag.astro';
 
-interface Props { type: 'contact' | 'prayer' | 'involved'; emailSubject: string }
+interface Props { type: 'contact' | 'prayer' | 'involved' | 'visit'; emailSubject: string }
 const { type, emailSubject } = Astro.props;
 const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 const mailto = `mailto:${church.email.general}?subject=${encodeURIComponent(emailSubject)}`;
 const copy = {
   contact: { message: 'Your question or message', submit: 'Send message', privacy: 'Your message is sent privately to the Golgotha Fellowship office. We use your details only to reply to you.' },
   prayer: { message: 'How can we pray for you?', submit: 'Send prayer request', privacy: 'Your request is sent privately to Golgotha Fellowship. It is never published on this website and is not recorded by analytics tools.' },
+  visit: { message: 'Anything we should know? (optional)', submit: 'Let us know', privacy: 'Your details go only to the Golgotha Fellowship greeting team, so someone can welcome you and help with check-in. We will not add you to a mailing list.' },
   involved: { message: 'Anything you would like us to know? (optional)', submit: 'Send', privacy: 'Your details are sent privately to the Golgotha Fellowship office so the right ministry leader can contact you.' },
 }[type];
 ---
@@ -46,6 +48,27 @@ const copy = {
       <input class="input sm:max-w-xs" id={`${type}-phone`} name="phone" type="tel" autocomplete="tel" maxlength="40" />
     </div>
 
+    {type === 'visit' && (
+      <div class="grid gap-6 sm:grid-cols-2">
+        <div class="field">
+          <label for="visit-service">Which service are you planning to come to?</label>
+          <select class="input" id="visit-service" name="service" required data-error="Please choose a service.">
+            <option value="">Choose a service</option>
+            {primaryGatherings.flatMap((g) => g.times.map((t) => <option value={`${g.day} ${t}`}>{g.day} {t}</option>))}
+            <option value="Not sure yet">Not sure yet</option>
+          </select>
+          <p class="js-error mt-1.5 hidden font-semibold text-error" id="visit-service-error"></p>
+        </div>
+        <div class="field">
+          <label for="visit-kids">Children coming with you</label>
+          <span class="hint" id="visit-kids-hint">Nursery and kids ministry through 6th grade.</span>
+          <select class="input" id="visit-kids" name="kids" aria-describedby="visit-kids-hint">
+            {['None', '1', '2', '3', '4', '5 or more'].map((k) => <option value={k}>{k}</option>)}
+          </select>
+        </div>
+      </div>
+    )}
+
     {type === 'involved' && (
       <fieldset class="field">
         <legend>Where would you like to serve or get connected?</legend>
@@ -63,7 +86,7 @@ const copy = {
 
     <div class="field">
       <label for={`${type}-message`}>{copy.message}</label>
-      <textarea class="input" id={`${type}-message`} name="message" maxlength="5000" required={type !== 'involved'} data-error="Please write a short message."></textarea>
+      <textarea class="input" id={`${type}-message`} name="message" maxlength="5000" required={type !== 'involved' && type !== 'visit'} data-error="Please write a short message."></textarea>
       <p class="js-error mt-1.5 hidden font-semibold text-error" id={`${type}-message-error`}></p>
     </div>
 
@@ -132,7 +155,7 @@ const copy = {
   </>
 ) : (
   <div class="card p-6 md:p-8">
-    <p class="text-[1.1rem]">The quickest way to reach us is by phone or email. We would be glad to hear from you.</p>
+    <p class="text-[1.1rem]">{type === 'visit' ? 'Call or email us before Sunday and we will make sure a greeter is expecting you.' : type === 'prayer' ? 'Call or email us with your request. We would be honored to pray for you.' : 'The quickest way to reach us is by phone or email. We would be glad to hear from you.'}</p>
     <div class="mt-5 flex flex-wrap gap-3">
       <a class="btn btn-primary" href={telHref} data-goal="call"><Phone size={18} aria-hidden="true" /> Call {church.phone.display}</a>
       <a class="btn btn-secondary" href={mailto} data-goal="email"><Mail size={18} aria-hidden="true" /> Email us</a>

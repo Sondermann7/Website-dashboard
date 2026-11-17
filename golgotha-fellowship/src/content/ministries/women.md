@@ -1,6 +1,7 @@
 ---
 title: Women’s Ministry
 summary: Women growing together in God’s Word and in fellowship.
+lede: "Study, prayer and friendship among the women of Golgotha Fellowship."
 order: 4
 icon: heart
 audience: Women

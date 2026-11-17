@@ -1,6 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-import Check from '@lucide/astro/icons/check';
 import Play from '@lucide/astro/icons/play';
 import MapPin from '@lucide/astro/icons/map-pin';
 import ArrowRight from '@lucide/astro/icons/arrow-right';
@@ -25,10 +24,9 @@ const ministries = (await getCollection('ministries'))
   .slice(0, 4);
 const radio = church.radio.status !== 'todo' ? church.radio : null;
 
-const promises = ['Casual, come-as-you-are services', 'The Bible taught line by line', 'Nursery and kids ministry through 6th grade'];
 const sunday = [
-  { photo: 'sunday-teaching', want: 'Pastor teaching from an open Bible on a Sunday', title: 'We open the Bible', text: 'The heart of every service is God’s Word, taught simply and systematically, line by line.', href: '/teachings', link: 'Hear a teaching' },
-  { photo: 'sunday-fellowship', want: 'People greeting each other / talking in the lobby', title: 'You come as you are', text: 'Services are casual. No dress code, no pressure. Following Jesus is a relationship grounded in His love and grace.', href: '/new-here', link: 'Plan your visit' },
+  { photo: 'sunday-teaching', want: 'Pastor teaching from an open Bible on a Sunday', title: 'We open the Bible', text: 'Every service centers on Scripture, taught verse by verse and book by book, so you leave knowing what it says and how to live it.', href: '/teachings', link: 'Hear a teaching' },
+  { photo: 'sunday-fellowship', want: 'People greeting each other / talking in the lobby', title: 'You come as you are', text: 'Services are casual, with no dress code and no pressure. Take your time getting to know us.', href: '/new-here', link: 'Plan your visit' },
   { photo: 'kids', want: 'Kids ministry classroom (released photos only)', title: 'Your kids are cared for', text: 'Nursery and children’s ministry through sixth grade on Sundays, and children’s ministry on Wednesdays. A greeter helps you check in.', href: '/ministries/kids', link: 'About kids ministry' },
 ];
 const gallery = [
@@ -55,9 +53,6 @@ const holdFast = 'Hold fast.'.split('');
         <p class="eyebrow hero-rise mb-5">Downtown Nampa, Idaho</p>
         <h1 class="hero-rise text-[length:var(--text-display)] leading-[1.02]" style="--mo-d:50ms">Come grow in <em>God’s Word</em> with us.</h1>
         <p class="hero-rise mt-6 max-w-xl text-[length:var(--text-lede)] leading-relaxed text-white/90" style="--mo-d:120ms">{church.shortDescription}</p>
-        <ul class="hero-rise mt-6 grid gap-2.5" style="--mo-d:160ms">
-          {promises.map((p) => <li class="flex items-start gap-2.5 font-semibold"><Check size={20} class="mt-1 shrink-0 text-gold-light" aria-hidden="true" />{p}</li>)}
-        </ul>
         <div class="hero-rise mt-8 flex flex-wrap gap-3" style="--mo-d:200ms">
           <Button href="/new-here" variant="gold" goal="plan-visit">Plan Your Visit <ArrowRight size={18} aria-hidden="true" /></Button>
           <Button href="/teachings" variant="outline-light" goal="watch"><Play size={18} aria-hidden="true" /> Watch a Teaching</Button>
@@ -163,7 +158,7 @@ const holdFast = 'Hold fast.'.split('');
             </ul>
           )}
           <div class="mt-9 flex flex-wrap gap-3">
-            <Button href={latest ? (latest.href ?? latest.videoUrl ?? '/teachings') : church.youtube.channelUrl} variant="gold" external={!latest?.href} goal="watch"><Play size={18} aria-hidden="true" /> {latest ? 'Watch now' : 'Watch on YouTube'}</Button>
+            <Button href={latest ? (latest.href ?? latest.videoUrl ?? latest.audioUrl ?? '/teachings') : church.youtube.channelUrl} variant="gold" external={!!latest && !latest.href} goal="watch"><Play size={18} aria-hidden="true" /> {latest ? (latest.videoUrl ? 'Watch now' : 'Listen now') : 'Watch on YouTube'}</Button>
             <Button href="/teachings" variant="outline-light">All teachings</Button>
           </div>
         </div>
@@ -197,7 +192,7 @@ const holdFast = 'Hold fast.'.split('');
       </div>
       <ul class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         {gallery.map((g, i) => (
-          <li class:list={['overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]', i === 0 && 'col-span-2 md:row-span-2']} data-reveal>
+          <li class:list={['overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]', i === 0 && 'col-span-2 md:row-span-2', i >= 5 && 'hidden md:block']} data-reveal>
             <Photo name={g.name} alt={g.alt} want="Candid photo of church life" class={`h-full w-full object-cover ${i === 0 ? 'aspect-[4/3] md:aspect-auto' : 'aspect-[4/3]'}`} sizes={i === 0 ? '(min-width: 48rem) 50vw, 100vw' : '(min-width: 48rem) 25vw, 50vw'} />
           </li>
         ))}
@@ -205,49 +200,44 @@ const holdFast = 'Hold fast.'.split('');
     </div>
   </section>
 
-  <!-- 6. "Hold fast." band (Hebrews 10:23): the letters spread as the page scrolls -->
-  <section aria-labelledby="holdfast-heading" class="relative bg-paper pb-24 md:pb-36">
+  <!-- 6. "Hold fast." (Hebrews 10:23) with what we believe: one navy panel. The letters spread as the page scrolls. -->
+  <section aria-labelledby="holdfast-heading" class="relative bg-paper pb-16 md:pb-24">
     <div class="container-site">
-      <div class="on-dark cross-texture relative overflow-hidden rounded-[var(--radius-panel)] bg-navy-deep px-6 py-16 text-center text-white shadow-[var(--shadow-float)] md:py-24" data-kinetic data-no-mo>
-        <Motif kind="ornament" class="mx-auto mb-8 w-28 text-gold-light/80" />
-        <h2 id="holdfast-heading" class="font-display !text-[clamp(3.2rem,11vw,9rem)] !leading-none text-gold-light" aria-label="Hold fast.">
-          {holdFast.map((ch, i) => (
-            <span aria-hidden="true" class="inline-block whitespace-pre will-change-transform" style={`transform:translateX(calc(var(--k,0) * ${((i - (holdFast.length - 1) / 2) * 0.09).toFixed(3)}em))`}>{ch}</span>
-          ))}
-        </h2>
-        <p class="mx-auto mt-8 max-w-2xl text-[length:var(--text-lede)] text-mist">Holding fast to our hope, and gathering together to encourage one another, all the more as the Day approaches.</p>
-        <p class="mt-3 text-[0.8rem] font-bold uppercase tracking-[0.16em] text-gold-light">Hebrews 10:23–25</p>
-        <p class="mt-9"><Button href="/new-here" variant="gold" goal="plan-visit">Join us this Sunday</Button></p>
-      </div>
-    </div>
-  <Curve fill="stone" />
-  </section>
+      <div class="on-dark cross-texture relative overflow-hidden rounded-[var(--radius-panel)] bg-navy-deep px-6 pt-16 pb-10 text-white shadow-[var(--shadow-float)] md:px-12 md:pt-24 md:pb-14" data-kinetic data-no-mo>
+        <div class="text-center">
+          <Motif kind="ornament" class="mx-auto mb-8 w-28 text-gold-light/80" />
+          <h2 id="holdfast-heading" class="font-display !text-[clamp(3.2rem,11vw,9rem)] !leading-none text-gold-light" aria-label="Hold fast.">
+            {holdFast.map((ch, i) => (
+              <span aria-hidden="true" class="inline-block whitespace-pre will-change-transform" style={`transform:translateX(calc(var(--k,0) * ${((i - (holdFast.length - 1) / 2) * 0.09).toFixed(3)}em))`}>{ch}</span>
+            ))}
+          </h2>
+          <p class="mx-auto mt-8 max-w-2xl text-[length:var(--text-lede)] text-mist">Holding fast to our hope, and gathering together to encourage one another, all the more as the Day approaches.</p>
+          <p class="mt-3 text-[0.8rem] font-bold uppercase tracking-[0.16em] text-gold-light">Hebrews 10:23–25</p>
+        </div>
 
-  <!-- 7. Beliefs and affiliation -->
-  <section aria-labelledby="beliefs-heading" class="relative isolate overflow-hidden bg-stone pt-10 pb-24 md:pt-16 md:pb-36">
-    <Motif kind="cross" stroke={0.9} class="watermark -right-4 -bottom-16 hidden h-[30rem] lg:block" />
-    <div class="relative container-site grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-20">
-      <div>
-        <p class="eyebrow mb-4">What we believe</p>
-        <h2 id="beliefs-heading">Anchored in Scripture. Centered on <em>Jesus Christ.</em></h2>
-        <p class="lede mt-6 text-[length:var(--text-lede)] leading-relaxed">We believe the Bible is the inspired, authoritative Word of God, that salvation is by God’s grace through faith in Jesus Christ alone, and that He is coming again.</p>
-        <div class="mt-8 flex flex-wrap gap-3" data-reveal>
-          <Button href="/beliefs">Read what we believe</Button>
-          <Button href="/about" variant="secondary">Our mission</Button>
+        <div class="mx-auto mt-14 grid max-w-5xl gap-8 border-t border-white/15 pt-12 md:mt-20 md:pt-14 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
+          <div>
+            <p class="eyebrow mb-4">What we believe</p>
+            <h3 class="!text-[clamp(1.6rem,1.2rem+1.6vw,2.3rem)] !font-bold !leading-tight">Anchored in Scripture. Centered on <em class="font-semibold text-gold-light">Jesus Christ.</em></h3>
+            <p class="mt-5 text-[1.08rem] leading-relaxed text-mist">We believe the Bible is the inspired, authoritative Word of God, that salvation is by God’s grace through faith in Jesus Christ alone, and that He is coming again.</p>
+            <div class="mt-7 flex flex-wrap gap-3">
+              <Button href="/beliefs" variant="gold">Read what we believe</Button>
+              <Button href="/about" variant="outline-light">Our mission</Button>
+            </div>
+          </div>
+          <div class="relative flex flex-col justify-center gap-4 overflow-hidden rounded-[var(--radius-card)] bg-white/[0.06] p-6 ring-1 ring-white/10 md:p-8">
+            <Motif kind="fish" stroke={1.2} class="pointer-events-none absolute -right-6 -bottom-4 w-44 text-white/[0.07]" />
+            <Dove tone="light" class="h-16 w-auto self-start" />
+            <p class="text-[0.8rem] font-bold uppercase tracking-[0.16em] text-gold-light">Calvary Chapel</p>
+            <p class="leading-relaxed text-mist">{church.affiliation.summary}</p>
+          </div>
         </div>
       </div>
-      <div class="card relative flex flex-col justify-center gap-5 overflow-hidden p-7 md:p-10">
-        <Motif kind="fish" stroke={1.2} class="pointer-events-none absolute -right-6 -bottom-4 w-48 text-navy/[0.06]" />
-        <Dove class="h-20 w-auto self-start" />
-        <p class="text-[0.8rem] font-bold uppercase tracking-[0.16em] text-blue">Calvary Chapel</p>
-        <p class="text-[1.1rem] leading-relaxed">{church.affiliation.summary}</p>
-      </div>
     </div>
-  <Curve fill="paper" flip />
   </section>
 
   <!-- 8. Events -->
-  <section aria-labelledby="events-heading" class="relative bg-paper pt-10 pb-24 md:pt-14 md:pb-36">
+  <section aria-labelledby="events-heading" class="relative bg-paper pt-4 pb-24 md:pt-8 md:pb-36">
     <div class="container-site">
       <div class="mb-10 flex flex-wrap items-end justify-between gap-6">
         <div>

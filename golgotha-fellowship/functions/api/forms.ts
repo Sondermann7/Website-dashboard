@@ -18,6 +18,7 @@ export interface Env {
   CONTACT_TO?: string;
   PRAYER_TO?: string;
   INVOLVED_TO?: string;
+  VISIT_TO?: string;
   TURNSTILE_SECRET_KEY?: string;
 }
 
@@ -25,6 +26,7 @@ const FORMS = {
   contact: { to: 'CONTACT_TO', subject: 'Website: question or message', messageRequired: true },
   prayer: { to: 'PRAYER_TO', subject: 'Website: prayer request', messageRequired: true },
   involved: { to: 'INVOLVED_TO', subject: 'Website: get involved', messageRequired: false },
+  visit: { to: 'VISIT_TO', subject: 'Website: planning a visit', messageRequired: false },
 } as const;
 type FormType = keyof typeof FORMS;
 
@@ -46,6 +48,8 @@ export interface Submission {
   phone: string;
   message: string;
   areas: string[];
+  service?: string;
+  kids?: string;
 }
 
 export function validate(data: FormData): { ok: true; value: Submission } | { ok: false; error: string } {
@@ -59,9 +63,12 @@ export function validate(data: FormData): { ok: true; value: Submission } | { ok
   if (name.length < 2) return { ok: false, error: 'Please enter your name.' };
   if (!EMAIL_RE.test(email)) return { ok: false, error: 'Please enter a valid email address so we can reply.' };
   if (FORMS[type].messageRequired && message.length < 3) return { ok: false, error: 'Please write a short message.' };
+  const service = line(data.get('service'), 60);
+  const kids = line(data.get('kids'), 20);
+  if (type === 'visit' && !service) return { ok: false, error: 'Please choose a service.' };
   if (type === 'involved' && areas.length === 0 && message.length < 3)
     return { ok: false, error: 'Please choose at least one area, or write a short message.' };
-  return { ok: true, value: { type, name, email, phone, message, areas } };
+  return { ok: true, value: { type, name, email, phone, message, areas, ...(type === 'visit' ? { service, kids: kids || 'None' } : {}) } };
 }
 
 export function buildEmail(s: Submission): string {
@@ -71,6 +78,8 @@ export function buildEmail(s: Submission): string {
     `Email: ${s.email}`,
     s.phone && `Phone: ${s.phone}`,
     s.areas.length > 0 && `Areas of interest: ${s.areas.join(', ')}`,
+    s.service && `Planning to attend: ${s.service}`,
+    s.kids && `Children coming: ${s.kids}`,
     '',
     s.message || '(no message)',
     '',
@@ -135,7 +144,7 @@ export async function handle(request: Request, env: Env, fetchImpl: typeof fetch
     if (!passed) return respond(request, 403, { ok: false, error: `We could not confirm you are not a robot. Please try again. ${FALLBACK}` });
   }
 
-  const to = env[FORMS[s.type].to];
+  const to = env[FORMS[s.type].to] ?? (s.type === 'visit' ? env.CONTACT_TO : undefined);
   if (!env.RESEND_API_KEY || !env.FORMS_FROM || !to) {
     console.error(`[forms] Delivery is not configured for "${s.type}".`); // no personal data
     return respond(request, 503, { ok: false, error: `Sorry, this form is not available right now. ${FALLBACK}` });

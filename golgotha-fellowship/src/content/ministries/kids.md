@@ -1,7 +1,8 @@
 ---
 title: Kids Ministry
 alsoKnownAs: Feed My Lambs
-summary: A nursery and children’s ministry through sixth grade, where kids worship, learn God’s Word, and pray together.
+summary: Kids worship, learn God’s Word, make crafts and pray together.
+lede: "Feed My Lambs is where children from the nursery through sixth grade worship, hear Bible lessons, make crafts and pray, every Sunday and on Wednesday evenings."
 order: 1
 icon: baby
 audience: Nursery through 6th grade

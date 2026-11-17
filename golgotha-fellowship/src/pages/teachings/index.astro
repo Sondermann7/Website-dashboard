@@ -14,7 +14,9 @@ const items = await getTeachings();
 ---
 <Base title="Bible Teachings" description={`Watch and listen to verse-by-verse Bible teaching from ${church.name} in Nampa, Idaho. Free on YouTube and on Hold Fast radio.`}>
   <PageHero photo="page-teachings" eyebrow="Teachings" title="Bible teaching, line by line" lede="We teach through Scripture simply and systematically. Every teaching is free — no account or sign-in needed.">
-    <Button href={church.youtube.channelUrl} external goal="watch"><Play size={18} aria-hidden="true" /> Watch on YouTube</Button>
+    <Button href={church.podcast.showUrl} variant="gold" external goal="watch"><Play size={18} aria-hidden="true" /> Listen to Hold Fast</Button>
+    <Button href={church.youtube.channelUrl} variant="outline-light" external goal="watch">Watch on YouTube</Button>
+    <Button href={church.podcast.appleUrl} variant="outline-light" external>Apple Podcasts</Button>
   </PageHero>
 
   <Section id="library" title={items.length > 0 ? 'Teaching library' : 'Where to watch and listen'}>
@@ -45,7 +47,7 @@ const items = await getTeachings();
     )}
     <ReviewFlag class="mt-8 max-w-3xl">
       {items.length === 0 ? 'The searchable teaching library (search by book, passage, title, speaker, date, series, video/audio) is built and appears here as soon as teachings exist. Two ways to fill it: (1) set the YouTube channel ID in src/config/church.ts to pull the latest uploads automatically; (2) add files to src/content/teachings/ for full details (passage, series, notes, transcripts). ' : ''}
-      The old teaching archive page (/about-6) — including notes/commentary and the Revelation material — could not be read during the build. Its links must be migrated into src/content/teachings/.
+      Hold Fast episodes load automatically from the podcast feed at every build (feeds.buzzsprout.com/2180061.rss). The feed was unreachable from this preview environment, so only two verified episodes show here; the live site will list all of them. The old teaching archive page (/about-6) could not be read; add any notes or commentary from it to src/content/teachings/.
     </ReviewFlag>
   </Section>
 </Base>

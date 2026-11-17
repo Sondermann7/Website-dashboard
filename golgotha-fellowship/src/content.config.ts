@@ -18,6 +18,8 @@ const ministries = defineCollection({
     /** Existing ministry name on the old site, e.g. "Feed My Lambs". */
     alsoKnownAs: z.string().optional(),
     summary: z.string(),
+    /** Opening line on the ministry's own page; different wording from the card summary. */
+    lede: z.string().optional(),
     order: z.number().default(50),
     icon: z.enum(['baby', 'users', 'book-open', 'heart', 'globe', 'hand-heart', 'flame']).default('users'),
     audience: z.string().optional(),

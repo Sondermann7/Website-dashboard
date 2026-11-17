@@ -1,6 +1,7 @@
 import { getCollection } from 'astro:content';
 import { church } from '../config/church';
 import { getLatestVideos } from './youtube';
+import { getPodcastEpisodes, bookFromTitle } from './podcast';
 
 /** One shape for the teaching library, whether it came from a content file or YouTube. */
 export interface TeachingItem {
@@ -26,7 +27,8 @@ export async function getTeachings(): Promise<TeachingItem[]> {
   const curated: TeachingItem[] = entries.map((t) => ({
     key: t.id,
     title: t.data.title,
-    date: t.data.date.toISOString(),
+    // Date-only entries (2026-02-25) parse as UTC midnight, which is the evening before in Idaho. Pin them to midday.
+    date: (t.data.date.getUTCHours() === 0 && t.data.date.getUTCMinutes() === 0 ? new Date(t.data.date.getTime() + 12 * 3600e3) : t.data.date).toISOString(),
     speaker: t.data.speaker,
     book: t.data.book,
     passage: t.data.passage,
@@ -38,7 +40,24 @@ export async function getTeachings(): Promise<TeachingItem[]> {
     summary: t.data.summary,
     href: `/teachings/${t.id}`,
   }));
-  const known = new Set(curated.map((c) => c.videoUrl).filter(Boolean));
+  const known = new Set(curated.flatMap((c) => [c.videoUrl, c.audioUrl]).filter(Boolean));
+  const knownTitles = new Set(curated.map((c) => c.title.toLowerCase()));
+  const episodes: TeachingItem[] = (await getPodcastEpisodes(church.podcast.feedUrl))
+    .filter((e) => !knownTitles.has(e.title.toLowerCase()) && !(e.pageUrl && known.has(e.pageUrl)))
+    .map((e) => {
+      const { book, chapter } = bookFromTitle(e.title);
+      return {
+        key: `pod-${e.id}`,
+        title: e.title,
+        date: e.published.toISOString(),
+        speaker: church.seniorPastor.known,
+        book,
+        passage: book && chapter ? `${book} ${chapter}` : undefined,
+        series: church.podcast.name,
+        audioUrl: e.pageUrl ?? e.audioUrl,
+        summary: e.summary,
+      };
+    });
   const feed: TeachingItem[] = (await getLatestVideos(church.youtube.channelId))
     .filter((v) => !known.has(v.url))
     .map((v) => ({
@@ -48,5 +67,5 @@ export async function getTeachings(): Promise<TeachingItem[]> {
       videoUrl: v.url,
       thumbnail: v.thumbnail,
     }));
-  return [...curated, ...feed].sort((a, b) => b.date.localeCompare(a.date));
+  return [...curated, ...episodes, ...feed].sort((a, b) => b.date.localeCompare(a.date));
 }

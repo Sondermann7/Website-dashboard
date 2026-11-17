@@ -1,6 +1,7 @@
 ---
 title: Youth Ministry
 summary: A place for students to hear God’s Word and put it into practice.
+lede: "Built on Luke 6:46–48: students learning to build their lives on the rock by hearing what Jesus says and doing it."
 order: 2
 icon: flame
 audience: Students

@@ -115,7 +115,7 @@ for (const [href, from] of internal) {
 }
 
 // ---------- 4. External links: shape check (network to them is blocked here) ---
-const allowedHosts = ['www.google.com', 'maps.apple.com', 'www.youtube.com', 'www.facebook.com', 'www.instagram.com', 'www.amazon.com', 'www.audible.com', 'podcasts.apple.com', 'www.tvmen.org', 'www.revelationroundtable.com', 'members.nampa.com'];
+const allowedHosts = ['www.google.com', 'maps.apple.com', 'www.youtube.com', 'www.facebook.com', 'www.instagram.com', 'www.amazon.com', 'www.audible.com', 'podcasts.apple.com', 'www.tvmen.org', 'www.revelationroundtable.com', 'members.nampa.com', 'golgothafellowship.buzzsprout.com', 'music.amazon.com'];
 for (const [h] of external) {
   const host = new URL(h, SITE).host;
   ok(h.startsWith('https://'), `External link not https: ${h}`);

@@ -108,10 +108,10 @@ export default function TeachingLibrary({ items }: { items: TeachingItem[] }) {
                   {(t.passage || t.series) && <p className="mt-1.5 text-[0.95rem] text-blue font-semibold">{[t.passage, t.series && `Series: ${t.series}`].filter(Boolean).join(' · ')}</p>}
                   {t.summary && <p className="mt-2 text-[0.95rem] text-body">{t.summary}</p>}
                   <ul className="mt-auto flex flex-wrap gap-x-5 pt-4 text-[0.95rem]">
-                    {t.videoUrl && <li><a className="link inline-flex min-h-11 items-center" href={t.videoUrl} target="_blank" rel="noopener" data-goal="watch">Watch<span className="sr-only"> {t.title} (opens in a new tab)</span></a></li>}
-                    {t.audioUrl && <li><a className="link inline-flex min-h-11 items-center" href={t.audioUrl} target="_blank" rel="noopener">Listen<span className="sr-only"> to {t.title} (opens in a new tab)</span></a></li>}
-                    {t.notesUrl && <li><a className="link inline-flex min-h-11 items-center" href={t.notesUrl} target="_blank" rel="noopener">Notes<span className="sr-only"> for {t.title} (opens in a new tab)</span></a></li>}
-                    {t.transcriptUrl && <li><a className="link inline-flex min-h-11 items-center" href={t.transcriptUrl} target="_blank" rel="noopener">Transcript<span className="sr-only"> of {t.title} (opens in a new tab)</span></a></li>}
+                    {t.videoUrl && <li><a className="link inline-flex min-h-11 min-w-11 items-center" href={t.videoUrl} target="_blank" rel="noopener" data-goal="watch">Watch<span className="sr-only"> {t.title} (opens in a new tab)</span></a></li>}
+                    {t.audioUrl && <li><a className="link inline-flex min-h-11 min-w-11 items-center" href={t.audioUrl} target="_blank" rel="noopener">Listen<span className="sr-only"> to {t.title} (opens in a new tab)</span></a></li>}
+                    {t.notesUrl && <li><a className="link inline-flex min-h-11 min-w-11 items-center" href={t.notesUrl} target="_blank" rel="noopener">Notes<span className="sr-only"> for {t.title} (opens in a new tab)</span></a></li>}
+                    {t.transcriptUrl && <li><a className="link inline-flex min-h-11 min-w-11 items-center" href={t.transcriptUrl} target="_blank" rel="noopener">Transcript<span className="sr-only"> of {t.title} (opens in a new tab)</span></a></li>}
                   </ul>
                 </div>
               </li>

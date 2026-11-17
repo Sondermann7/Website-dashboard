@@ -14,7 +14,8 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const t = entry.data;
 const { Content } = await render(entry);
-const meta = [formatDate(t.date), t.speaker, t.passage, t.series && `Series: ${t.series}`].filter(Boolean).join(' · ');
+const shown = t.date.getUTCHours() === 0 ? new Date(t.date.getTime() + 12 * 3600e3) : t.date;
+const meta = [formatDate(shown), t.speaker, t.passage, t.series && `Series: ${t.series}`].filter(Boolean).join(' · ');
 ---
 <Base title={t.title} description={t.summary ?? `${t.title}${t.passage ? ` (${t.passage})` : ''} — a Bible teaching from ${church.name}, Nampa, Idaho.`}>
   <PageHero eyebrow="Teaching" title={t.title} lede={meta}>

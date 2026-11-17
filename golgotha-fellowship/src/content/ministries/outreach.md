@@ -1,6 +1,7 @@
 ---
 title: Outreach & Jail Ministry
 summary: Taking the gospel of Jesus Christ beyond our walls, including into local jails and prisons.
+lede: "Bringing the hope of Christ to our community and to people in local jails and prisons."
 order: 5
 icon: hand-heart
 leaders: [Doug Turner]

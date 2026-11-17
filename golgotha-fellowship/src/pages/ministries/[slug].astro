@@ -20,7 +20,7 @@ const { Content } = await render(entry);
 const hasSchedule = m.gatheringIds.length > 0;
 ---
 <Base title={m.alsoKnownAs ? `${m.title} (${m.alsoKnownAs})` : m.title} description={`${m.title} at ${church.name}, Nampa, Idaho. ${m.summary}`}>
-  <PageHero eyebrow={m.alsoKnownAs ?? 'Ministries'} title={m.title} lede={m.summary}>
+  <PageHero eyebrow={m.alsoKnownAs ?? 'Ministries'} title={m.title} lede={m.lede ?? m.summary}>
     {m.nextStep && <Button href={m.nextStep.href} goal={m.nextStep.href === '/new-here' ? 'plan-visit' : undefined}>{m.nextStep.label}</Button>}
     <Button href="/ministries" variant="secondary">All ministries</Button>
   </PageHero>

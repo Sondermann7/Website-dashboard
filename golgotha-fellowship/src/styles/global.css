@@ -622,3 +622,20 @@ html.mo .hero-rise {
 .on-dark .on-light :focus-visible {
   outline-color: var(--color-focus);
 }
+
+/* Buttons inside a navy photo header: the navy variants would vanish into the photo. */
+.hero .btn-primary {
+  background: var(--color-gold-light);
+  color: var(--color-navy-deep);
+}
+.hero .btn-primary:hover {
+  background: #edd39a;
+}
+.hero .btn-secondary {
+  border-color: #fff;
+  color: #fff;
+}
+.hero .btn-secondary:hover {
+  background: #fff;
+  color: var(--color-navy);
+}

@@ -82,3 +82,18 @@ test('failed Turnstile check blocks the submission', async () => {
   assert.equal(res.status, 403);
   assert.equal(calls.length, 1);
 });
+
+test('plan-a-visit needs a service and goes to the greeter inbox (or contact inbox)', async () => {
+  const base = { form: 'visit', name: 'New Family', email: 'new@example.com' };
+  assert.equal(validate(form(base)).ok, false);
+  const calls = [];
+  const res = await handle(req({ ...base, service: 'Sunday 10:30 AM', kids: '2' }), env, okFetch(calls));
+  assert.equal(res.status, 200);
+  const body = JSON.parse(calls[0].init.body);
+  assert.deepEqual(body.to, ['c@example.org']);
+  assert.match(body.text, /Planning to attend: Sunday 10:30 AM/);
+  assert.match(body.text, /Children coming: 2/);
+  const calls2 = [];
+  await handle(req({ ...base, service: 'Sunday 8:30 AM' }), { ...env, VISIT_TO: 'greeters@example.org' }, okFetch(calls2));
+  assert.deepEqual(JSON.parse(calls2[0].init.body).to, ['greeters@example.org']);
+});
