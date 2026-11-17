@@ -5,13 +5,18 @@ import Phone from '@lucide/astro/icons/phone';
 import MapPin from '@lucide/astro/icons/map-pin';
 import Play from '@lucide/astro/icons/play';
 import { church, telHref, directionsUrl } from '../config/church';
+const here = Astro.url.pathname.replace(/\.html$/, '').replace(/(.)\/$/, '$1') || '/';
 const item = 'flex min-h-14 flex-col items-center justify-center gap-0.5 text-[0.78rem] font-semibold text-paper no-underline active:bg-navy-soft';
 ---
 <nav aria-label="Quick actions" class="on-dark fixed inset-x-0 bottom-0 z-40 border-t border-paper/15 bg-navy pb-[env(safe-area-inset-bottom)] md:hidden">
   <ul class="grid grid-cols-4">
-    <li><a class={item} href="/new-here" data-goal="plan-visit"><CalendarDays size={20} aria-hidden="true" />Visit</a></li>
+    <li>{here === '/new-here'
+      ? <span class:list={[item, 'text-gold-light']} aria-current="page"><CalendarDays size={20} aria-hidden="true" />Visit</span>
+      : <a class={item} href="/new-here" data-goal="plan-visit"><CalendarDays size={20} aria-hidden="true" />Visit</a>}</li>
     <li><a class={item} href={telHref} data-goal="call" aria-label={`Call ${church.phone.display}`}><Phone size={20} aria-hidden="true" />Call</a></li>
     <li><a class={item} href={directionsUrl} target="_blank" rel="noopener" data-goal="directions"><MapPin size={20} aria-hidden="true" />Directions<span class="sr-only"> (opens in a new tab)</span></a></li>
-    <li><a class={item} href="/teachings" data-goal="watch"><Play size={20} aria-hidden="true" />Watch</a></li>
+    <li>{here === '/teachings'
+      ? <span class:list={[item, 'text-gold-light']} aria-current="page"><Play size={20} aria-hidden="true" />Watch</span>
+      : <a class={item} href="/teachings" data-goal="watch"><Play size={20} aria-hidden="true" />Watch</a>}</li>
   </ul>
 </nav>

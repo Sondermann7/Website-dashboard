@@ -5,6 +5,7 @@ import { joinTimes } from '../lib/format';
 import ReviewFlag from './ReviewFlag.astro';
 interface Props { ids?: string[] }
 const { ids } = Astro.props;
+const here = Astro.url.pathname.replace(/\.html$/, '').replace(/(.)\/$/, '$1');
 const list = allGatherings
   .filter((g) => g.status !== 'todo' && (!ids || ids.includes(g.id)))
   .sort((a, b) => DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day));
@@ -15,7 +16,7 @@ const list = allGatherings
       <span class="pt-1 text-[0.8rem] font-bold uppercase tracking-[0.12em] text-blue">{g.day}</span>
       <span>
         <span class="block font-display text-[1.3rem] font-bold leading-tight">{joinTimes(g.times)}</span>
-        {g.href ? <span class="mt-0.5 block"><a class="link inline-flex min-h-11 items-center -my-2.5" href={g.href}>{g.name}</a></span> : <span class="mt-0.5 block font-semibold">{g.name}</span>}
+        {g.href && g.href !== here ? <span class="mt-0.5 block"><a class="link inline-flex min-h-11 items-center -my-2.5" href={g.href}>{g.name}</a></span> : <span class="mt-0.5 block font-semibold">{g.name}</span>}
         {g.note && <span class="block text-[0.95rem] text-body">{g.note}</span>}
         {g.status === 'confirm' && <ReviewFlag class="mt-2">Re-confirm this day and time before launch.</ReviewFlag>}
       </span>

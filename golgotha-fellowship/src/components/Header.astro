@@ -92,6 +92,16 @@ const timesLine = primaryGatherings.map((g) => `${g.day}s ${joinTimes(g.times)}`
     close.addEventListener('click', () => dialog.close());
     // Click on the backdrop closes; Escape is handled natively by <dialog>.
     dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+    // Tapping the page you are already on just closes the menu instead of reloading.
+    const norm = (p) => p.replace(/\.html$/, '').replace(/\/index$/, '/').replace(/(.)\/$/, '$1');
+    document.addEventListener('click', (e) => {
+      const a = e.target instanceof Element ? e.target.closest('a[href]') : null;
+      if (!a || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      const u = new URL(a.href, location.href);
+      if (u.origin !== location.origin || u.hash || norm(u.pathname) !== norm(location.pathname)) return;
+      e.preventDefault();
+      if (dialog.open) dialog.close();
+    });
     dialog.addEventListener('close', () => open.focus());
     window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => { if (e.matches && dialog.open) dialog.close(); });
   })();

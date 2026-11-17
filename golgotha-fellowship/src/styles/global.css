@@ -74,8 +74,9 @@
 
 @layer base {
   html {
-    font-size: 106.25%; /* 17px mobile */
     scroll-padding-top: 6rem;
+    scroll-padding-bottom: 5rem; /* keep focused items clear of the phone quick-actions bar */
+    font-size: 106.25%; /* 17px mobile */
     -webkit-text-size-adjust: 100%;
   }
   @media (min-width: 64rem) {
