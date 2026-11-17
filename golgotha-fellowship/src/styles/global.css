@@ -683,14 +683,16 @@ html.mo .hero-rise {
 }
 .track-fill {
   position: absolute;
-  inset: 0 0 auto 0;
-  height: calc(var(--t) * 100%);
+  inset: 0;
   background: var(--color-gold);
+  transform-origin: 50% 0;
+  transform: scaleY(var(--t));
+  will-change: transform;
 }
 .track-fish {
   position: absolute;
   left: var(--rail);
-  top: calc(var(--dot) / 2 + var(--t) * (100% - var(--dot)));
+  top: calc(var(--dot) / 2);
   z-index: 3;
   width: var(--fish);
   height: var(--fish);
@@ -701,6 +703,7 @@ html.mo .hero-rise {
   color: var(--color-gold-light);
   box-shadow: 0 0 0 4px var(--color-paper), var(--shadow-lift);
   transform: translate(-50%, -50%);
+  will-change: transform;
   pointer-events: none;
 }
 .track-dark .track-fish {
