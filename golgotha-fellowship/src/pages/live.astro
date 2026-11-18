@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Section from '../components/Section.astro';
+import Button from '../components/Button.astro';
+import ReviewFlag from '../components/ReviewFlag.astro';
+import Track from '../components/Track.astro';
+import TrackDot from '../components/TrackDot.astro';
+import StationCard from '../components/StationCard.astro';
+import Play from '@lucide/astro/icons/play';
+import { church } from '../config/church';
+import { getLatestTeaching } from '../lib/teachings';
+import { PREVIEW } from '../lib/review';
+const live = church.live;
+const latest = await getLatestTeaching();
+const steps = [
+  { title: 'Tap “Watch live”', text: 'It opens the service on YouTube, in the app or your browser. No account or sign-in needed.' },
+  { title: 'Get a reminder', text: 'Subscribe on YouTube and tap the bell, and YouTube will let you know when we go live.' },
+  { title: 'Watch on your TV', text: 'Open the YouTube app on a smart TV or streaming stick and search “Golgotha Fellowship Nampa”.' },
+  { title: 'Missed it?', text: 'Every teaching is posted afterwards. Watch it any time from the teachings page.' },
+];
+---
+<Base title="Watch Live" description={`Watch ${church.name} services live on YouTube: ${live.windows.map((w) => `${w.label} at ${w.times}`).join(' and ')} (Idaho time).`}>
+  <PageHero photo="sunday-teaching" eyebrow="Watch live" title="Join us from wherever you are" lede={`Our services stream live on YouTube. ${live.windows.map((w) => `${w.label} at ${w.times}`).join(', ')} (Idaho time).`}>
+    <Button href={live.youtubeUrl} variant="gold" external goal="watch-live"><Play size={18} aria-hidden="true" /> Watch on YouTube</Button>
+    <Button href={live.subscribeUrl} variant="outline-light" external goal="subscribe">Subscribe for reminders</Button>
+  </PageHero>
+
+  <Section>
+    <div class="grid gap-6 lg:grid-cols-[1.2fr_1fr] lg:items-start">
+      <!-- Status card: one of these two shows, depending on the time -->
+      <div>
+        <div data-live-only class="on-dark relative overflow-hidden rounded-[var(--radius-panel)] bg-navy p-7 text-white shadow-[var(--shadow-float)] md:p-10">
+          <p class="flex items-center gap-2.5 font-bold uppercase tracking-[0.14em] text-[#ff8a80]"><span class="live-dot" aria-hidden="true"></span> Live now</p>
+          <h2 class="mt-3 !text-white">We’re worshipping together right now.</h2>
+          <p class="mt-3 text-mist">The service is streaming on YouTube. Come on in.</p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <Button href={live.youtubeUrl} variant="gold" external goal="watch-live"><Play size={18} aria-hidden="true" /> Watch live on YouTube</Button>
+            {live.facebookUrl && <Button href={live.facebookUrl} variant="outline-light" external goal="watch-live">Watch on Facebook</Button>}
+          </div>
+        </div>
+        <div data-offair-only class="card p-7 md:p-10">
+          <p class="eyebrow plain">Next live service</p>
+          <h2 class="mt-2" data-next-live>{live.windows[0].label}, {live.windows[0].times}</h2>
+          <p class="mt-3 text-body">We’re not live right now. While you wait, watch the latest teaching or catch up on past ones.</p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <Button href={latest?.href ?? '/teachings'} goal="watch"><Play size={18} aria-hidden="true" /> Latest teaching</Button>
+            <Button href={live.youtubeUrl} variant="secondary" external goal="watch-live">Open our live page on YouTube</Button>
+          </div>
+        </div>
+        {PREVIEW && (
+          <p class="mt-4 text-[0.95rem] text-body">
+            Preview: <button type="button" class="link min-h-11" data-force-live>see how the site looks during a service</button>
+          </p>
+        )}
+      </div>
+
+      <div class="card p-7 md:p-8">
+        <h2 class="!text-[length:var(--text-h3)]">Live every week</h2>
+        <dl class="mt-4 divide-y divide-line border-y border-line">
+          {live.windows.map((w) => (
+            <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4">
+              <dt class="font-semibold">{w.label}</dt>
+              <dd class="text-body">{w.times}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="mt-4 text-[0.95rem] text-body">Times are Idaho (Mountain) time. During a service, a red “Live now” bar appears at the top of every page on this site.</p>
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="stone" id="how" title="How to watch">
+    <Track>
+      <ol class="grid max-w-3xl gap-6">
+        {steps.map((s, i) => (
+          <li data-step>
+            <TrackDot n={i + 1} />
+            <div class="card p-6 md:p-7">
+              <h3 class="!text-[1.35rem] !font-bold">{s.title}</h3>
+              <p class="mt-2 text-body">{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </Track>
+  </Section>
+
+  <Section id="listen" title="Prefer to listen?">
+    <div class="grid gap-6 lg:grid-cols-2">
+      <StationCard />
+      <div class="card p-6 md:p-8">
+        <h3>Hold Fast</h3>
+        <p class="mt-2 text-body">{church.seniorPastor.known} teaching through the Bible verse by verse, on the radio every weekday and as a podcast.</p>
+        <p class="mt-5"><Button href="/listen" variant="secondary">Play Hold Fast</Button></p>
+      </div>
+    </div>
+    {live.status === 'confirm' && <ReviewFlag class="mt-8 max-w-3xl">Confirm which services stream (both Sunday services? Wednesday?) and the Facebook live page. The live bar shows {live.windows.map((w) => `${w.label} ${w.start}–${w.end}`).join(', ')}; edit church.live in src/config/church.ts to change it.</ReviewFlag>}
+  </Section>
+
+  {PREVIEW && (
+    <script is:inline>
+      document.querySelectorAll('[data-force-live]').forEach(function (b) {
+        function label() { var on = document.documentElement.hasAttribute('data-live'); b.textContent = on ? 'back to the normal look' : 'see how the site looks during a service'; }
+        label();
+        b.addEventListener('click', function () {
+          var on = !document.documentElement.hasAttribute('data-live');
+          try { on ? sessionStorage.setItem('gf-force-live', '1') : sessionStorage.removeItem('gf-force-live'); } catch (e) {}
+          document.documentElement.toggleAttribute('data-live', on);
+          label();
+        });
+      });
+    </script>
+  )}
+</Base>

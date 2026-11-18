@@ -7,6 +7,8 @@ import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import Schema from '../components/Schema.astro';
 import Announcements from '../components/Announcements.astro';
+import LiveStatus from '../components/LiveStatus.astro';
+import LiveBar from '../components/LiveBar.astro';
 import { church } from '../config/church';
 import { REVIEW, PREVIEW } from '../lib/review';
 import { cleanPath } from '../lib/format';
@@ -79,7 +81,9 @@ const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
       </aside>
     )}
     <Announcements />
+    <LiveStatus />
     <Header />
+    <LiveBar />
     <main id="main" tabindex="-1" class="outline-none">
       <slot />
     </main>

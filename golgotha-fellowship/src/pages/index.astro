@@ -172,12 +172,20 @@ const holdFast = 'Hold fast.'.split('');
               <li class="border-l-2 border-gold-light pl-4"><p class="font-bold">Line by line</p><p class="text-mist">We teach through books of the Bible, simply and systematically.</p></li>
             </ul>
           )}
+          <a data-live-only href={church.live.youtubeUrl} target="_blank" rel="noopener" data-goal="watch-live" class="mt-7 flex items-center gap-3 rounded-[var(--radius-card)] bg-[#b3261e] px-5 py-4 font-semibold text-white no-underline shadow-[var(--shadow-card)] hover:underline">
+            <span class="live-dot !bg-white" aria-hidden="true"></span>
+            <span><span class="uppercase tracking-[0.12em]">Live now</span> · Watch the service on YouTube</span><span class="sr-only"> (opens in a new tab)</span>
+          </a>
           <div class="mt-9 flex flex-wrap gap-3">
             {video && !PREVIEW
               ? <button type="button" class="btn btn-gold" data-watch-inline><Play size={18} aria-hidden="true" /> Watch now</button>
               : <Button href={latest ? (latest.videoUrl ?? latest.audioUrl ?? latest.href ?? '/teachings') : church.youtube.channelUrl} variant="gold" external={!!latest && !!(latest.videoUrl ?? latest.audioUrl)} goal="watch"><Play size={18} aria-hidden="true" /> {latest ? (latest.videoUrl ? 'Watch now' : 'Listen now') : 'Watch on YouTube'}</Button>}
             <Button href="/teachings" variant="outline-light">All teachings</Button>
           </div>
+          <p data-offair-only class="mt-6 text-[0.98rem] text-mist">
+            Live on YouTube {church.live.windows.map((w) => `${w.label} ${w.times}`).join(' · ')}.
+            <a class="ml-1 inline-flex min-h-11 items-center font-semibold text-gold-light underline underline-offset-4" href="/live">How to watch live</a>
+          </p>
         </div>
       </div>
       {radio?.status === 'confirm' && <ReviewFlag class="mt-5">Confirm Hold Fast stations and air times.</ReviewFlag>}

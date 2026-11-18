@@ -23,6 +23,9 @@ const status = beliefs.match(/^approvalStatus:\s*(\w+)/m)?.[1];
 
 check(status === 'approved', blockers, `Statement of Faith is "${status}". Paste the official text verbatim into src/content/beliefs/statement.md and get pastoral approval.`, 'Statement of Faith migrated and approved.');
 check(!/giving:\s*\{[\s\S]*?url:\s*null/.test(cfg), blockers, 'Giving link not set (giving.url in src/config/church.ts).', 'Giving link set.');
+check(!/giving:\s*\{[\s\S]*?status:\s*'confirm'/.test(cfg), blockers, 'Giving link is provisional (ChMeetings home page). Paste the exact Give page address and set giving.status to verified.', 'Giving link confirmed.');
+check(!/station:\s*\{[\s\S]*?status:\s*'confirm'/.test(cfg), warnings, '97.5 FM: confirm the new station name and stream link (church.station).', '97.5 FM details confirmed.');
+check(!/live:\s*\{[\s\S]*?status:\s*'confirm'/.test(cfg), warnings, 'Watch Live: confirm which services stream and the Facebook live page (church.live).', 'Live schedule confirmed.');
 check(anyFile('src/assets/brand', /^golgotha-logo\.svg$/i), blockers, 'Logo missing (src/assets/brand/golgotha-logo.svg).', 'Logo present (vector traced from the church artwork; swap in the original file when supplied).');
 check(anyFile('src/assets/brand', /^calvary-dove\.svg$/i), warnings, 'Calvary Chapel dove not supplied (src/assets/brand/calvary-dove.svg). No dove is shown.', 'Calvary Chapel dove present.');
 check(anyFile('src/assets/photos', /^hero\./i), warnings, 'No hero photo (src/assets/photos/hero.jpg). Homepage hero is plain navy. The design depends on real photos: see src/assets/photos/README.md.', 'Hero photo present.');

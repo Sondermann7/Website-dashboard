@@ -15,8 +15,11 @@ const item = 'flex min-h-14 flex-col items-center justify-center gap-0.5 text-[0
       : <a class={item} href="/new-here" data-goal="plan-visit"><CalendarDays size={20} aria-hidden="true" />Visit</a>}</li>
     <li><a class={item} href={telHref} data-goal="call" aria-label={`Call ${church.phone.display}`}><Phone size={20} aria-hidden="true" />Call</a></li>
     <li><a class={item} href={directionsUrl} target="_blank" rel="noopener" data-goal="directions"><MapPin size={20} aria-hidden="true" />Directions<span class="sr-only"> (opens in a new tab)</span></a></li>
-    <li>{here === '/teachings'
+    <li>
+      <a data-live-only class:list={[item, 'text-white']} href={church.live.youtubeUrl} target="_blank" rel="noopener" data-goal="watch-live"><span class="relative"><Play size={20} aria-hidden="true" /><span class="live-dot absolute -right-1.5 -top-1" aria-hidden="true"></span></span>Live now<span class="sr-only"> on YouTube (opens in a new tab)</span></a>
+      <span data-offair-only class="contents">{here === '/teachings'
       ? <span class:list={[item, 'text-gold-light']} aria-current="page"><Play size={20} aria-hidden="true" />Watch</span>
-      : <a class={item} href="/teachings" data-goal="watch"><Play size={20} aria-hidden="true" />Watch</a>}</li>
+      : <a class={item} href="/teachings" data-goal="watch"><Play size={20} aria-hidden="true" />Watch</a>}</span>
+    </li>
   </ul>
 </nav>

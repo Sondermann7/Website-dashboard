@@ -58,5 +58,19 @@
 /prayer-request/          /prayer                301
 
 
+# --- Watch live / listen (2026-11-18) ---------------------------------------
+/watch                    /live                  301
+/watch/                   /live                  301
+/livestream               /live                  301
+/livestream/              /live                  301
+/stream                   /live                  301
+/stream/                  /live                  301
+/radio                    /listen                301
+/radio/                   /listen                301
+/podcast                  /listen                301
+/podcast/                 /listen                301
+/hold-fast                /listen                301
+/hold-fast/               /listen                301
+
 # --- Splat rules (must stay last) -----------------------------------------
 /sermons/*                /teachings             301

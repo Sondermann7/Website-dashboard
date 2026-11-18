@@ -1,0 +1,136 @@
+---
+/**
+ * Hold Fast player: plays recent episodes from the church's podcast feed right on the page.
+ * Audio streams straight from the feed's own files (no embed, no third-party script).
+ * Episodes refresh at every build. If the feed can't be reached, preview builds show sample
+ * titles (audio plays on the live site); public builds fall back to podcast links.
+ */
+import Play from '@lucide/astro/icons/play';
+import Pause from '@lucide/astro/icons/pause';
+import RotateCcw from '@lucide/astro/icons/rotate-ccw';
+import RotateCw from '@lucide/astro/icons/rotate-cw';
+import { church } from '../config/church';
+import { getPodcastEpisodes } from '../lib/podcast';
+import { cleanTitle } from '../lib/sermon-text';
+import { PREVIEW } from '../lib/review';
+import ReviewFlag from './ReviewFlag.astro';
+
+interface Props { limit?: number; class?: string; heading?: string }
+const { limit = 5, class: cls = '', heading = 'Hold Fast' } = Astro.props;
+
+type Ep = { title: string; date: string; audio?: string };
+const feed = await getPodcastEpisodes(church.podcast.feedUrl);
+let eps: Ep[] = feed.filter((e) => e.audioUrl).slice(0, limit).map((e) => ({ title: cleanTitle(e.title), date: e.published.toISOString(), audio: e.audioUrl }));
+const sample = eps.length === 0 && PREVIEW;
+if (sample) {
+  // Preview only: titles of real Hold Fast episodes, so the player can be seen. No audio here.
+  eps = [
+    { title: 'Revelation 3, Philadelphia, Part 3', date: '2026-03-18T18:00:00Z' },
+    { title: 'Revelation 2, Pergamos, Part 3', date: '2026-02-25T18:00:00Z' },
+  ];
+}
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/Boise' });
+const first = eps[0];
+---
+{first ? (
+  <div class:list={['hf on-dark relative overflow-hidden rounded-[var(--radius-card)] bg-navy p-5 text-paper shadow-[var(--shadow-float)] sm:p-7', cls]} data-hf>
+    <div class="flex items-center gap-4 sm:gap-5">
+      <button type="button" class="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-gold-light text-navy-deep shadow-[var(--shadow-card)] transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white" data-hf-toggle aria-label={`Play ${first.title}`}>
+        <span data-hf-icon="play"><Play size={26} class="translate-x-0.5" fill="currentColor" aria-hidden="true" /></span>
+        <span data-hf-icon="pause" hidden><Pause size={26} fill="currentColor" aria-hidden="true" /></span>
+      </button>
+      <div class="min-w-0">
+        <p class="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-gold-light">{heading} · {church.seniorPastor.known}</p>
+        <p class="mt-1 font-display text-[1.3rem] font-bold leading-tight sm:text-[1.5rem]" data-hf-title>{first.title}</p>
+        <p class="mt-0.5 text-[0.92rem] text-mist" data-hf-date>{fmt(first.date)}</p>
+      </div>
+    </div>
+    <div class="mt-4 flex items-center gap-1 text-[0.85rem] text-mist sm:gap-2">
+      <button type="button" class="grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-white/10" data-hf-skip="-15" aria-label="Back 15 seconds"><RotateCcw size={18} aria-hidden="true" /></button>
+      <span class="w-11 shrink-0 text-right tabular-nums" data-hf-cur>0:00</span>
+      <input type="range" class="hf-seek min-w-0 flex-1" min="0" max="1000" value="0" step="1" data-hf-seek aria-label="Position in episode" />
+      <span class="w-11 shrink-0 tabular-nums" data-hf-dur>--:--</span>
+      <button type="button" class="grid h-11 w-11 shrink-0 place-items-center rounded-full hover:bg-white/10" data-hf-skip="30" aria-label="Forward 30 seconds"><RotateCw size={18} aria-hidden="true" /></button>
+    </div>
+    <p class="mt-1 text-[0.9rem] text-gold-light" data-hf-msg role="status" hidden></p>
+    <audio preload="none" data-hf-audio src={first.audio}></audio>
+    {eps.length > 1 && (
+      <>
+        <p class="mt-5 text-[0.78rem] font-bold uppercase tracking-[0.14em] text-mist">Recent episodes</p>
+        <ol class="mt-2 divide-y divide-white/10 border-y border-white/10">
+          {eps.map((e, i) => (
+            <li>
+              <button type="button" class="group flex min-h-12 w-full items-center gap-3 py-2.5 text-left hover:text-gold-light aria-pressed:text-gold-light" data-hf-ep data-src={e.audio ?? ''} data-title={e.title} data-date={fmt(e.date)} aria-pressed={i === 0 ? 'true' : 'false'}>
+                <Play size={14} class="shrink-0 opacity-60 group-aria-pressed:opacity-100" fill="currentColor" aria-hidden="true" />
+                <span class="min-w-0 flex-1 font-semibold leading-snug">{e.title}</span>
+                <span class="shrink-0 text-[0.85rem] text-mist">{fmt(e.date)}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </>
+    )}
+    <p class="mt-4 flex flex-wrap gap-x-5 text-[0.92rem]">
+      <a class="inline-flex min-h-11 items-center text-paper underline underline-offset-4" href={church.podcast.appleUrl} target="_blank" rel="noopener">Apple Podcasts<span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="inline-flex min-h-11 items-center text-paper underline underline-offset-4" href={church.podcast.showUrl} target="_blank" rel="noopener">All episodes<span class="sr-only"> (opens in a new tab)</span></a>
+    </p>
+  </div>
+) : (
+  <div class:list={['card p-6 md:p-7', cls]}>
+    <h3>{heading}</h3>
+    <p class="mt-2 text-body">Listen to Pastor Marty teach through the Bible on the Hold Fast podcast.</p>
+    <p class="mt-4 flex flex-wrap gap-3">
+      <a class="btn btn-primary" href={church.podcast.appleUrl} target="_blank" rel="noopener">Apple Podcasts<span class="sr-only"> (opens in a new tab)</span></a>
+      <a class="btn btn-secondary" href={church.podcast.showUrl} target="_blank" rel="noopener">All episodes<span class="sr-only"> (opens in a new tab)</span></a>
+    </p>
+  </div>
+)}
+{sample && <ReviewFlag class="mt-4">Preview only: the podcast feed can’t be reached from the preview, so these are sample titles and audio plays on the live site. The live site loads the five newest Hold Fast episodes from the feed at every build.</ReviewFlag>}
+
+<script>
+  const fmt = (s: number) => (Number.isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}` : '--:--');
+  document.querySelectorAll<HTMLElement>('[data-hf]').forEach((root) => {
+    const audio = root.querySelector<HTMLAudioElement>('[data-hf-audio]')!;
+    const toggle = root.querySelector<HTMLButtonElement>('[data-hf-toggle]')!;
+    const seek = root.querySelector<HTMLInputElement>('[data-hf-seek]')!;
+    const cur = root.querySelector<HTMLElement>('[data-hf-cur]')!;
+    const dur = root.querySelector<HTMLElement>('[data-hf-dur]')!;
+    const msg = root.querySelector<HTMLElement>('[data-hf-msg]')!;
+    const title = root.querySelector<HTMLElement>('[data-hf-title]')!;
+    const date = root.querySelector<HTMLElement>('[data-hf-date]')!;
+    const icon = (playing: boolean) => {
+      root.querySelector<HTMLElement>('[data-hf-icon="play"]')!.hidden = playing;
+      root.querySelector<HTMLElement>('[data-hf-icon="pause"]')!.hidden = !playing;
+      toggle.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} ${title.textContent}`);
+    };
+    const say = (t: string) => { msg.textContent = t; msg.hidden = !t; };
+    const play = () => {
+      if (!audio.getAttribute('src')) { say('Audio plays on the live site.'); return; }
+      say('');
+      audio.play().catch(() => say('This episode could not be played here. Try Apple Podcasts below.'));
+    };
+    toggle.addEventListener('click', () => (audio.paused ? play() : audio.pause()));
+    audio.addEventListener('play', () => {
+      icon(true);
+      document.querySelectorAll<HTMLAudioElement>('audio').forEach((a) => a !== audio && a.pause());
+    });
+    audio.addEventListener('pause', () => icon(false));
+    audio.addEventListener('loadedmetadata', () => { dur.textContent = fmt(audio.duration); });
+    audio.addEventListener('timeupdate', () => {
+      cur.textContent = fmt(audio.currentTime);
+      if (audio.duration) { seek.value = String((audio.currentTime / audio.duration) * 1000); seek.style.setProperty('--p', `${(audio.currentTime / audio.duration) * 100}%`); }
+    });
+    seek.addEventListener('input', () => { if (audio.duration) audio.currentTime = (Number(seek.value) / 1000) * audio.duration; });
+    root.querySelectorAll<HTMLButtonElement>('[data-hf-skip]').forEach((b) => b.addEventListener('click', () => {
+      if (audio.duration) audio.currentTime = Math.min(audio.duration, Math.max(0, audio.currentTime + Number(b.dataset.hfSkip)));
+    }));
+    root.querySelectorAll<HTMLButtonElement>('[data-hf-ep]').forEach((b) => b.addEventListener('click', () => {
+      root.querySelectorAll('[data-hf-ep]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      title.textContent = b.dataset.title ?? '';
+      date.textContent = b.dataset.date ?? '';
+      if (b.dataset.src) audio.src = b.dataset.src; else audio.removeAttribute('src');
+      seek.value = '0'; seek.style.setProperty('--p', '0%'); cur.textContent = '0:00'; dur.textContent = '--:--';
+      play();
+    }));
+  });
+</script>

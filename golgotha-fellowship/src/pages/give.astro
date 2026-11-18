@@ -19,6 +19,14 @@ const g = church.giving;
         </div>
       )}
       <div class="card p-6 md:p-8">
+        <h2 class="!text-[length:var(--text-h3)]">Give in the app</h2>
+        <p class="mt-2 text-body">The {church.name} app has a Give tab, along with events and the weekly bulletin.</p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <Button href={church.app.ios} variant="secondary" external goal="give">iPhone app</Button>
+          <Button href={church.app.android} variant="secondary" external goal="give">Android app</Button>
+        </div>
+      </div>
+      <div class="card p-6 md:p-8">
         <h2 class="!text-[length:var(--text-h3)]">Give in person</h2>
         <p class="mt-2 text-body">You are welcome to give at any of our services at {addressOneLine}.</p>
       </div>
@@ -31,6 +39,7 @@ const g = church.giving;
         </div>
       </div>
     </div>
+    {g.status === 'confirm' && <ReviewFlag class="mt-8 max-w-3xl">Give online currently opens the church’s ChMeetings site, which has a Give tab. Replace giving.url in src/config/church.ts with the exact Give page address from the app. Also confirm how in-person giving works and whether mailed gifts are accepted.</ReviewFlag>}
     {!g.url && <ReviewFlag class="mt-8 max-w-3xl">LAUNCH BLOCKER. The church’s existing online-giving link was not verified, so no “Give online” button is shown. Set giving.url and giving.providerName in src/config/church.ts. Also confirm how in-person giving works (offering box, etc.) and whether mailed gifts are accepted. This site never processes payments itself.</ReviewFlag>}
   </Section>
 </Base>

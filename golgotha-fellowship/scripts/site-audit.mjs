@@ -38,7 +38,7 @@ const legacy = {
   '/home': '/', '/what-we-believe': '/beliefs', '/feed-my-lambs': '/ministries/kids', '/called-for-a-purpose': '/ministries/youth',
   '/team-3': '/leadership', '/about-6': '/teachings', '/contact-8': '/get-involved', '/missions': '/ministries/missions', '/about-1': '/about',
   '/visit': '/new-here', '/directions': '/location', '/map': '/location', '/sermons': '/teachings', '/sermons/2019/some-old-sermon': '/teachings',
-  '/donate': '/give', '/giving': '/give', '/staff': '/leadership', '/pastor': '/pastor-marty', '/kids': '/ministries/kids', '/youth': '/ministries/youth', '/prayer-request': '/prayer',
+  '/donate': '/give', '/giving': '/give', '/staff': '/leadership', '/pastor': '/pastor-marty', '/kids': '/ministries/kids', '/youth': '/ministries/youth', '/prayer-request': '/prayer', '/watch': '/live', '/livestream': '/live', '/radio': '/listen', '/podcast': '/listen',
 };
 const redirectRows = [];
 for (const [from, to] of Object.entries(legacy)) {
@@ -55,7 +55,7 @@ for (const [from, to] of Object.entries(legacy)) {
 const sm = await (await get('/sitemap-0.xml')).text();
 const pages = [...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname.replace(/(.)\/$/, '$1'));
 ok(pages.length >= 20, `Sitemap lists only ${pages.length} pages`);
-for (const must of ['/', '/new-here', '/location', '/pastor-marty', '/beliefs', '/give', '/prayer', '/contact']) ok(pages.includes(must), `Sitemap missing ${must}`);
+for (const must of ['/', '/live', '/listen', '/new-here', '/location', '/pastor-marty', '/beliefs', '/give', '/prayer', '/contact']) ok(pages.includes(must), `Sitemap missing ${must}`);
 const robots = await (await get('/robots.txt')).text();
 ok(/Sitemap: https:\/\/www\.golgothafellowship\.org\/sitemap-index\.xml/.test(robots) && !/Disallow: \/\s*$/m.test(robots), 'robots.txt does not allow indexing / list the sitemap');
 
@@ -115,7 +115,7 @@ for (const [href, from] of internal) {
 }
 
 // ---------- 4. External links: shape check (network to them is blocked here) ---
-const allowedHosts = ['www.google.com', 'maps.apple.com', 'www.youtube.com', 'www.facebook.com', 'www.instagram.com', 'www.amazon.com', 'www.audible.com', 'podcasts.apple.com', 'www.tvmen.org', 'www.revelationroundtable.com', 'members.nampa.com', 'golgothafellowship.buzzsprout.com', 'music.amazon.com'];
+const allowedHosts = ['www.google.com', 'maps.apple.com', 'www.youtube.com', 'www.facebook.com', 'www.instagram.com', 'www.amazon.com', 'www.audible.com', 'podcasts.apple.com', 'www.tvmen.org', 'www.revelationroundtable.com', 'members.nampa.com', 'golgothafellowship.buzzsprout.com', 'music.amazon.com', 'apps.apple.com', 'play.google.com', 'zeno.fm', 'golgotha.chmeetings.com'];
 for (const [h] of external) {
   const host = new URL(h, SITE).host;
   ok(h.startsWith('https://'), `External link not https: ${h}`);
@@ -157,7 +157,7 @@ ok(!(await pg.evaluate(() => document.getElementById('mobile-menu').open)), 'Esc
 await pg.click('#menu-open'); await pg.click('#mobile-menu a[href="/location"]'); await pg.waitForLoadState('load');
 ok(new URL(pg.url()).pathname === '/location', 'Mobile menu link does not navigate');
 const bar = await pg.$$eval('nav[aria-label="Quick actions"] a', (as) => as.map((a) => a.getAttribute('href')));
-ok(bar.length === 4 && bar[0] === '/new-here' && bar[1] === TEL && /google\.com\/maps\/dir/.test(bar[2]) && bar[3] === '/teachings', `Quick-action bar links wrong: ${bar.join(' | ')}`);
+ok(bar.length === 5 && bar[0] === '/new-here' && bar[1] === TEL && /google\.com\/maps\/dir/.test(bar[2]) && /youtube\.com\/.+\/live$/.test(bar[3]) && bar[4] === '/teachings', `Quick-action bar links wrong: ${bar.join(' | ')}`);
 const map = await pg.$eval('iframe', (f) => f.src);
 ok(/google\.com\/maps\?q=1404%201st%20Street%20South/.test(map), `Location map is not pinned to the address: ${map}`);
 for (const p of ['/prayer', '/contact', '/get-involved']) {

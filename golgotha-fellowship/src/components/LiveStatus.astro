@@ -1,0 +1,46 @@
+---
+/**
+ * Live-service status, decided on the visitor's device from the schedule in church.live.
+ * Sets <html data-live> during a service window, so anything marked data-live-only appears and
+ * anything marked data-offair-only hides. Fills [data-next-live] with the next service time.
+ * No YouTube API: the channel's /live address always opens whatever is streaming.
+ * Preview builds also honour a "show the live look" switch (sessionStorage gf-force-live).
+ */
+import { church } from '../config/church';
+const { windows, timeZone } = church.live;
+---
+<script is:inline define:vars={{ windows, timeZone }}>
+  (function () {
+    var DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    function mins(t) { var a = t.split(':'); return +a[0] * 60 + +a[1]; }
+    function now() {
+      var p = {};
+      try {
+        new Intl.DateTimeFormat('en-US', { timeZone: timeZone, weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+          .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+      } catch (e) { var d = new Date(); return { d: d.getDay(), m: d.getHours() * 60 + d.getMinutes() }; }
+      return { d: DAYS.indexOf(p.weekday), m: (+p.hour % 24) * 60 + +p.minute };
+    }
+    function forced() { try { return sessionStorage.getItem('gf-force-live') === '1'; } catch (e) { return false; } }
+    function check() {
+      var n = now(), live = forced(), next = null, best = 1e9;
+      windows.forEach(function (w) {
+        var s = mins(w.start), e = mins(w.end);
+        if (w.day === n.d && n.m >= s && n.m < e) live = true;
+        var ahead = ((w.day - n.d + 7) % 7) * 1440 + s - n.m;
+        if (ahead <= 0) ahead += 7 * 1440;
+        if (ahead < best) { best = ahead; next = w; }
+      });
+      document.documentElement.toggleAttribute('data-live', live);
+      if (!next) return;
+      var when = best < 1440 && next.day === n.d ? 'Today' : best < 2880 && next.day === (n.d + 1) % 7 ? 'Tomorrow' : NAMES[next.day];
+      var text = when + ', ' + next.times;
+      document.querySelectorAll('[data-next-live]').forEach(function (el) { el.textContent = text; });
+    }
+    check();
+    document.addEventListener('DOMContentLoaded', check);
+    setInterval(check, 60000);
+    window.gfLiveCheck = check;
+  })();
+</script>

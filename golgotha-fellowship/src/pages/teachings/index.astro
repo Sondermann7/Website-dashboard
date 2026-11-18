@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import Section from '../../components/Section.astro';
 import Button from '../../components/Button.astro';
-import RadioCard from '../../components/RadioCard.astro';
+import HoldFastPlayer from '../../components/HoldFastPlayer.astro';
 import ReviewFlag from '../../components/ReviewFlag.astro';
 import TeachingLibrary from '../../components/TeachingLibrary.tsx';
 import { church } from '../../config/church';
@@ -15,9 +15,9 @@ const books = [...new Map(items.filter((t) => t.book).map((t) => [t.book!, items
 ---
 <Base title="Bible Teachings" description={`Watch and listen to verse-by-verse Bible teaching from ${church.name} in Nampa, Idaho. Free on YouTube and on Hold Fast radio.`}>
   <PageHero photo="page-teachings" eyebrow="Teachings" title="Bible teaching, line by line" lede="We teach through Scripture simply and systematically. Every teaching is free — no account or sign-in needed.">
-    <Button href={church.podcast.showUrl} variant="gold" external goal="watch"><Play size={18} aria-hidden="true" /> Listen to Hold Fast</Button>
+    <Button href="/live" variant="gold" goal="watch-live"><Play size={18} aria-hidden="true" /> Watch live</Button>
+    <Button href="/listen" variant="outline-light">Listen to Hold Fast</Button>
     <Button href={church.youtube.channelUrl} variant="outline-light" external goal="watch">Watch on YouTube</Button>
-    <Button href={church.podcast.appleUrl} variant="outline-light" external>Apple Podcasts</Button>
   </PageHero>
 
   <Section id="library" title={items.length > 0 ? 'Teaching library' : 'Where to watch and listen'}>
@@ -37,7 +37,19 @@ const books = [...new Map(items.filter((t) => t.book).map((t) => [t.book!, items
             <p class="mt-2 text-body">Our full archive is on YouTube.</p>
             <p class="mt-4"><Button href={church.youtube.channelUrl} variant="secondary" external goal="watch">Open the YouTube archive</Button></p>
           </div>
-          <RadioCard />
+          <div class="card p-6 md:p-7">
+            <h3>Watch live</h3>
+            <p class="mt-2 text-body">Services stream live on YouTube: {church.live.windows.map((w) => `${w.label} at ${w.times}`).join(', ')}.</p>
+            <p class="mt-4"><Button href="/live" variant="secondary" goal="watch-live">How to watch live</Button></p>
+          </div>
+        </div>
+        <div class="mt-6 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:items-start">
+          <HoldFastPlayer limit={3} />
+          <div class="card p-6 md:p-7">
+            <h3>Hold Fast &amp; 97.5 FM</h3>
+            <p class="mt-2 text-body">Hold Fast airs every weekday, and {church.station.frequency} is now part of {church.name}.</p>
+            <p class="mt-4"><Button href="/listen" variant="secondary">Radio times &amp; listen live</Button></p>
+          </div>
         </div>
       </>
     ) : (
@@ -49,7 +61,7 @@ const books = [...new Map(items.filter((t) => t.book).map((t) => [t.book!, items
           </div>
           <p class="mt-8"><Button href={church.youtube.channelUrl} variant="light" external goal="watch"><Play size={18} aria-hidden="true" /> Go to our YouTube channel</Button></p>
         </div>
-        <RadioCard />
+        <HoldFastPlayer limit={3} />
       </div>
     )}
     <ReviewFlag class="mt-8 max-w-3xl">

@@ -1,0 +1,10 @@
+---
+/** Slim "Live now" bar under the header. Shown only while a service is streaming (see LiveStatus). */
+import { church } from '../config/church';
+---
+<a data-live-only href={church.live.youtubeUrl} target="_blank" rel="noopener" data-goal="watch-live"
+  class="live-bar flex min-h-11 items-center justify-center gap-2.5 px-4 py-2 text-center text-[0.98rem] font-semibold text-white no-underline hover:underline">
+  <span class="live-dot" aria-hidden="true"></span>
+  <span><span class="uppercase tracking-[0.12em]">Live now</span><span class="opacity-70"> · </span>Watch the service on YouTube</span>
+  <span aria-hidden="true">→</span><span class="sr-only"> (opens in a new tab)</span>
+</a>

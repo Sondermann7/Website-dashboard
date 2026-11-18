@@ -6,6 +6,7 @@ import ArrowRight from '@lucide/astro/icons/arrow-right';
 import Base from '../layouts/Base.astro';
 import PageHero from '../components/PageHero.astro';
 import Button from '../components/Button.astro';
+import HoldFastPlayer from '../components/HoldFastPlayer.astro';
 import Photo from '../components/Photo.astro';
 import ConnectCta from '../components/ConnectCta.astro';
 import ReviewFlag from '../components/ReviewFlag.astro';
@@ -32,7 +33,7 @@ const person = {
   <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(person)} />
   <PageHero eyebrow={pastor.role} title={`Meet ${pastor.known}`} lede={`${pastor.name} teaches the Bible verse by verse at ${church.name} and on Hold Fast radio.`} photo="page-pastor">
     <Button href="/teachings" variant="gold" goal="watch">Hear a teaching</Button>
-    <Button href={pastor.podcast.url} variant="outline-light" external goal="watch">Listen to Hold Fast</Button>
+    <Button href="/listen" variant="outline-light">Listen to Hold Fast</Button>
   </PageHero>
 
   <!-- Biography -->
@@ -94,13 +95,16 @@ const person = {
           </dl>
         )}
         <div class="mt-8 flex flex-wrap gap-3" data-reveal>
-          <Button href={pastor.podcast.url} external goal="watch">Listen to the podcast</Button>
+          <Button href="/listen" goal="watch">Radio times &amp; 97.5 FM</Button>
           <Button href={church.youtube.channelUrl} variant="secondary" external goal="watch">Watch on YouTube</Button>
         </div>
         <ReviewFlag class="mt-6">Confirm current stations and air times. A search also lists Hold Fast on 94.1 The Voice.</ReviewFlag>
       </div>
-      <div class="framed mr-4 mb-4" data-reveal>
-        <Photo name="pastor-bw" alt={`${pastor.known} speaking into a microphone at a podium`} want="Pastor Marty teaching" class="aspect-[3/2] w-full object-cover" />
+      <div>
+        <div class="framed mr-4 mb-4" data-reveal>
+          <Photo name="pastor-bw" alt={`${pastor.known} speaking into a microphone at a podium`} want="Pastor Marty teaching" class="aspect-[3/2] w-full object-cover" />
+        </div>
+        <HoldFastPlayer limit={3} class="mt-8" />
       </div>
     </div>
   </section>

@@ -1,0 +1,25 @@
+---
+/** 97.5 FM, Golgotha Fellowship's radio station. "Listen live" opens the station's stream. */
+import Radio from '@lucide/astro/icons/radio';
+import { church } from '../config/church';
+import ReviewFlag from './ReviewFlag.astro';
+interface Props { class?: string; flag?: boolean }
+const { class: cls = '', flag = true } = Astro.props;
+const st = church.station;
+---
+<div class:list={['card relative overflow-hidden p-6 md:p-8', cls]}>
+  <div class="flex items-start gap-5">
+    <div class="grid h-20 w-20 shrink-0 place-items-center rounded-[var(--radius-card)] bg-navy text-center text-white shadow-[var(--shadow-card)]">
+      <span><span class="block font-display text-[1.7rem] font-bold leading-none">97.5</span><span class="mt-1 block text-[0.72rem] font-bold uppercase tracking-[0.18em] text-gold-light">FM</span></span>
+    </div>
+    <div>
+      <p class="eyebrow plain flex items-center gap-2"><Radio size={18} aria-hidden="true" /> Our radio station</p>
+      <h3 class="mt-1">{st.name ?? `${st.frequency}`}, <em>now part of {church.name}</em></h3>
+    </div>
+  </div>
+  <p class="mt-4 text-body">Bible teaching on the air in the Treasure Valley, including {church.radio.name} with {church.seniorPastor.known}. Tune in at {st.frequency}, or listen online from anywhere.</p>
+  <p class="mt-5 flex flex-wrap gap-3">
+    <a class="btn btn-primary" href={st.listenUrl} target="_blank" rel="noopener" data-goal="listen-radio"><span class="live-dot" aria-hidden="true"></span> Listen live<span class="sr-only"> to {st.frequency} (opens in a new tab)</span></a>
+  </p>
+  {flag && st.status === 'confirm' && <ReviewFlag class="mt-5">The station is moving to {church.name}. Confirm its new name, official website and stream link, then update church.station in src/config/church.ts. “Listen live” opens the station’s current public stream page (listed as Higher Rock Radio).</ReviewFlag>}
+</div>

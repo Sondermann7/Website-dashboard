@@ -760,3 +760,25 @@ html.mo .hero-rise {
 @media print {
   .track-fish, .track-rail { display: none; }
 }
+
+/* ---------- Live services (components/LiveStatus.astro) ---------- */
+html:not([data-live]) [data-live-only] { display: none !important; }
+html[data-live] [data-offair-only] { display: none !important; }
+.live-bar { background: #b3261e; }
+.live-dot {
+  display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 9999px;
+  background: #ff5a4f; box-shadow: 0 0 0 0 rgb(255 90 79 / 0.7);
+  animation: live-pulse 1.8s ease-out infinite;
+}
+.live-bar .live-dot { background: #fff; box-shadow: 0 0 0 0 rgb(255 255 255 / 0.7); }
+@keyframes live-pulse { 70% { box-shadow: 0 0 0 0.55rem rgb(255 90 79 / 0); } 100% { box-shadow: 0 0 0 0 rgb(255 90 79 / 0); } }
+@media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
+
+/* ---------- Hold Fast player (components/HoldFastPlayer.astro) ---------- */
+.hf-seek { -webkit-appearance: none; appearance: none; height: 2.75rem; background: transparent; cursor: pointer; }
+.hf-seek::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(to right, var(--color-gold-light) var(--p, 0%), rgb(255 255 255 / 0.22) var(--p, 0%)); }
+.hf-seek::-moz-range-track { height: 4px; border-radius: 4px; background: rgb(255 255 255 / 0.22); }
+.hf-seek::-moz-range-progress { height: 4px; border-radius: 4px; background: var(--color-gold-light); }
+.hf-seek::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border-radius: 9999px; background: #fff; box-shadow: 0 1px 4px rgb(0 0 0 / 0.35); }
+.hf-seek::-moz-range-thumb { width: 16px; height: 16px; border: 0; border-radius: 9999px; background: #fff; }
+.hf-seek:focus-visible { outline: 2px solid var(--color-gold-light); outline-offset: 2px; }

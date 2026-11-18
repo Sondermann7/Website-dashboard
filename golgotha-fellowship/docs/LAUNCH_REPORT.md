@@ -7,10 +7,10 @@ Build date: 2026-11-16. **Not launch-ready: 3 blockers.** The live site and DNS 
 | # | Blocker | What is needed | Where it goes |
 |---|---|---|---|
 | 1 | Statement of Faith not migrated verbatim. The old site was unreachable from the build environment. `/beliefs` shows a clearly labeled topic summary instead. | Paste the full official text, word for word; pastor approves. | `src/content/beliefs/statement.md` |
-| 2 | Online giving link unverified. `/give` shows no online button. | Exact giving URL and provider name. | `giving` in `src/config/church.ts` |
-| 3 | Official logo not supplied. Header/footer show the church name in type. | Church-owned original (SVG or transparent PNG), light variant if available. | `src/assets/brand/` |
+| 2 | Online giving link provisional. Giving runs through ChMeetings (also the church app); “Give online” opens golgotha.chmeetings.com, and the Give page links the iPhone and Android apps. | The exact Give page address from the app; set `giving.status` to `'verified'`. | `giving` in `src/config/church.ts` |
+| 3 | ~~Official logo~~ Done: vector traced from the church artwork. Swap in the original file if one exists. | Optional | `public/brand/` |
 
-`npm run launch-check` enforces all three.
+`npm run launch-check` enforces these. Watch Live, the Hold Fast player and 97.5 FM are explained in [LIVE-LISTEN-GIVE.md](LIVE-LISTEN-GIVE.md); their open confirmations show as warnings.
 
 ## Needs pastoral / church approval
 
