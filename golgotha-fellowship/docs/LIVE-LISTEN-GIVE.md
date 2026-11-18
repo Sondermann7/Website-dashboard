@@ -54,21 +54,28 @@ service" to turn on the live look across the whole preview.
   "All episodes" buttons instead. The preview shows two sample titles, because the preview
   environment can't reach the feed.
 
-## 97.5 FM
+## 97.5 FM (plays on the page)
 
-- A **"97.5 FM, now part of Golgotha Fellowship"** card with a **Listen live** button. It is on
-  the Listen page, the Watch Live page and the Teachings page (via "Radio times & listen live"),
-  and in the footer ("Hold Fast & 97.5 FM").
-- **What the research found:** 97.5 is KIDH-LP, licensed to Meridian. Public listings still call
-  it Higher Rock Radio, owned by Calvary Chapel Meridian, and one radio forum mentions the
-  license moving to Golgotha Fellowship.
-- **For now,** "Listen live" opens the station's existing public stream page on Zeno.fm.
-- **When the move is done,** set these in `church.station`:
-  - `name`: the new station name. It shows instead of "97.5 FM".
-  - `listenUrl`: the station's own stream or player page.
-  - `status`: change it to `'verified'`.
-- **The church app** is built on ChMeetings. Adding a "Listen live 97.5" tab is done in the
-  ChMeetings admin, with the same link.
+- **Where:** a bold navy "97.5 FM · On air now" player sits on the homepage (right after the
+  latest teaching), at the top of the Listen page, on the Watch Live page and on the Teachings
+  page. The top bar has a "● 97.5 FM Live" link on every page.
+- **Short addresses:** `/radio` goes to the Listen page.
+- **How it plays:** pressing **Listen live** plays the station right there; nobody leaves the
+  site. Press **Stop** to end it.
+  - **Now:** it loads the station's Zeno.fm player in place (`church.station.embedUrl`),
+    because the station's direct stream address isn't public.
+  - **Once you have the direct stream link** from whoever runs the station (it looks like
+    `https://stream.zeno.fm/...`), paste it into `church.station.streamUrl`. The site then uses
+    its own player, with no Zeno box.
+- **Research:** 97.5 is KIDH-LP, licensed to Meridian. Public listings still call it Higher Rock
+  Radio, owned by Calvary Chapel Meridian. One forum post mentions the license moving to
+  Golgotha Fellowship.
+- **Until the new name is set,** the player is titled "Golgotha Fellowship radio". Set
+  `church.station.name` when the station has its new name.
+- **The church app** is built on ChMeetings. Add a "Listen live 97.5" tab in the ChMeetings
+  admin, using the same stream link.
+- **The shareable preview** can't load other sites, so there "Listen live" opens the station
+  page. The real site plays in place.
 
 ## Giving
 

@@ -7,6 +7,7 @@ import ReviewFlag from '../components/ReviewFlag.astro';
 import Track from '../components/Track.astro';
 import TrackDot from '../components/TrackDot.astro';
 import StationCard from '../components/StationCard.astro';
+import HoldFastPlayer from '../components/HoldFastPlayer.astro';
 import Play from '@lucide/astro/icons/play';
 import { church } from '../config/church';
 import { getLatestTeaching } from '../lib/teachings';
@@ -87,13 +88,9 @@ const steps = [
   </Section>
 
   <Section id="listen" title="Prefer to listen?">
-    <div class="grid gap-6 lg:grid-cols-2">
+    <div class="grid gap-6 lg:grid-cols-2 lg:items-start">
       <StationCard />
-      <div class="card p-6 md:p-8">
-        <h3>Hold Fast</h3>
-        <p class="mt-2 text-body">{church.seniorPastor.known} teaching through the Bible verse by verse, on the radio every weekday and as a podcast.</p>
-        <p class="mt-5"><Button href="/listen" variant="secondary">Play Hold Fast</Button></p>
-      </div>
+      <HoldFastPlayer limit={3} />
     </div>
     {live.status === 'confirm' && <ReviewFlag class="mt-8 max-w-3xl">Confirm which services stream (both Sunday services? Wednesday?) and the Facebook live page. The live bar shows {live.windows.map((w) => `${w.label} ${w.start}–${w.end}`).join(', ')}; edit church.live in src/config/church.ts to change it.</ReviewFlag>}
   </Section>

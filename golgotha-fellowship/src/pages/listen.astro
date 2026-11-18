@@ -10,16 +10,22 @@ import Radio from '@lucide/astro/icons/radio';
 import { church } from '../config/church';
 const radio = church.radio;
 ---
-<Base title="Hold Fast & 97.5 FM" description={`Listen to Hold Fast with ${church.seniorPastor.known}: verse-by-verse Bible teaching from ${church.name} in Nampa, Idaho. Play recent episodes here, or listen live on 97.5 FM.`}>
-  <PageHero photo="pastor-teaching" eyebrow="Listen" title="Hold Fast, every weekday" lede={`${church.seniorPastor.known} teaching through the Bible verse by verse, chapter by chapter, and book by book. Play it here, on the radio, or in your podcast app.`} />
+<Base title="97.5 FM Live & Hold Fast" description={`Listen to Hold Fast with ${church.seniorPastor.known}: verse-by-verse Bible teaching from ${church.name} in Nampa, Idaho. Play recent episodes here, or listen live on 97.5 FM.`}>
+  <PageHero photo="pastor-teaching" eyebrow="Listen" title="97.5 FM, live" lede={`${church.name}’s radio station: Bible teaching and music, on your dial or right here. Plus Hold Fast with ${church.seniorPastor.known}, every weekday.`} />
 
-  <Section>
-    <h2 class="sr-only">Play Hold Fast</h2>
+  <section aria-labelledby="station-heading" class="bg-paper pt-12 md:pt-16">
+    <div class="container-site">
+      <h2 id="station-heading" class="sr-only">Listen live on 97.5 FM</h2>
+      <StationCard variant="band" />
+    </div>
+  </section>
+
+  <Section id="holdfast" title="Hold Fast, every weekday">
     <div class="grid gap-8 lg:grid-cols-[1.25fr_1fr] lg:items-start">
       <HoldFastPlayer heading="Hold Fast" />
       <div class="card p-6 md:p-8">
         <p class="eyebrow plain flex items-center gap-2"><Radio size={18} aria-hidden="true" /> On the air</p>
-        <h2 class="mt-1 !text-[length:var(--text-h3)]">Hold Fast on the radio</h2>
+        <h3 class="mt-1">Hold Fast on the radio</h3>
         <dl class="mt-4 divide-y divide-line border-y border-line">
           {radio.broadcasts.map((b) => (
             <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4">
@@ -35,9 +41,5 @@ const radio = church.radio;
         {radio.status === 'confirm' && <ReviewFlag class="mt-5">Confirm current Hold Fast stations and air times. A search also lists Hold Fast on 94.1 The Voice.</ReviewFlag>}
       </div>
     </div>
-  </Section>
-
-  <Section tone="stone" id="station" title="Listen live on the radio">
-    <StationCard class="max-w-3xl" />
   </Section>
 </Base>

@@ -19,6 +19,7 @@ import MinistryCard from '../components/MinistryCard.astro';
 import EventList from '../components/EventList.astro';
 import ConnectCta from '../components/ConnectCta.astro';
 import ReviewFlag from '../components/ReviewFlag.astro';
+import StationCard from '../components/StationCard.astro';
 import { church, primaryGatherings, directionsUrl, telHref } from '../config/church';
 import { getLatestTeaching } from '../lib/teachings';
 import { formatDate, joinTimes } from '../lib/format';
@@ -198,6 +199,14 @@ const holdFast = 'Hold fast.'.split('');
           });
         });
       </script>
+    </div>
+  </section>
+
+  <!-- 4b. 97.5 FM: the church's radio station, playable right here -->
+  <section aria-labelledby="radio-band-heading" class="bg-paper pb-16 md:pb-24">
+    <div class="container-site" data-reveal>
+      <h2 id="radio-band-heading" class="sr-only">Listen live on 97.5 FM</h2>
+      <StationCard variant="band" />
     </div>
   </section>
 

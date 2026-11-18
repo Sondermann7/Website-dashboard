@@ -131,7 +131,12 @@ export const church = {
     frequency: '97.5 FM',
     callSign: 'KIDH-LP',
     name: null as string | null,
+    /** The station's public page (used where a page can't play audio itself). */
     listenUrl: 'https://zeno.fm/radio/higher-rock-radio-97-5-fm-kidh-lp/',
+    /** Direct audio stream (e.g. https://stream.zeno.fm/xxxx). When set, our own player streams it. */
+    streamUrl: null as string | null,
+    /** Zeno.fm's embeddable player for the station; used until streamUrl is known. */
+    embedUrl: 'https://zeno.fm/player/higher-rock-radio-97-5-fm-kidh-lp' as string | null,
     status: 'confirm' as Status,
   },
 
@@ -244,6 +249,7 @@ export const mainNav = [
 ] as const;
 
 export const utilityNav = [
+  { label: '97.5 FM Live', href: '/listen' },
   { label: 'Watch Live', href: '/live' },
   { label: 'Location', href: '/location' },
   { label: 'Prayer', href: '/prayer' },
@@ -276,7 +282,7 @@ export const footerNav = [
     links: [
       { label: 'Teachings', href: '/teachings' },
       { label: 'Watch Live', href: '/live' },
-      { label: 'Hold Fast & 97.5 FM', href: '/listen' },
+      { label: '97.5 FM & Hold Fast', href: '/listen' },
       { label: 'Ministries', href: '/ministries' },
       { label: 'Kids', href: '/ministries/kids' },
       { label: 'Youth', href: '/ministries/youth' },

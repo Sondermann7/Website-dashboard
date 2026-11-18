@@ -1,25 +1,92 @@
 ---
-/** 97.5 FM, Golgotha Fellowship's radio station. "Listen live" opens the station's stream. */
+/**
+ * 97.5 FM live radio player. Plays the station on the page.
+ * - church.station.streamUrl set: our own player (play/stop) streams the audio directly.
+ * - Otherwise: pressing Play loads the station's Zeno.fm player in place (church.station.embedUrl).
+ * In the shareable preview (which cannot load other sites) Play opens the station's page instead.
+ * variant="band" is the wide homepage version; "card" fits a column.
+ */
+import Play from '@lucide/astro/icons/play';
+import Square from '@lucide/astro/icons/square';
 import Radio from '@lucide/astro/icons/radio';
 import { church } from '../config/church';
+import { PREVIEW } from '../lib/review';
 import ReviewFlag from './ReviewFlag.astro';
-interface Props { class?: string; flag?: boolean }
-const { class: cls = '', flag = true } = Astro.props;
+interface Props { class?: string; flag?: boolean; variant?: 'card' | 'band'; heading?: 'h2' | 'h3' }
+const { class: cls = '', flag = true, variant = 'card', heading = 'h3' } = Astro.props;
 const st = church.station;
+const mode = PREVIEW ? 'link' : st.streamUrl ? 'stream' : st.embedUrl ? 'embed' : 'link';
+const H = heading;
+const band = variant === 'band';
 ---
-<div class:list={['card relative overflow-hidden p-6 md:p-8', cls]}>
-  <div class="flex items-start gap-5">
-    <div class="grid h-20 w-20 shrink-0 place-items-center rounded-[var(--radius-card)] bg-navy text-center text-white shadow-[var(--shadow-card)]">
-      <span><span class="block font-display text-[1.7rem] font-bold leading-none">97.5</span><span class="mt-1 block text-[0.72rem] font-bold uppercase tracking-[0.18em] text-gold-light">FM</span></span>
+<div class:list={['radio-player on-dark relative isolate overflow-hidden rounded-[var(--radius-panel)] bg-navy-deep text-white shadow-[var(--shadow-float)]', band ? 'p-6 sm:p-8 md:p-12' : 'p-6 sm:p-8', cls]}
+  data-radio data-mode={mode} data-stream={st.streamUrl ?? undefined} data-embed={st.embedUrl ?? undefined}>
+  <span class="radio-rings pointer-events-none absolute -right-24 -top-24 -z-10 h-80 w-80 rounded-full md:-right-16 md:h-[26rem] md:w-[26rem]" aria-hidden="true"></span>
+  <div class:list={['grid items-center gap-6', band && 'md:grid-cols-[auto_1fr_auto] md:gap-10']}>
+    <div class="flex items-end gap-3">
+      <span class="font-display text-[4.2rem] font-bold leading-[0.8] text-gold-light sm:text-[5rem]">97.5</span>
+      <span class="pb-1 text-[0.9rem] font-bold uppercase tracking-[0.2em] text-white">FM</span>
     </div>
     <div>
-      <p class="eyebrow plain flex items-center gap-2"><Radio size={18} aria-hidden="true" /> Our radio station</p>
-      <h3 class="mt-1">{st.name ?? `${st.frequency}`}, <em>now part of {church.name}</em></h3>
+      <p class="flex items-center gap-2.5 text-[0.82rem] font-bold uppercase tracking-[0.16em] text-[#ff8a80]"><span class="live-dot" aria-hidden="true"></span> On air now</p>
+      <H class="mt-2 !text-white !text-[clamp(1.5rem,3vw,2.1rem)]">{st.name ?? `${church.name} radio`}</H>
+      <p class="mt-2 max-w-xl text-mist">Bible teaching and music, including {church.radio.name} with {church.seniorPastor.known} every weekday. On your dial at {st.frequency}, or right here.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-3" data-radio-controls>
+      {mode === 'link' ? (
+        <a class="btn btn-gold !min-h-14 !px-7" href={st.listenUrl} target="_blank" rel="noopener" data-goal="listen-radio"><Play size={20} fill="currentColor" aria-hidden="true" /> Listen live<span class="sr-only"> to {st.frequency} (opens in a new tab)</span></a>
+      ) : (
+        <button type="button" class="btn btn-gold !min-h-14 !px-7" data-radio-toggle data-goal="listen-radio">
+          <span data-radio-icon="play" class="inline-flex items-center gap-2"><Play size={20} fill="currentColor" aria-hidden="true" /> Listen live</span>
+          <span data-radio-icon="stop" class="inline-flex items-center gap-2" hidden><Square size={18} fill="currentColor" aria-hidden="true" /> Stop</span>
+        </button>
+      )}
     </div>
   </div>
-  <p class="mt-4 text-body">Bible teaching on the air in the Treasure Valley, including {church.radio.name} with {church.seniorPastor.known}. Tune in at {st.frequency}, or listen online from anywhere.</p>
-  <p class="mt-5 flex flex-wrap gap-3">
-    <a class="btn btn-primary" href={st.listenUrl} target="_blank" rel="noopener" data-goal="listen-radio"><span class="live-dot" aria-hidden="true"></span> Listen live<span class="sr-only"> to {st.frequency} (opens in a new tab)</span></a>
-  </p>
-  {flag && st.status === 'confirm' && <ReviewFlag class="mt-5">The station is moving to {church.name}. Confirm its new name, official website and stream link, then update church.station in src/config/church.ts. “Listen live” opens the station’s current public stream page (listed as Higher Rock Radio).</ReviewFlag>}
+  <p class="mt-3 text-[0.9rem] text-gold-light" data-radio-msg role="status" hidden></p>
+  {mode === 'stream' && <audio preload="none" data-radio-audio></audio>}
+  <div data-radio-frame hidden class="mt-6 overflow-hidden rounded-[var(--radius-card)] bg-white"></div>
+  {flag && st.status === 'confirm' && <ReviewFlag class="mt-6 !text-navy">97.5 FM is moving to {church.name}. Confirm the station’s new name and get its direct stream link from whoever runs it, then set church.station.name and church.station.streamUrl in src/config/church.ts. Until then Play loads the station’s Zeno.fm player (listed as Higher Rock Radio).{PREVIEW && ' The preview can’t load other sites, so here it opens the station page.'}</ReviewFlag>}
 </div>
+
+<script is:inline>
+  document.querySelectorAll('[data-radio]').forEach(function (box) {
+    var btn = box.querySelector('[data-radio-toggle]');
+    if (!btn || btn.dataset.wired) return;
+    btn.dataset.wired = '1';
+    var mode = box.getAttribute('data-mode');
+    var audio = box.querySelector('[data-radio-audio]');
+    var frame = box.querySelector('[data-radio-frame]');
+    var msg = box.querySelector('[data-radio-msg]');
+    function show(playing) {
+      box.querySelector('[data-radio-icon="play"]').hidden = playing;
+      box.querySelector('[data-radio-icon="stop"]').hidden = !playing;
+      btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+    }
+    function say(t) { msg.textContent = t; msg.hidden = !t; }
+    btn.addEventListener('click', function () {
+      if (mode === 'stream') {
+        if (!audio.paused) { audio.pause(); audio.removeAttribute('src'); audio.load(); show(false); return; }
+        document.querySelectorAll('audio').forEach(function (a) { if (a !== audio) a.pause(); });
+        audio.src = box.getAttribute('data-stream');
+        say('Connecting…');
+        audio.play().then(function () { say(''); show(true); }).catch(function () { say('The station could not be reached. Try again in a moment.'); show(false); });
+        audio.onpause = function () { show(false); };
+        return;
+      }
+      // Embed: load the station's player in place (once), then this button stops it by removing it.
+      if (frame.firstChild) { frame.innerHTML = ''; frame.hidden = true; show(false); return; }
+      document.querySelectorAll('audio').forEach(function (a) { a.pause(); });
+      var f = document.createElement('iframe');
+      f.src = box.getAttribute('data-embed');
+      f.title = '97.5 FM live player';
+      f.allow = 'autoplay';
+      f.loading = 'eager';
+      f.className = 'block h-[250px] w-full border-0';
+      frame.appendChild(f);
+      frame.hidden = false;
+      show(true);
+      say('Press play in the player below if it doesn’t start on its own.');
+    });
+  });
+</script>

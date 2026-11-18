@@ -5,6 +5,7 @@ import PageHero from '../../components/PageHero.astro';
 import Section from '../../components/Section.astro';
 import Button from '../../components/Button.astro';
 import HoldFastPlayer from '../../components/HoldFastPlayer.astro';
+import StationCard from '../../components/StationCard.astro';
 import ReviewFlag from '../../components/ReviewFlag.astro';
 import TeachingLibrary from '../../components/TeachingLibrary.tsx';
 import { church } from '../../config/church';
@@ -45,11 +46,7 @@ const books = [...new Map(items.filter((t) => t.book).map((t) => [t.book!, items
         </div>
         <div class="mt-6 grid gap-6 lg:grid-cols-[1.25fr_1fr] lg:items-start">
           <HoldFastPlayer limit={3} />
-          <div class="card p-6 md:p-7">
-            <h3>Hold Fast &amp; 97.5 FM</h3>
-            <p class="mt-2 text-body">Hold Fast airs every weekday, and {church.station.frequency} is now part of {church.name}.</p>
-            <p class="mt-4"><Button href="/listen" variant="secondary">Radio times &amp; listen live</Button></p>
-          </div>
+          <StationCard />
         </div>
       </>
     ) : (
