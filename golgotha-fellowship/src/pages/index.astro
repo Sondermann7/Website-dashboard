@@ -34,7 +34,7 @@ const radio = church.radio.status !== 'todo' ? church.radio : null;
 
 const sunday = [
   { photo: 'sunday-teaching', want: 'Pastor teaching from an open Bible on a Sunday', title: 'We open the Bible', text: 'Every service centers on Scripture, taught verse by verse and book by book, so you leave knowing what it says and how to live it.', href: '/teachings', link: 'Hear a teaching' },
-  { photo: 'sunday-fellowship', want: 'People greeting each other / talking in the lobby', title: 'You come as you are', text: 'Services are casual, with no dress code and no pressure. Take your time getting to know us.', href: '/new-here', link: 'Plan your visit' },
+  { photo: 'sunday-fellowship', want: 'People greeting each other / talking in the lobby', title: 'No dress code, no pressure', text: 'Services are casual. Wear what you like, sit where you like, and take your time getting to know us.', href: '/new-here', link: 'Plan your visit' },
   { photo: 'kids', want: 'Kids ministry classroom (released photos only)', title: 'Your kids are cared for', text: 'Nursery and children’s ministry through sixth grade on Sundays, and children’s ministry on Wednesdays. A greeter helps you check in.', href: '/ministries/kids', link: 'About kids ministry' },
 ];
 const gallery = [
@@ -53,14 +53,17 @@ const holdFast = 'Hold fast.'.split('');
 <Base title={`${church.name} | Bible-Teaching Church in Nampa, Idaho`} description={`${church.shortDescription} Sundays at 8:30 and 10:30 AM, Wednesdays at 6:00 PM.`}>
   <!-- 1. Hero: congregation photo, invitation, and this week's service card -->
   <section class="hero on-dark relative isolate overflow-hidden bg-navy text-white">
-    <Photo name="hero" alt="" want="HERO: the congregation on a Sunday morning (wide, landscape)" eager sizes="100vw" widths={[640, 1024, 1600, 2400]} class="hero-photo absolute inset-0 -z-20 h-full w-full object-cover" />
-    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep/90 via-navy/70 to-navy/25"></div>
+    <!-- Desktop: photo behind the words, faded on the left so faces show on the right. -->
+    <Photo name="welcome" alt="" want="HERO: people worshipping together in daylight, faces visible (wide, landscape)" eager sizes="100vw" widths={[1024, 1600]} class="hero-photo absolute inset-0 -z-20 hidden h-full w-full object-cover object-[62%_35%] lg:block" />
+    <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-navy-deep/90 via-navy-deep/55 to-navy-deep/5 lg:block"></div>
+    <!-- Phones: the same photo as a clear strip on top, so the first thing you see is people. -->
+    <Photo name="welcome" alt={`People worshipping together at ${church.name}`} eager sizes="100vw" widths={[640, 1024]} class="block aspect-[16/9] w-full object-cover object-[50%_30%] lg:hidden" />
     <Motif kind="cross" stroke={0.9} class="watermark -right-10 top-1/2 hidden h-[34rem] -translate-y-1/2 lg:block" />
-    <div class="relative container-site grid gap-10 pt-14 pb-20 md:pt-20 md:pb-28 lg:min-h-[41rem] lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14">
+    <div class="relative container-site grid gap-10 pt-9 pb-20 md:pt-14 md:pb-28 lg:pt-20 lg:min-h-[41rem] lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14">
       <div>
         <p class="eyebrow hero-rise mb-5">Downtown Nampa, Idaho</p>
-        <h1 class="hero-rise text-[length:var(--text-display)] leading-[1.02]" style="--mo-d:50ms">Come grow in <em>God’s Word</em> with us.</h1>
-        <p class="hero-rise mt-6 max-w-xl text-[length:var(--text-lede)] leading-relaxed text-white/90" style="--mo-d:120ms">{church.shortDescription}</p>
+        <h1 class="hero-rise text-[length:var(--text-display)] leading-[1.02]" style="--mo-d:50ms">You’re welcome <em>here.</em></h1>
+        <p class="hero-rise mt-6 max-w-xl text-[length:var(--text-lede)] leading-relaxed text-white/95" style="--mo-d:120ms">{church.name} is a casual, Bible-teaching church in downtown Nampa. Whether you’ve followed Jesus for years or you’re just curious, come as you are. We’d love to meet you.</p>
         <div class="hero-rise mt-8 flex flex-wrap gap-3" style="--mo-d:200ms">
           <Button href="/new-here" variant="gold" goal="plan-visit">Plan Your Visit <ArrowRight size={18} aria-hidden="true" /></Button>
           <Button href="/teachings" variant="outline-light" goal="watch"><Play size={18} aria-hidden="true" /> Watch a Teaching</Button>
@@ -78,6 +81,11 @@ const holdFast = 'Hold fast.'.split('');
             </div>
           ))}
         </dl>
+        <ul class="mt-4 flex flex-wrap gap-2 text-[0.88rem] font-semibold text-navy" aria-label="What to expect">
+          <li class="rounded-full bg-stone px-3 py-1.5">Casual dress</li>
+          <li class="rounded-full bg-stone px-3 py-1.5">Kids through 6th grade</li>
+          <li class="rounded-full bg-stone px-3 py-1.5">Greeters to help</li>
+        </ul>
         <address class="mt-5 flex gap-3 not-italic">
           <MapPin size={22} class="mt-0.5 shrink-0 text-gold-deep" aria-hidden="true" />
           <span>{church.address.street}<br />{church.address.city}, {church.address.regionName} {church.address.postalCode}</span>
@@ -95,7 +103,7 @@ const holdFast = 'Hold fast.'.split('');
   <section aria-labelledby="welcome-heading" class="relative bg-paper pt-14 pb-24 md:pt-24 md:pb-36">
     <div class="container-site grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
       <div class="framed relative mr-4 mb-4 sm:mr-8" data-reveal>
-        <Photo name="welcome" alt={`People worshipping with raised hands at a ${church.name} service`} want="Congregation / fellowship: people together, candid" class="aspect-[4/3] w-full object-cover" />
+        <Photo name="community" alt={`Two members of ${church.name} smiling together at a church gathering`} want="Congregation / fellowship: people together, candid" class="aspect-[4/3] w-full object-cover" />
         <div class="absolute -bottom-10 -right-4 z-10 hidden w-[42%] overflow-hidden rounded-[var(--radius-card)] border-[6px] border-white shadow-[var(--shadow-float)] sm:block md:-right-10">
           <Photo name="pastor-marty" alt={`${church.seniorPastor.name}, senior pastor, smiling as he teaches`} want="Pastor Marty portrait" class="aspect-[4/5] w-full object-cover" sizes="25vw" />
         </div>
