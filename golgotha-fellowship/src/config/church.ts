@@ -52,6 +52,14 @@ export const church = {
 
   seniorPastor: { name: 'Dr. Martin Sondermann', known: 'Pastor Marty', role: 'Senior Pastor' },
 
+  /**
+   * The church's own words for who they are, quoted from golgothafellowship.org / the church app
+   * ("a gathering of believers in Jesus Christ" / "part of the Calvary Chapel family of churches").
+   * Use these verbatim rather than paraphrasing, so the church's voice is its own.
+   */
+  selfDescription: 'a gathering of believers in Jesus Christ and part of the Calvary Chapel family of churches',
+
+
   affiliation: {
     summary:
       'We are a non-denominational local fellowship that affirms the historic Calvary Chapel distinctives and identifies with the Calvary Chapel Association.',
