@@ -17,6 +17,7 @@ import { PREVIEW } from '../lib/review';
 import { getPhoto } from '../lib/photos';
 import MinistryCard from '../components/MinistryCard.astro';
 import EventList from '../components/EventList.astro';
+import MapEmbed from '../components/MapEmbed.astro';
 import ConnectCta from '../components/ConnectCta.astro';
 import ReviewFlag from '../components/ReviewFlag.astro';
 import StationCard from '../components/StationCard.astro';
@@ -51,20 +52,40 @@ const gallery = [
 const holdFast = 'Hold fast.'.split('');
 ---
 <Base title={`${church.name} | Bible-Teaching Church in Nampa, Idaho`} description={`${church.shortDescription} Sundays at 8:30 and 10:30 AM, Wednesdays at 6:00 PM.`}>
-  <!-- 1. Hero: congregation photo, invitation, and this week's service card -->
-  <section class="hero on-dark relative isolate overflow-hidden bg-navy text-white">
-    <!-- Desktop: photo behind the words, faded on the left so faces show on the right. -->
-    <Photo name="welcome" alt="" want="HERO: people worshipping together in daylight, faces visible (wide, landscape)" eager sizes="100vw" widths={[1024, 1600]} class="hero-photo absolute inset-0 -z-20 hidden h-full w-full object-cover object-[62%_35%] lg:block" />
-    <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-navy-deep/90 via-navy-deep/55 to-navy-deep/5 lg:block"></div>
-    <!-- Phones: the same photo as a clear strip on top, so the first thing you see is people. -->
-    <Photo name="welcome" alt={`People worshipping together at ${church.name}`} eager sizes="100vw" widths={[640, 1024]} class="block aspect-[16/9] w-full object-cover object-[50%_30%] lg:hidden" />
+  <!-- 1. Hero: a Sunday clip (when set) or the welcome photo, the invitation, and the service card.
+       On phones the welcome sits over the photo so the first thing you see is faces + a greeting.
+       On desktop the media fills the right half and fades into the navy behind the words. -->
+  <section class="hero on-dark relative isolate overflow-hidden bg-navy-deep text-white">
+    <!-- Phones: a tall photo (or Sunday clip) up top, faces in frame, fading into the navy so the
+         greeting below reads as one piece — no hard seam, no cut-off headline. -->
+    <div class="relative h-[46vh] min-h-[17rem] w-full lg:hidden">
+      {church.heroVideoUrl ? (
+        <video class="h-full w-full object-cover object-[50%_40%]" autoplay muted loop playsinline preload="metadata" poster={getPhoto('welcome')?.src}>
+          <source src={church.heroVideoUrl} type="video/mp4" />
+        </video>
+      ) : (
+        <Photo name="welcome" alt={`People worshipping together at ${church.name}`} eager sizes="100vw" widths={[640, 1024]} class="h-full w-full object-cover object-[50%_40%]" />
+      )}
+      <div class="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-navy-deep to-transparent"></div>
+    </div>
+    <!-- Desktop: the media fills the right half and fades into the navy behind the words. -->
+    <div class="absolute inset-y-0 right-0 -z-20 hidden w-[58%] lg:block">
+      {church.heroVideoUrl ? (
+        <video class="h-full w-full object-cover object-[50%_30%]" autoplay muted loop playsinline preload="metadata" poster={getPhoto('welcome')?.src}>
+          <source src={church.heroVideoUrl} type="video/mp4" />
+        </video>
+      ) : (
+        <Photo name="welcome" alt="" want="HERO: people worshipping together in daylight, faces visible (wide, landscape)" eager sizes="58vw" widths={[1024, 1600]} class="hero-photo h-full w-full object-cover object-[50%_30%]" />
+      )}
+    </div>
+    <div class="absolute inset-0 -z-10 hidden bg-gradient-to-r from-navy-deep via-navy-deep/80 via-40% to-transparent lg:block"></div>
     <Motif kind="cross" stroke={0.9} class="watermark -right-10 top-1/2 hidden h-[34rem] -translate-y-1/2 lg:block" />
-    <div class="relative container-site grid gap-10 pt-9 pb-20 md:pt-14 md:pb-28 lg:pt-20 lg:min-h-[41rem] lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14">
+    <div class="relative container-site grid gap-8 pt-6 pb-16 sm:pt-8 md:pb-20 lg:grid lg:min-h-[42rem] lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14 lg:pt-20 lg:pb-28">
       <div>
-        <p class="eyebrow hero-rise mb-5">Downtown Nampa, Idaho</p>
+        <p class="eyebrow hero-rise mb-4 md:mb-5">Downtown Nampa, Idaho</p>
         <h1 class="hero-rise text-[length:var(--text-display)] leading-[1.02]" style="--mo-d:50ms">You’re welcome <em>here.</em></h1>
-        <p class="hero-rise mt-6 max-w-xl text-[length:var(--text-lede)] leading-relaxed text-white/95" style="--mo-d:120ms">{church.name} is a casual, Bible-teaching church in downtown Nampa. Whether you’ve followed Jesus for years or you’re just curious, come as you are. We’d love to meet you.</p>
-        <div class="hero-rise mt-8 flex flex-wrap gap-3" style="--mo-d:200ms">
+        <p class="hero-rise mt-5 max-w-xl text-[length:var(--text-lede)] leading-relaxed text-white/95 md:mt-6" style="--mo-d:120ms">{church.name} is a casual, Bible-teaching church in downtown Nampa. Whether you’ve followed Jesus for years or you’re just curious, come as you are. We’d love to meet you.</p>
+        <div class="hero-rise mt-7 flex flex-wrap gap-3 md:mt-8" style="--mo-d:200ms">
           <Button href="/new-here" variant="gold" goal="plan-visit">Plan Your Visit <ArrowRight size={18} aria-hidden="true" /></Button>
           <Button href="/teachings" variant="outline-light" goal="watch"><Play size={18} aria-hidden="true" /> Watch a Teaching</Button>
         </div>
@@ -300,6 +321,33 @@ const holdFast = 'Hold fast.'.split('');
       <EventList limit={3} />
     </div>
   <Curve fill="stone" />
+  </section>
+
+  <!-- 8b. Find us: the map, right on the homepage -->
+  <section aria-labelledby="find-heading" class="relative bg-stone pt-4 pb-20 md:pt-8 md:pb-28">
+    <div class="container-site grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-14">
+      <div>
+        <p class="eyebrow mb-4">Find us</p>
+        <h2 id="find-heading">In the heart of <em>downtown Nampa</em></h2>
+        <address class="mt-6 flex gap-3 text-[1.1rem] not-italic leading-snug">
+          <MapPin size={22} class="mt-0.5 shrink-0 text-gold-deep" aria-hidden="true" />
+          <span>{church.address.street}<br />{church.address.city}, {church.address.regionName} {church.address.postalCode}</span>
+        </address>
+        <dl class="mt-6 divide-y divide-line border-y border-line">
+          {primaryGatherings.map((g) => (
+            <div class="flex items-baseline justify-between gap-4 py-3">
+              <dt class="font-semibold text-body">{g.day}s</dt>
+              <dd class="text-right font-display text-[1.25rem] font-bold leading-tight">{joinTimes(g.times)}</dd>
+            </div>
+          ))}
+        </dl>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <Button href={directionsUrl} external goal="directions">Get directions</Button>
+          <Button href="/location" variant="secondary">Location &amp; parking</Button>
+        </div>
+      </div>
+      <MapEmbed />
+    </div>
   </section>
 
   <!-- 9. Prayer and connection -->

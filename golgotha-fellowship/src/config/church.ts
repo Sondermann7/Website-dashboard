@@ -178,6 +178,13 @@ export const church = {
     channelId: 'UC7ZJXJ3B2GQQLjolHM0Zo-Q' as string | null,
   },
 
+  /**
+   * Homepage hero. When heroVideoUrl is set to a short, silent, looping clip of a Sunday
+   * (an .mp4), the hero plays it instead of the photo, with the photo as the still fallback.
+   * Keep it under ~10 MB and about 10-20 seconds. Until then it stays null and the photo shows.
+   */
+  heroVideoUrl: null as string | null,
+
   /** The church app (built on ChMeetings): giving, events, bulletin and Bible. */
   app: {
     name: 'Golgotha Fellowship Nampa, ID',
