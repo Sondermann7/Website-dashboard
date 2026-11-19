@@ -13,7 +13,7 @@ const meets = m.data.gatheringIds
   .map((g) => `${g!.day}s ${joinTimes(g!.times)}`);
 ---
 <article class="tile on-dark h-full">
-  <Photo name={m.data.photo} alt="" want={`${m.data.title}: a real photo of this ministry`} sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw" />
+  <Photo name={m.data.photo} alt="" want={`${m.data.title}: a real photo of this ministry`} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" widths={[480, 800, 1200]} />
   <div class="p-6">
     {m.data.audience && <p class="text-[0.78rem] font-bold uppercase tracking-[0.14em] text-gold-light">{m.data.audience}</p>}
     <h3 class="mt-1 !text-[1.6rem] !font-bold">

@@ -133,7 +133,7 @@ const person = {
                   <a class="card-link no-underline after:absolute after:inset-0 after:content-['']" href={b.url} target="_blank" rel="noopener">{b.title}<span class="sr-only"> (opens in a new tab)</span></a>
                 </h3>
                 <p class="mt-1 font-display italic text-body">{b.subtitle}</p>
-                {b.about && <p class="mt-3 text-[0.96rem] leading-snug text-body">{b.about}</p>}
+                {b.about && <p class="mt-3 max-w-[60ch] text-[0.96rem] leading-relaxed text-body">{b.about}</p>}
                 <p class="mt-auto flex items-center gap-1.5 pt-4 text-[0.82rem] font-bold uppercase tracking-[0.1em] text-blue" aria-hidden="true">View book <ArrowRight size={16} /></p>
               </div>
             </li>

@@ -11,14 +11,21 @@ const has = !!getPhoto(photo);
 <section class="hero on-dark relative isolate overflow-hidden bg-navy text-white">
   {has && (
     <>
-      <Photo name={photo} alt="" eager sizes="100vw" widths={[640, 1024, 1600, 2200]} class="hero-photo absolute inset-0 -z-20 h-full w-full object-cover" />
-      <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep/95 via-navy/80 to-navy/45"></div>
+      <!-- Phones: the photo as a clear, uncovered strip, so faces are framed and sharp. -->
+      <Photo name={photo} alt="" eager sizes="100vw" widths={[640, 1024, 1206]} class="block aspect-[16/9] w-full object-cover lg:hidden" />
+      <!-- Desktop: the photo fills the right half only (never stretched past its real size),
+           softly fading into the navy behind the words. -->
+      <div class="absolute inset-y-0 right-0 -z-20 hidden w-[54%] lg:block" aria-hidden="true">
+        <Photo name={photo} alt="" eager sizes="54vw" widths={[800, 1206]} class="hero-photo h-full w-full object-cover" />
+        <div class="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-navy to-navy/0"></div>
+        <div class="absolute inset-0 bg-navy-deep/15"></div>
+      </div>
     </>
   )}
   {!has && <div class="absolute inset-y-0 right-0 -z-10 hidden w-1/3 bg-navy-soft lg:block [clip-path:polygon(18%_0,100%_0,100%_100%,0_100%)]" aria-hidden="true"></div>}
-  <Motif kind="cross" stroke={0.9} class="watermark -right-6 top-1/2 hidden h-[24rem] -translate-y-1/2 md:block" />
-  <div class="relative container-site pt-16 pb-24 md:pt-24 md:pb-32">
-    <div class="max-w-3xl">
+  {!has && <Motif kind="cross" stroke={0.9} class="watermark -right-6 top-1/2 hidden h-[24rem] -translate-y-1/2 md:block" />}
+  <div class:list={["relative container-site pb-24 md:pb-32", has ? "pt-9 md:pt-14 lg:pt-24" : "pt-16 md:pt-24"]}>
+    <div class:list={["max-w-3xl", has && "lg:max-w-[44%] lg:min-h-[19rem]"]}>
       {eyebrow && <p class="eyebrow hero-rise mb-5">{eyebrow}</p>}
       <h1 class="hero-rise" style="--mo-d:50ms">{title}</h1>
       {lede && <p class="hero-rise mt-5 text-[length:var(--text-lede)] leading-relaxed text-mist" style="--mo-d:120ms">{lede}</p>}

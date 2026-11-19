@@ -61,15 +61,16 @@
   --text-lede: clamp(1.2rem, 1.1rem + 0.4vw, 1.4rem);
 
   /* Layered shadows: a tight contact shadow + a soft, offset ambient shadow, tinted navy. */
-  --shadow-hair: 0 1px 2px rgb(34 43 74 / 0.06);
-  --shadow-card: 0 1px 2px rgb(34 43 74 / 0.05), 0 10px 28px -14px rgb(34 43 74 / 0.2);
-  --shadow-lift: 0 2px 4px rgb(34 43 74 / 0.06), 0 24px 48px -20px rgb(34 43 74 / 0.32);
-  --shadow-float: 0 4px 10px rgb(34 43 74 / 0.08), 0 36px 72px -26px rgb(34 43 74 / 0.45);
+  --shadow-hair: 0 1px 2px rgb(52 44 36 / 0.06);
+  --shadow-card: 0 1px 2px rgb(52 44 36 / 0.05), 0 12px 32px -16px rgb(52 44 36 / 0.22);
+  --shadow-lift: 0 2px 4px rgb(52 44 36 / 0.06), 0 26px 52px -22px rgb(44 40 52 / 0.32);
+  --shadow-float: 0 4px 12px rgb(52 44 36 / 0.07), 0 38px 76px -28px rgb(44 40 52 / 0.42);
 
-  --radius-card: 0.5rem;
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
   --radius-panel: 1.25rem;
   --container-site: 78rem;
-  --container-prose: 44rem;
+  --container-prose: 37rem; /* about 65 characters a line */
 }
 
 @layer base {
@@ -96,13 +97,14 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 650;
     line-height: 1.08;
     letter-spacing: -0.015em;
     text-wrap: balance;
   }
   h1 {
     font-size: var(--text-h1);
+    font-weight: 700;
   }
   h2 {
     font-size: var(--text-h2);
@@ -215,7 +217,7 @@
     gap: 0.55rem;
     min-height: 3.1rem;
     padding: 0.7rem 1.5rem;
-    border-radius: 0.3rem;
+    border-radius: var(--radius-control);
     border: 2px solid transparent;
     font-family: var(--font-sans);
     font-weight: 700;
@@ -281,15 +283,16 @@
   }
 
   .card {
-    background: #fff;
-    border: 1px solid var(--color-line);
+    background: #fffefb;
+    border: 1px solid rgb(52 44 36 / 0.06);
     border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
     transition: box-shadow 0.3s ease;
   }
   a.card:hover,
   .card:has(.card-link:hover),
   .card:has(.card-link:focus-visible) {
-    box-shadow: 0 18px 40px rgb(34 43 74 / 0.14);
+    box-shadow: var(--shadow-lift);
   }
 
   /* Photo with a caption laid over a navy fade (ministry tiles). */
@@ -478,7 +481,7 @@
     padding: 0.65rem 0.85rem;
     background: #fff;
     border: 1.5px solid #7b869a;
-    border-radius: 0.3rem;
+    border-radius: var(--radius-control);
     font: inherit;
     color: var(--color-navy);
     transition:
@@ -789,4 +792,12 @@ html[data-live] [data-offair-only] { display: none !important; }
     radial-gradient(circle, transparent 38%, rgb(227 197 127 / 0.14) 38.5%, transparent 40%),
     radial-gradient(circle, transparent 54%, rgb(227 197 127 / 0.10) 54.5%, transparent 56%),
     radial-gradient(circle, transparent 70%, rgb(227 197 127 / 0.07) 70.5%, transparent 72%);
+}
+
+/* ---------- Paper grain: a barely-there texture on the warm light surfaces ---------- */
+body,
+.bg-paper,
+.bg-stone {
+  background-image: url('/textures/grain.png');
+  background-size: 96px 96px;
 }
