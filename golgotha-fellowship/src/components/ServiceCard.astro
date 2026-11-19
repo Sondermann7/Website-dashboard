@@ -1,0 +1,33 @@
+---
+/** The "Service times" visit card used in the homepage hero (desktop column and mobile band). */
+import MapPin from '@lucide/astro/icons/map-pin';
+import { church, primaryGatherings, directionsUrl, telHref } from '../config/church';
+import { joinTimes } from '../lib/format';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+---
+<aside aria-labelledby="visit-card-heading" class:list={['on-light relative rounded-[var(--radius-card)] bg-white p-6 text-navy shadow-[var(--shadow-float)] ring-1 ring-navy/5 md:p-8', cls]}>
+  <p class="eyebrow">Join us this week</p>
+  <h2 id="visit-card-heading" class="mt-2 !text-[1.9rem]">Service times</h2>
+  <dl class="mt-5 divide-y divide-line border-y border-line">
+    {primaryGatherings.map((g) => (
+      <div class="flex items-baseline justify-between gap-4 py-3.5">
+        <dt class="font-semibold text-body">{g.day}s</dt>
+        <dd class="text-right font-display text-[1.45rem] font-bold leading-tight">{joinTimes(g.times)}</dd>
+      </div>
+    ))}
+  </dl>
+  <ul class="mt-4 flex flex-wrap gap-2 text-[0.88rem] font-semibold text-navy" aria-label="What to expect">
+    <li class="rounded-full bg-stone px-3 py-1.5">Casual dress</li>
+    <li class="rounded-full bg-stone px-3 py-1.5">Kids through 6th grade</li>
+    <li class="rounded-full bg-stone px-3 py-1.5">Greeters to help</li>
+  </ul>
+  <address class="mt-5 flex gap-3 not-italic">
+    <MapPin size={22} class="mt-0.5 shrink-0 text-gold-deep" aria-hidden="true" />
+    <span>{church.address.street}<br />{church.address.city}, {church.address.regionName} {church.address.postalCode}</span>
+  </address>
+  <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+    <a class="btn btn-primary" href={directionsUrl} target="_blank" rel="noopener" data-goal="directions">Get directions<span class="sr-only"> (opens in a new tab)</span></a>
+    <a class="btn btn-secondary" href={telHref} data-goal="call" aria-label={`Call ${church.phone.display}`}>{church.phone.display}</a>
+  </div>
+</aside>
